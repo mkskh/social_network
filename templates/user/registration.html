@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Header-->
+<header class="bg-grey py-5" style="background-color: rgb(201, 201, 201);">
+    <div class="container px-4 px-lg-5 my-5" style="background-color: rgb(201, 201, 201);">
+        <div class="text-center text-black">
+            <h1 class="display-4 fw-bolder">Sign Up</h1>
+            <p class="lead fw-normal text-black-50 mb-0" style="font-size: larger;">We are glad that you will become part of our community</p>
+        </div>
+    </div>
+</header>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>    
+    {% endfor %}
+{% endif %}
+
+<h1 style="margin: 20px 260px 10px 260px; padding: 20px 260px; text-align: center;">Please enter your registration details</h1>
+
+<div style="margin: 20px 260px; padding: 20px 260px; text-align: left;">
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-secondary" style="display: block; margin: 0 auto;">Sign Up</button>
+    </form>
+
+</div>
+
+{% endblock %}
