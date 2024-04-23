@@ -10,8 +10,9 @@ class UserProfile(models.Model):
         ('OTHER', 'Other'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
-    date_of_modified = models.DateTimeField(auto_now=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True, blank=True) 
     date_of_birth = models.DateTimeField(blank=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES)
     phone = models.CharField(max_length=15, blank=True)
