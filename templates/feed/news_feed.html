@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="card-container", style="text-align: center; margin-top: 20px;">
+
+        <div class="card" style="display: inline-block; width: 350px; margin: 35px;">
+            <div class="card-header" style="text-align: center; background-color: rgb(194, 192, 192);">
+                <h4>Your Profile</h4>
+            </div>
+            <div class="card-body" style="text-align: center;">
+                <p>Information about you</p>
+            </div>
+        </div>
+        
+        <div class="card" style="display: inline-block; width: 850px; margin: 35px;">
+            <div class="card-header" style="text-align: center; background-color: rgb(194, 192, 192);">
+                <h4>News Feed</h4>
+            </div>
+            <div class="card-body" style="text-align: center;">
+
+                {% for post in posts %}
+                <div class="card" style="width: 815px;">
+                    <h3 style="margin-top: 20px; margin-left: 20px; text-align: left;">{{ post.headline }}</h3>
+
+                    <p style="margin-top: 20px; margin-left: 30px; text-align: left;">{{ post.text }}</p>
+                    <p style="margin-left: 30px; text-align: left;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, aut expedita cum illum facere ipsa molestiae autem doloribus sint omnis reiciendis nisi in ipsum praesentium voluptas accusamus suscipit repellendus laborum.</p>
+
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img">
+                    </div>
+                    
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="card" style="display: inline-block; width: 350px; margin: 35px;">
+            <div class="card-header" style="text-align: center; background-color: rgb(194, 192, 192);">
+                <h4>Create post</h4>
+            </div>
+            <div class="card-body" style="text-align: center;">
+                {% for post in posts %}
+
+                <a href="#" style="margin-right: 30px;"><button class="btn btn-secondary" style="width: 320px;">Crate Post</button></a>
+
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
