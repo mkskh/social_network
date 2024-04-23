@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class UserProfile(models.Model):
@@ -11,14 +12,16 @@ class UserProfile(models.Model):
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True, blank=True) 
+    date_of_modified = models.DateTimeField(auto_now=True, blank=True) 
     date_of_birth = models.DateTimeField(blank=True)
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES)
     phone = models.CharField(max_length=15, blank=True)
     location = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to='user_images/', blank=True, null=True)
-    description = models.CharField(max_length=300)
+    description = models.CharField(max_length=300, blank=True)
     
+    def populate_created_at_default(self):
+        UserProfile.objects.filter(created_at__isnull=True).update(created_at=timezone.now())
+
     def __str__(self):
         return self.user.username
