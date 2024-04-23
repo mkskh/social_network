@@ -17,6 +17,7 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=15, blank=True)
     location = models.CharField(max_length=100, blank=True)
     image = models.ImageField(upload_to='user_images/', blank=True, null=True)
+    description = models.CharField(max_length=300)
     
     def __str__(self):
         return self.user.username
