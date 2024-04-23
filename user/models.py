@@ -20,8 +20,5 @@ class UserProfile(models.Model):
     image = models.ImageField(upload_to='user_images/', blank=True, null=True)
     description = models.CharField(max_length=300, blank=True)
     
-    def populate_created_at_default(self):
-        UserProfile.objects.filter(created_at__isnull=True).update(created_at=timezone.now())
-
     def __str__(self):
         return self.user.username
