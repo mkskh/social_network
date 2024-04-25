@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- <div class="container mt-3">
+    <h1>Profile of {{ user_profile.user.username }}</h1>
+    <p><strong>Date Joined:</strong> {{ user_profile.user.date_joined|date:"Y-m-d" }}</p>
+    <p><strong>Last Login:</strong> {{ user_profile.user.last_login|date:"Y-m-d H:i" }}</p>
+    <p><strong>Date of Birth:</strong> {{ user_profile.date_of_birth|date:"Y-m-d" }}</p>
+    <p><strong>Gender:</strong> {{ user_profile.gender }}</p>
+    <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
+    <p><strong>Location:</strong> {{ user_profile.location }}</p>
+    <p><strong>Description:</strong> {{ user_profile.description }}</p>
+    {% if user_profile.image %}
+        <img src="{{ user_profile.image.url }}" alt="Profile Image" style="max-width: 200px;">
+    {% else %}
+        <p>No image available.</p>
+    {% endif %}
+</div> -->
+<div class="container mt-3">
+    <div class="row">
+        <!-- Profile Image and Description -->
+        <div class="col-md-8">
+            <h1>Profile of {{ user_profile.user.username }}</h1>
+            {% if user_profile.image %}
+                <!-- Image trigger modal -->
+                <img src="{{ user_profile.image.url }}" alt="Profile Image" class="img-fluid mb-3" style="max-width: 400px; height: auto; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#imageModal">
+
+                <!-- Modal -->
+                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imageModalLabel">Profile Image of {{ user_profile.user.username }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ user_profile.image.url }}" alt="Profile Image" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>No image available.</p>
+            {% endif %}
+            <p><strong>Description:</strong> {{ user_profile.description }}</p>
+        </div>
+        <!-- Date Joined and Last Login -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Activity</h5>
+                    <p><strong>Date Joined:</strong> {{ user_profile.user.date_joined|date:"Y-m-d" }}</p>
+                    <p><strong>Last Login:</strong> {{ user_profile.user.last_login|date:"Y-m-d H:i" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <!-- Additional Info -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Additional Information</h5>
+                    <p><strong>Date of Birth:</strong> {{ user_profile.date_of_birth|date:"Y-m-d" }}</p>
+                    <p><strong>Gender:</strong> {{ user_profile.gender }}</p>
+                    <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
+                    <p><strong>Location:</strong> {{ user_profile.location }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+

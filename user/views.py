@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.http import Http404
 
 
 def registration(request):
@@ -19,7 +20,7 @@ def registration(request):
             return redirect('/user/login/')
         else:
             error = "You put wrong information. Please try again"
-            return render(request, '/user/registration.html', {"form": form, "error": error})
+            return render(request, 'user/registration.html', {"form": form, "error": error})
 
 
 def user_login(request):
@@ -45,3 +46,34 @@ def user_logout(request):
     logout(request)
     messages.success(request, ("You have been logged out"))
     return redirect('/')
+
+
+# adding a user profile base view.
+# def user_profile_view(request, user_id):
+#     user = User.objects.get(pk=user_id)
+#     user_profile = user.userprofile
+
+#     context = {
+#         'user_profile': user_profile,
+#         'date_joined': user.date_joined,
+#         'last_login': user.last_login,
+#     }
+#     return render(request, 'user/_profile_page_temp.html', context)
+
+
+
+def user_profile_page(request, user_id):
+    # ensure that
+    if not request.user.is_authenticated:
+        raise Http404("You must be logged in to access this page")
+    
+    user = User.objects.get(pk=user_id)
+    user_profile = user.userprofile
+
+    context = {
+        'user_profile': user_profile,
+        'user': user, # passing the whole user object for more flexibility.
+        'date_joined': user.date_joined,
+        'last_login': user.last_login,
+    }
+    return render(request, 'user/profile_page_temp.html', context)
