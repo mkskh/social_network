@@ -7,53 +7,92 @@
         <div class="row justify-content-center" style="padding: 0px; margin: 0px;">
 
             <!-- SECTION 1: USER PROFILE -->
-            <div class="card" style="display: inline-block; width: 350px; margin: 35px; padding: 0px;">
-                <div class="card-header" style="text-align: center; background-color: rgb(53, 53, 53);">
-                    <h4 style="color: white;">Your Profile</h4>
+            <div class="card" style="display: inline-block; width: 350px; margin: 35px; padding: 0px; border: none;">
+
+                <div class="card" style="display: inline-block; width: 350px; margin: 0px; padding: 0px; background-color: rgb(235, 235, 235);">
+
+                    <div class="card-body" style="text-align: center;">
+                        <img src="{{ profile.image.url }}" alt="profile_photo" width="310" height="310" style="border-radius: 50%;">
+                    </div>
+                    <div class="card-body" style="text-align: center;">
+                        <h4>{{ profile.user.first_name }} {{ profile.user.last_name }}</h4>
+                    </div>
+
                 </div>
-                <div class="card-body" style="text-align: center;">
-                    <img src="{{ profile.image.url }}" alt="profile_photo" width="290" height="310" style="border-radius: 50%;">
-                </div>
-                <div class="card-body" style="text-align: center;">
-                    {{ profile.user.first_name }} {{ profile.user.last_name }}
-                </div>
+
             </div>
             
             <!-- SECTION 2: NEWS FEED -->
-            <div class="card" style="display: inline-block; width: 850px; margin: 35px; padding: 0px;">
-                <div class="card-header" style="text-align: center; background-color: rgb(53, 53, 53);">
-                    <h4 style="color: white;">News Feed</h4>
-                </div>
-                <div class="card-body" style="text-align: center;">
+            <div class="card" style="display: inline-block; width: 850px; margin: 35px; padding-left: 18px; border: none;">
 
-                    {% for post in posts %}
-                    <div class="card" style="width: 815px;">
-                        <h3 style="margin-top: 20px; margin-left: 20px; text-align: left;">{{ post.headline }}</h3>
+                <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
+                    
+                    <form method="POST" style="margin: 15px;">
 
-                        <p style="margin-top: 20px; margin-left: 30px; text-align: left;">{{ post.text }}</p>
-                        <p style="margin-left: 30px; text-align: left;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, aut expedita cum illum facere ipsa molestiae autem doloribus sint omnis reiciendis nisi in ipsum praesentium voluptas accusamus suscipit repellendus laborum.</p>
+                        {% csrf_token %}
 
-                        <div style="text-align: center; margin-bottom: 20px;">
-                            <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img">
+                        <div class="mb-3">
+                            <textarea class="form-control" rows="3" placeholder="What would you like to share today?"></textarea>
                         </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <div><button type="submit" class="btn btn-secondary">Attach image</button></div>
+                            <div><button type="submit" class="btn btn-secondary">Publish</button></div>
+                        </div>                        
                         
-                    </div>
-                    {% endfor %}
+                    </form>
                 </div>
+                
+
+                {% for post in posts %}
+                <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px;">
+
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="text-align: left; margin-right: auto; margin: 15px 0 0 20px;">
+                            <img src="{{ post.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}
+                        </div>
+                        <div style="text-align: right; margin: 15px 20px 0 0;">
+                            {{ post.created_at }}
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 20px; margin-left: 30px; text-align: left;">{{ post.text }}</p>
+                    <p style="margin-left: 30px; text-align: left;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, aut expedita cum illum facere ipsa molestiae autem doloribus sint omnis reiciendis nisi in ipsum praesentium voluptas accusamus suscipit repellendus laborum.</p>
+
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img">
+                    </div>
+                    
+                </div>
+                {% endfor %}
+
             </div>
 
             <!-- SECTION 3: CREATE A POST -->
-            <div class="card" style="display: inline-block; width: 350px; margin: 35px; padding: 0px;">
-                <div class="card-header" style="text-align: center; background-color: rgb(53, 53, 53);">
-                    <h4 style="color: white;">Create post</h4>
-                </div>
-                <div class="card-body" style="text-align: center;">
-                    {% for post in posts %}
+            <div class="card" style="display: inline-block; width: 350px; margin: 35px; padding: 0px; border: none;">
 
-                    <a href="#" style="margin-right: 30px;"><button class="btn btn-secondary" style="width: 320px;">Crate Post</button></a>
+                <div class="card" style="display: inline-block; width: 350px; margin: 0px; padding: 0px; background-color: rgb(235, 235, 235);">
+                    
+                    <div class="card-header" style="text-align: center; background-color: rgb(235, 235, 235); border: none;">
+                        <h5 style="color: rgb(0, 0, 0); text-align: left; margin-left: 10px;">People you may know</h5>
+                    </div>
+                    <div class="card-body" style="text-align: center; background-color: rgb(235, 235, 235); border: none;">
 
-                {% endfor %}
+                        {% for recommended_profile in recommended_profiles %}
+
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="text-align: left; margin-right: auto; margin: 15px 0 0 20px;">
+                                <img src="{{ recommended_profile.image.url }}" alt="profile_photo" width="50" height="50" 
+                                style="border-radius: 50%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                {{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}
+                            </div>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+
                 </div>
+
             </div>
 
         </div>
