@@ -48,22 +48,8 @@ def user_logout(request):
     return redirect('/')
 
 
-# adding a user profile base view.
-# def user_profile_view(request, user_id):
-#     user = User.objects.get(pk=user_id)
-#     user_profile = user.userprofile
-
-#     context = {
-#         'user_profile': user_profile,
-#         'date_joined': user.date_joined,
-#         'last_login': user.last_login,
-#     }
-#     return render(request, 'user/_profile_page_temp.html', context)
-
-
-
 def user_profile_page(request, user_id):
-    # ensure that
+    # ensure that user is logged in/authenticated to access profile pages.
     if not request.user.is_authenticated:
         raise Http404("You must be logged in to access this page")
     

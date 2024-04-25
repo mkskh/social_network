@@ -1,21 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- <div class="container mt-3">
-    <h1>Profile of {{ user_profile.user.username }}</h1>
-    <p><strong>Date Joined:</strong> {{ user_profile.user.date_joined|date:"Y-m-d" }}</p>
-    <p><strong>Last Login:</strong> {{ user_profile.user.last_login|date:"Y-m-d H:i" }}</p>
-    <p><strong>Date of Birth:</strong> {{ user_profile.date_of_birth|date:"Y-m-d" }}</p>
-    <p><strong>Gender:</strong> {{ user_profile.gender }}</p>
-    <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
-    <p><strong>Location:</strong> {{ user_profile.location }}</p>
-    <p><strong>Description:</strong> {{ user_profile.description }}</p>
-    {% if user_profile.image %}
-        <img src="{{ user_profile.image.url }}" alt="Profile Image" style="max-width: 200px;">
-    {% else %}
-        <p>No image available.</p>
-    {% endif %}
-</div> -->
 <div class="container mt-3">
     <div class="row">
         <!-- Profile Image and Description -->

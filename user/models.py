@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class UserProfile(models.Model):
 
     GENDER_CHOICES = [
@@ -18,21 +17,6 @@ class UserProfile(models.Model):
     location = models.CharField(max_length=100, blank=True, null=True)
     image = models.ImageField(upload_to='user_images/', blank=True, null=True)
     description = models.CharField(max_length=300, blank=True, null=True)
-
-    # adding follow attribute to user profiles
-    #follows = models.ManyToManyField("self", related_name="followed_by", symmetrical=False, blank=True)
-    
+  
     def __str__(self):
         return self.user.username
-
-
-# need to correct the date_of_birth, no need for the time when putting profile information? can be redone later
-
-
-#  might need a separate class for follow function.
-
-
-# background picture / creating a model/table for it.
-# what to include in?
-# - image -> background pic
-# - user -> foreign key to reach the correct user profile ?
