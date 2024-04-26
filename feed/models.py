@@ -1,5 +1,6 @@
 from django.db import models
 from user.models import UserProfile
+from ckeditor.fields import RichTextField
 
 
 class Post(models.Model):
@@ -7,7 +8,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True) 
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
-    text = models.CharField(max_length=1000)
+    text = RichTextField(max_length=1000)
 
 
 class Like(models.Model):

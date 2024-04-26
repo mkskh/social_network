@@ -2,7 +2,16 @@
 
 {% block content %}
 
-    <div class="card-container", style="text-align: center; margin-top: 20px;">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+                {{message}}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>    
+        {% endfor %}
+    {% endif %}
+
+    <div class="card-container" style="text-align: left; margin-top: 20px;">
 
         <div class="row justify-content-center" style="padding: 0px; margin: 0px;">
 
@@ -27,24 +36,31 @@
 
                 <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
                     
-                    <form method="POST" style="margin: 15px;">
-
+                    <form method="POST" style="margin: 15px;" enctype="multipart/form-data">
                         {% csrf_token %}
-
-                        <div class="mb-3">
-                            <textarea class="form-control" rows="3" placeholder="What would you like to share today?"></textarea>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <div><button type="submit" class="btn btn-secondary">Attach image</button></div>
-                            <div><button type="submit" class="btn btn-secondary">Publish</button></div>
-                        </div>                        
                         
+                        <div class="form-group">
+                            <textarea name="text" rows="3" class="form-control" placeholder="What would you like to share today?" required></textarea>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+
+                            <div class="form-group">
+                                <input type="file" name="image" class="form-control-file" id="id_image" accept="image/*">
+                            </div>
+                            
+                            <div>
+                                <button type="submit" style="border-radius: 5%; border-width: 1px; height: 30px; width: 90px;">Submit</button>
+                            </div>
+                            
+                        </div>
                     </form>
+
                 </div>
                 
 
                 {% for post in posts %}
-                <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px;">
+                <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
 
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="text-align: left; margin-right: auto; margin: 15px 0 0 20px;">
@@ -56,10 +72,11 @@
                         </div>
                     </div>
                     
-                    <p style="margin-top: 20px; margin-left: 30px; text-align: left;">{{ post.text }}</p>
-                    <p style="margin-left: 30px; text-align: left;">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis, aut expedita cum illum facere ipsa molestiae autem doloribus sint omnis reiciendis nisi in ipsum praesentium voluptas accusamus suscipit repellendus laborum.</p>
+                    <div style="text-align: left; margin-bottom: 20px; margin-left: 30px;">
+                        <p style="margin-top: 20px; margin-left: 30px;">{{ post.text | safe }}</p>
+                    </div>
 
-                    <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="text-align: center; margin-bottom: 30px;">
                         <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img">
                     </div>
                     
@@ -68,7 +85,7 @@
 
             </div>
 
-            <!-- SECTION 3: CREATE A POST -->
+            <!-- SECTION 3: RECOMMENDED PEOPLE -->
             <div class="card" style="display: inline-block; width: 350px; margin: 35px; padding: 0px; border: none;">
 
                 <div class="card" style="display: inline-block; width: 350px; margin: 0px; padding: 0px; background-color: rgb(235, 235, 235);">
