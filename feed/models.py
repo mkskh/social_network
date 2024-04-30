@@ -9,18 +9,26 @@ class Post(models.Model):
     last_modified = models.DateTimeField(auto_now=True, blank=True) 
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
     text = RichTextField(max_length=1000)
+    liked = models.ManyToManyField(UserProfile, blank=True, related_name='likes')
 
+    def num_likes(self):
+        return self.liked.all().count()
+
+
+LIKE_CHOICES = (
+    ('Like', 'Like'),
+    ('Unlike', 'Unlike'),
+)
 
 class Like(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    value = models.CharField(choices=LIKE_CHOICES, max_length=8, blank=True)
 
 
 class Comment(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.CharField(max_length=1000)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
 
 
-    def __str__(self):
-        return self.headline

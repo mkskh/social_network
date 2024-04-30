@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 import random
 from django.contrib import messages
 import markdown2
 
 from . import models
 from user.models import UserProfile
-from .models import Post
+from .models import Post, Like, Comment
 from .forms import PublishPostForm
 
 
@@ -46,3 +47,41 @@ def news_feed(request):
 
     return render(request, 'feed/news_feed.html', 
                 {'posts': posts, 'profile': profile, 'recommended_profiles': recommended_profiles, 'form': form})
+
+
+def like_unlike_post(request):
+    user = request.user
+
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post_obj = Post.objects.get(id=post_id)
+        profile = UserProfile.objects.get(user=user)
+
+        if profile in post_obj.liked.all():
+            post_obj.liked.remove(profile)
+        else:
+            post_obj.liked.add(profile)
+
+        like, created = Like.objects.get_or_create(profile=profile, post_id=post_id)
+
+        if not created:
+            if like.value=='Like':
+                like.value='Unlike'
+            else:
+                like.value='Like'
+            post_obj.save()
+            like.save()
+        else:
+            like.value='Like'
+
+            post_obj.save()
+            like.save()
+
+        data = {
+            'value': like.value,
+            'likes': post_obj.liked.all().count()
+        }
+
+        return JsonResponse(data, safe=False)
+
+
