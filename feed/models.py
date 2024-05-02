@@ -1,25 +1,34 @@
 from django.db import models
-from django.contrib.auth.models import User
-
-
-class Like(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-
-class Comment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    text = models.CharField(max_length=1000)
+from user.models import UserProfile
+from ckeditor.fields import RichTextField
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True) 
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
-    headline = models.CharField(max_length=100)
-    text = models.CharField(max_length=1000)
-    likes = models.ForeignKey(Like, on_delete=models.CASCADE, blank=True, null=True)
-    comments = models.ForeignKey(Comment, on_delete=models.CASCADE, blank=True, null=True)
+    text = RichTextField(max_length=1000)
+    liked = models.ManyToManyField(UserProfile, blank=True, related_name='likes')
 
-    def __str__(self):
-        return self.headline
+    def num_likes(self):
+        return self.liked.all().count()
+
+
+LIKE_CHOICES = (
+    ('Like', 'Like'),
+    ('Unlike', 'Unlike'),
+)
+
+class Like(models.Model):
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    value = models.CharField(choices=LIKE_CHOICES, max_length=8, blank=True)
+
+
+class Comment(models.Model):
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    text = models.CharField(max_length=1000)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+
+

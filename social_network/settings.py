@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'user',
     'feed',
     'marketplace',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
