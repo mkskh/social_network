@@ -30,5 +30,6 @@ class Comment(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.CharField(max_length=1000)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    #add date time later
 
 

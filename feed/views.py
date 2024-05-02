@@ -7,7 +7,7 @@ import markdown2
 from . import models
 from user.models import UserProfile
 from .models import Post, Like, Comment
-from .forms import PublishPostForm
+from .forms import PublishPostForm, LeaveCommentForm
 
 
 def news_feed(request):
@@ -31,10 +31,26 @@ def news_feed(request):
     if request.method == "GET":
 
         form = PublishPostForm()
+        comment_form = LeaveCommentForm()
         
     if request.method == "POST":
 
         form = PublishPostForm(request.POST, request.FILES)
+        comment_form = LeaveCommentForm(request.POST)
+
+        if comment_form.is_valid():
+            post_id = request.POST.get('post_id_comment')
+            post_obj = Post.objects.get(id=post_id)
+            text = comment_form.cleaned_data['text']
+            
+            comment = Comment.objects.create(profile=profile, text=text, post=post_obj)
+            comment.save()
+            messages.success(request, "You have added a comment.")
+            return redirect('/feed/')
+        else:
+            messages.error(request, "Form is not valid. Please check your input.")
+
+
         if form.is_valid():
             text = markdown2.markdown(form.cleaned_data['text'])
             image = form.cleaned_data['image']
@@ -46,7 +62,7 @@ def news_feed(request):
             messages.error(request, "Form is not valid. Please check your input.")
 
     return render(request, 'feed/news_feed.html', 
-                {'posts': posts, 'profile': profile, 'recommended_profiles': recommended_profiles, 'form': form})
+                {'posts': posts, 'profile': profile, 'recommended_profiles': recommended_profiles, 'form': form, 'comment_form': comment_form})
 
 
 def like_unlike_post(request):
