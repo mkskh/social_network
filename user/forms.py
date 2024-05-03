@@ -3,6 +3,9 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+# import Userprofile from models.py
+from .models import UserProfile
+
 
 class RegistrationForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email Address'}))
@@ -35,3 +38,20 @@ class RegistrationForm(UserCreationForm):
 class LoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+
+# new form for updating profiles.
+class UserEditProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['date_of_birth', 'gender', 'phone', 'location', 'image', 'description', 'background_image' ]
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'background_image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
