@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from .models import UserProfile
 
+from feed.models import Post, Like
+
 
 def registration(request):
 
@@ -48,21 +50,20 @@ def user_logout(request):
     messages.success(request, ("You have been logged out"))
     return redirect('/')
 
-
+@login_required
 def user_profile_page(request, user_id):
-    ''' Users can access profiles page'''
-    # ensure that user is logged in/authenticated to access profile pages.
-    if not request.user.is_authenticated:
-        raise Http404("You must be logged in to access this page")
-    
-    user = User.objects.get(pk=user_id)
-    user_profile = user.userprofile
+    ''' Users can access profiles page'''   
+    profile_user = User.objects.get(pk=user_id)
+    user_profile = profile_user.userprofile
+
+    posts = Post.objects.filter(profile=user_profile).order_by('-created_at')
 
     context = {
+        'profile_user': profile_user, # passing the whole user object for more flexibility.
         'user_profile': user_profile,
-        'user': user, # passing the whole user object for more flexibility.
+        'posts': posts,
     }
-    return render(request, 'user/profile_page_temp.html', context)
+    return render(request, 'user/profile_page.html', context)
 
 
 
@@ -84,4 +85,9 @@ def edit_profile(request, user_id):
         messages.error(request, ("Incorrect information were provided. Please try again"))
         form = UserEditProfileForm(instance=request.user.userprofile)
     return render(request, 'user/edit_profile.html', {'form': form})
+
+
+
+# want to implement the view of feeds. post of the user.
+# should appear as '' your publications'
 

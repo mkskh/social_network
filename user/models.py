@@ -15,8 +15,8 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length=6, choices=GENDER_CHOICES, blank=True, null=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
-    image = models.ImageField(upload_to='user_images/', blank=True, null=True)
+    image = models.ImageField(upload_to='user_images/', blank=True, null=True, default='user_images/dummy-profile-picture.png')
     description = models.CharField(max_length=300, blank=True, null=True)
-    background_image = models.ImageField(upload_to='background_images/', blank=True, null=True)
+    background_image = models.ImageField(upload_to='background_images/', blank=True, null=True, default='background_images/dummy_background_img.jpg')
     def __str__(self):
         return self.user.username
