@@ -36,6 +36,7 @@
 
                 <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
                     
+                    <!-- Make a post form-->
                     <form method="POST" style="margin: 15px;" enctype="multipart/form-data">
                         {% csrf_token %}
                         
@@ -62,24 +63,110 @@
                 {% for post in posts %}
                 <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
 
+                    <!-- Header of the post -->
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div style="text-align: left; margin-right: auto; margin: 15px 0 0 20px;">
                             <img src="{{ post.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}
                         </div>
-                        <div style="text-align: right; margin: 15px 20px 0 0;">
-                            {{ post.created_at }}
+                        <div style="margin-left: 10px; width:750px;" >
+                            <p style="margin-top: 25px; margin-bottom: 0;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
+                            <p style="font-size: 12px;">{{ post.created_at|timesince }} ago </p>
                         </div>
+
+
+                        <!-- Dropdown button "Options" -->
+                        <div class="dropdown">
+                            <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
+                                Options
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <!-- First action with delete button -->
+                                <li>
+                                    <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
+                                        {% csrf_token %}
+                                        <button class="dropdown-item" type="submit">Delete</button>
+                                    </form>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Edit post</a></li>
+                            </ul>
+                        </div>
+
                     </div>
                     
-                    <div style="text-align: left; margin-bottom: 20px; margin-left: 30px;">
+                    <!-- Text of the post -->
+                    <div style="text-align: left; margin-bottom: 10px; margin-left: 30px;">
                         <p style="margin-top: 20px; margin-left: 30px;">{{ post.text | safe }}</p>
                     </div>
 
+                    <!-- Check if we have image in post -->
+                    {% if post.image %}
                     <div style="text-align: center; margin-bottom: 30px;">
                         <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img">
                     </div>
+                    {% else %}
+                    <!-- Do nothing -->
+                    {% endif %}
+
+                    <!-- Like button -->
+                    <form action="{% url 'feed:like_unlike_post' %}" method="POST" class='like-form' id='{{post.id}}'>
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value={{post.id}}>
+                        <div style="margin: 0 0 0 30px; display: flex; align-items: center;">
+                            <div style="flex-shrink: 0;">
+                                <button type="submit" class="ui button like-btn{{post.id}}">
+                                    {% if profile not in post.liked.all %}
+                                        Like
+                                    {% else %}
+                                        Unlike
+                                    {% endif %}
+                                </button>
+                            </div>
+                            <div style="margin-left: 10px;">
+                                <div class="like-count{{post.id}}">{{post.num_likes}}</div>
+                            </div>
+                            <div>
+                                <div>&nbsp;likes</div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr style="margin-left: 15px; margin-right: 15px;">
+
+                    <!-- Comments  -->
+
+                    {% if post.comments.all %}
+                    <h5 style="margin-left: 40px; margin-bottom: 15px;">Comments:</h5>
+                    {% endif %}
+
+                    {% for comment in post.comments.all %}
+
+                    <div style="border: 1px solid #ccc; padding: 10px; margin: 0 20px 20px 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="text-align: left; margin-right: auto;">
+                                <img src="{{ comment.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;">
+                                &nbsp;&nbsp;&nbsp;{{ comment.profile.user.first_name }} {{ comment.profile.user.last_name }}
+                            </div>
+                            <div style="text-align: right; ">
+                                {{ post.created_at|timesince }} ago
+                            </div>
+                        </div>
+                        <div style="text-align: left; margin: 10px 10px 20px 70px;">
+                            {{ comment.text }}
+                        </div>
+                    </div>
                     
+                    {% endfor %}
+
+                    <!-- Leave a comment form -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id_comment" value="{{ post.id }}">
+                        <div class="mb-3" style="width: 70%; margin: 0 auto;">
+                            <input type="text" class="form-control" placeholder="Leave a comment" name="text">
+                        </div>
+                        <button type="submit" style="display: block; margin: 10px 0 15px 0; margin-left: auto; margin-right: auto;">Leave comment</button>
+                    </form>
+
                 </div>
                 {% endfor %}
 
@@ -115,5 +202,51 @@
         </div>
 
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.like-form').click(function(e) {
+                e.preventDefault()
+                
+                const post_id = $(this).attr('id')
+                
+                const likeText = $(`.like-btn${post_id}`).text()
+                const trim = $.trim(likeText)
+                
+                const url = $(this).attr('action')
+                
+                let res;
+                const likes = $(`.like-count${post_id}`).text()
+                const trimCount = parseInt(likes)
+                
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {
+                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                        'post_id':post_id,
+                    },
+                    success: function(response) {
+                        if(trim == 'Unlike') {
+                            $(`.like-btn${post_id}`).text('Like')
+                            res = trimCount - 1
+                        } else {
+                            $(`.like-btn${post_id}`).text('Unlike')
+                            res = trimCount + 1
+                        }
+
+                        $(`.like-count${post_id}`).text(res)
+
+                    },
+                    error: function(response) {
+                        console.log('error', response)
+                    }
+
+                })
+            });
+        });
+    </script>
+
 
 {% endblock %}
