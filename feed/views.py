@@ -38,17 +38,22 @@ def news_feed(request):
         form = PublishPostForm(request.POST, request.FILES)
         comment_form = LeaveCommentForm(request.POST)
 
-        if comment_form.is_valid():
-            post_id = request.POST.get('post_id_comment')
+        post_id = request.POST.get('post_id_comment')
+        try:
             post_obj = Post.objects.get(id=post_id)
-            text = comment_form.cleaned_data['text']
-            
-            comment = Comment.objects.create(profile=profile, text=text, post=post_obj)
-            comment.save()
-            messages.success(request, "You have added a comment.")
-            return redirect('/feed/')
-        else:
-            messages.error(request, "Form is not valid. Please check your input.")
+        except:
+            post_obj = None
+
+        if post_obj:
+            if comment_form.is_valid():
+                text = comment_form.cleaned_data['text']
+                
+                comment = Comment.objects.create(profile=profile, text=text, post=post_obj)
+                comment.save()
+                messages.success(request, "You have added a comment.")
+                return redirect('/feed/')
+            else:
+                messages.error(request, "Form is not valid. Please check your input.")
 
 
         if form.is_valid():
@@ -101,3 +106,21 @@ def like_unlike_post(request):
         return JsonResponse(data, safe=False)
 
 
+from django.shortcuts import redirect
+from django.contrib import messages
+
+def delete_post(request, post_id):
+    if request.method == "POST":
+        try:
+            post = Post.objects.get(id=post_id)
+            post.delete()
+            messages.success(request, "Post deleted successfully.")
+        except Post.DoesNotExist:
+            messages.error(request, "Post does not exist.")
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+    else:
+        print(f"Invalid request method: {request.method}")  # Debug output
+        messages.error(request, "Invalid request method.")
+
+    return redirect('/feed/')

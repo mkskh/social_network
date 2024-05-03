@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'feed',
     'marketplace',
     'ckeditor',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [

@@ -5,7 +5,7 @@ from .models import Post, Comment
 class PublishPostForm(forms.ModelForm):
     
     text = forms.Textarea(attrs={'class':'form-control', 'placeholder':''})
-    image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control', 'placeholder':''}))
+    image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control', 'placeholder':''}), required=False)
 
     class Meta:
         model = Post

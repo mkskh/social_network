@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 from user.models import UserProfile
 from ckeditor.fields import RichTextField
 
@@ -30,6 +31,8 @@ class Comment(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     text = models.CharField(max_length=1000)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    #add date time later
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True, blank=True) 
+
 
 
