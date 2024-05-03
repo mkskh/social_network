@@ -1,5 +1,5 @@
 from django import forms
-from .models import Post
+from .models import Post, Comment
 
 
 class PublishPostForm(forms.ModelForm):
@@ -10,3 +10,12 @@ class PublishPostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['text', 'image']
+
+
+class LeaveCommentForm(forms.ModelForm):
+
+    text = forms.Textarea(attrs={'class':'form-control', 'placeholder':''})
+
+    class Meta:
+        model = Comment
+        fields = ['text']

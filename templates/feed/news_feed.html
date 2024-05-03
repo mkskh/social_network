@@ -36,6 +36,7 @@
 
                 <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
                     
+                    <!-- Make a post -->
                     <form method="POST" style="margin: 15px;" enctype="multipart/form-data">
                         {% csrf_token %}
                         
@@ -80,28 +81,60 @@
                         <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img">
                     </div>
 
-
+                    <!-- Like button -->
                     <form action="{% url 'feed:like_unlike_post' %}" method="POST" class='like-form' id='{{post.id}}'>
                         {% csrf_token %}
                         <input type="hidden" name="post_id" value={{post.id}}>
-                        
-                            <button type="submit" class="ui button like-btn{{post.id}}">
-                                {% if profile not in post.liked.all %}
-                                    Like
-                                {% else %}
-                                    Unlike
-                                {% endif %}
-                            </button>
-                            <div class="ui grid">
-                                <div class="column">
-                                    <div class="like-count{{post.id}}"> {{post.num_likes}} </div>
-                                </div>
-                                <div class="column">
-                                    likes
-                                </div>
+                        <div style="margin: 0 0 0 30px; display: flex; align-items: center;">
+                            <div style="flex-shrink: 0;">
+                                <button type="submit" class="ui button like-btn{{post.id}}">
+                                    {% if profile not in post.liked.all %}
+                                        Like
+                                    {% else %}
+                                        Unlike
+                                    {% endif %}
+                                </button>
                             </div>
+                            <div style="margin-left: 10px;">
+                                <div class="like-count{{post.id}}">{{post.num_likes}}</div>
+                            </div>
+                            <div>
+                                <div>&nbsp;likes</div>
+                            </div>
+                        </div>
                     </form>
+
+                    <hr>
+
+                    <!-- Comments  -->
+
+                    {% for comment in post.comments.all %}
+
+                    <div style="border: 1px solid #ccc; padding: 10px; margin: 0 12px 20px 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="text-align: left; margin-right: auto;">
+                                <img src="{{ comment.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;">
+                                &nbsp;&nbsp;&nbsp;{{ comment.profile.user.first_name }} {{ comment.profile.user.last_name }}
+                            </div>
+                        </div>
+                        <div style="text-align: left; margin: 10px 10px 20px 70px;">
+                            {{ comment.text }}
+                        </div>
+                    </div>
                     
+
+                    {% endfor %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id_comment" value="{{ post.id }}">
+                        <div class="mb-3" style="width: 70%; margin: 0 auto;">
+                            <input type="text" class="form-control" placeholder="Leave a comment" name="text">
+                        </div>
+                        <button type="submit" style="display: block; margin: 10px 0 15px 0; margin-left: auto; margin-right: auto;">Leave comment</button>
+                        
+                    </form>
+
                 </div>
                 {% endfor %}
 
