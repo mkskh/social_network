@@ -3,3 +3,7 @@ __pycache__/
 db.sqlite3
 
 backup/
+social_bk
+social_network.json
+backup.json
+
