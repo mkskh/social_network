@@ -5,3 +5,4 @@ backup/
 social_bk
 social_network.json
 backup.json
+.env
