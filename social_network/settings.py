@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'marketplace',
     'ckeditor',
     'django.contrib.humanize',
+    'search',
 ]
 
 MIDDLEWARE = [
