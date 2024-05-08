@@ -65,11 +65,13 @@
 
                     <!-- Header of the post -->
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="text-align: left; margin-right: auto; margin: 15px 0 0 20px;">
-                            <img src="{{ post.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;">
+                        <div style="text-align: left; margin-right: auto; margin: 10px 0 0 20px;">
+                            <a href="{% url 'user:my_user_profile' post.profile.user.id %}"><img src="{{ post.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;"></a>
                         </div>
                         <div style="margin-left: 10px; width:750px;" >
-                            <p style="margin-top: 25px; margin-bottom: 0;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
+                            <a href="{% url 'user:my_user_profile' post.profile.user.id %}" style="text-decoration: none; color: inherit;">
+                                <p style="margin-top: 25px; margin-bottom: 0;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
+                            </a>                            
                             <p style="font-size: 12px;">{{ post.created_at|timesince }} ago </p>
                         </div>
 
@@ -94,14 +96,14 @@
                     </div>
                     
                     <!-- Text of the post -->
-                    <div style="text-align: left; margin-bottom: 10px; margin-left: 30px;">
-                        <p style="margin-top: 20px; margin-left: 30px;">{{ post.text | safe }}</p>
+                    <div style="text-align: left; margin-bottom: 0; margin-left: 30px; margin-top: 0; padding-top: 5px; margin-left: 30px;">
+                        {{ post.text | safe }}
                     </div>
 
                     <!-- Check if we have image in post -->
                     {% if post.image %}
                     <div style="text-align: center; margin-bottom: 30px;">
-                        <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img">
+                        <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img" style="border-radius: 1%;">
                     </div>
                     {% else %}
                     <!-- Do nothing -->
@@ -135,30 +137,31 @@
                     <!-- Comments  -->
 
                     {% if post.comments.all %}
-                    <h5 style="margin-left: 40px; margin-bottom: 15px;">Comments:</h5>
+                    <h5 style="margin-left: 40px; margin-bottom: 5px; font-size: 18px;">Comments:</h5>
                     {% endif %}
 
                     {% for comment in post.comments.all %}
 
-                    <div style="border: 1px solid #ccc; padding: 10px; margin: 0 20px 20px 20px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="text-align: left; margin-right: auto;">
-                                <img src="{{ comment.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;">
-                                &nbsp;&nbsp;&nbsp;{{ comment.profile.user.first_name }} {{ comment.profile.user.last_name }}
-                            </div>
-                            <div style="text-align: right; ">
-                                {{ post.created_at|timesince }} ago
-                            </div>
+                    <div style="margin-left: 60px; display: flex; justify-content: space-between; align-items: center;">
+                        <div></div>
+                        <div style=" text-align: left; margin-right: auto; margin: 10px 0 0 20px;">
+                            <a href="{% url 'user:my_user_profile' comment.profile.user.id %}" style="text-decoration: none; color: inherit;">
+                                <img src="{{ comment.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%; margin-bottom: 15px;">
+                            </a>
                         </div>
-                        <div style="text-align: left; margin: 10px 10px 20px 70px;">
-                            {{ comment.text }}
+                        <div style="margin-left: 10px; width:750px;" >
+                            <a href="{% url 'user:my_user_profile' comment.profile.user.id %}" style="text-decoration: none; color: inherit;">
+                                <p style="margin-top: 10px; margin-bottom: 0; font-size: 16px;">{{ comment.profile.user.first_name }} {{ comment.profile.user.last_name }}</p>
+                            </a>
+                            <p style="margin-bottom: 0; font-size: 16px;">{{ comment.text }}</p>
+                            <p style="font-size: 12px; margin-top: 1px;">{{ comment.created_at|timesince }} ago </p>
                         </div>
                     </div>
                     
                     {% endfor %}
 
                     <!-- Leave a comment form -->
-                    <form method="post">
+                    <form method="post" style="margin-top: 5px;">
                         {% csrf_token %}
                         <input type="hidden" name="post_id_comment" value="{{ post.id }}">
                         <div class="mb-3" style="width: 70%; margin: 0 auto;">
@@ -186,8 +189,8 @@
 
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="text-align: left; margin-right: auto; margin: 15px 0 0 20px;">
-                                <img src="{{ recommended_profile.image.url }}" alt="profile_photo" width="50" height="50" 
-                                style="border-radius: 50%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}"><img src="{{ recommended_profile.image.url }}" alt="profile_photo" width="50" height="50" 
+                                style="border-radius: 50%;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 {{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}
                             </div>
                         </div>
