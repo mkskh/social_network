@@ -1,9 +1,7 @@
 .venv/
 __pycache__/
-db.sqlite3
+.env
 
 backup/
-social_bk
-social_network.json
-backup.json
+
 
