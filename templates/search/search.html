@@ -15,19 +15,87 @@
         </form>
     </div>
 
-    <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
-        
-        <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none;">
-            {% for recommended_profile in recommended_profiles %}
-            <div class="inner-card" style="background-color: rgb(235, 235, 235); margin: 20px;">
-                <div>
-                    <img src="{{recommended_profile.image.url}}" alt="photo" width="160" height="160" style="border-radius: 50%; margin: 20px;"> 
-                    {{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}
+    {% if searched %}
+    <!-- If POST request -->
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+            <!-- BOX with all users -->
+            <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none; background-color: rgb(236, 236, 236);">
+                <h3 style="margin-top: 15px;">Search result:</h3>
+
+                {% for profile in search_res %}
+                
+                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                    <div>
+                        <a href="{% url 'user:my_user_profile' profile.user.id  %}">
+                            <img src="{{profile.image.url}}" alt="photo" width="90" height="90" style="border-radius: 50%; margin: 20px;"> 
+                        </a>
+                    </div>
+                    <div style="text-align: left; margin-top: 32px">
+                        <a href="{% url 'user:my_user_profile' profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                            <h5>{{ profile.user.first_name }} {{ profile.user.last_name }}</h5>
+                        </a>
+                        <p>{{ profile.age }} years, {{ profile.location }}</p>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            
         </div>
-        
-    </div>
+
+    {% else %}
+    <!-- If GET request -->
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+            
+            <!-- BOX with recommended users -->
+            <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none; background-color: rgb(236, 236, 236);">
+                <h3 style="margin-top: 15px;">People you may know:</h3>
+                {% for recommended_profile in recommended_profiles %}
+                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                    <div>
+                        <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}">
+                            <img src="{{recommended_profile.image.url}}" alt="photo" width="90" height="90" style="border-radius: 50%; margin: 20px;"> 
+                        </a>
+                    </div>
+                    <div style="text-align: left; margin-top: 32px">
+                        <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                            <h5>{{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}</h5>
+                        </a>
+                        <p>{{ recommended_profile.age }} years, {{ recommended_profile.location }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+
+            <!-- BOX with all users -->
+            <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none; background-color: rgb(236, 236, 236);">
+                <h3 style="margin-top: 15px;">All people:</h3>
+
+                {% for profile in sorted_profiles_list %}
+                
+                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                    <div>
+                        <a href="{% url 'user:my_user_profile' profile.user.id  %}">
+                            <img src="{{profile.image.url}}" alt="photo" width="90" height="90" style="border-radius: 50%; margin: 20px;"> 
+                        </a>
+                    </div>
+                    <div style="text-align: left; margin-top: 32px">
+                        <a href="{% url 'user:my_user_profile' profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                            <h5>{{ profile.user.first_name }} {{ profile.user.last_name }}</h5>
+                        </a>
+                        <p>{{ profile.age }} years, {{ profile.location }}</p>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+            
+        </div>
+
+    {% endif %}
 
 {% endblock %}
