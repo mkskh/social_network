@@ -2,6 +2,32 @@
 
 {% block content %}
 
-This is the search page
+    <div style="margin: 30px 100px 5px 100px; text-align: center; padding: 15px 0 10px 0; background-color: rgb(226, 226, 226);" class="card">
+        <form method="post" style="display: inline-block; vertical-align: top;">
+            {% csrf_token %}
+            {% for field in form %}
+
+            {{ field.label_tag }}
+            {{ field }}
+
+            {% endfor %}
+            <button type="submit" class="btn btn-secondary" style="vertical-align: top; margin-left: 35px;">Search</button>
+        </form>
+    </div>
+
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+        
+        <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none;">
+            {% for recommended_profile in recommended_profiles %}
+            <div class="inner-card" style="background-color: rgb(235, 235, 235); margin: 20px;">
+                <div>
+                    <img src="{{recommended_profile.image.url}}" alt="photo" width="160" height="160" style="border-radius: 50%; margin: 20px;"> 
+                    {{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+    </div>
 
 {% endblock %}

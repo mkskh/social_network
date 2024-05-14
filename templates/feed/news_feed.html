@@ -189,9 +189,12 @@
 
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="text-align: left; margin-right: auto; margin: 15px 0 0 20px;">
-                                <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}"><img src="{{ recommended_profile.image.url }}" alt="profile_photo" width="50" height="50" 
-                                style="border-radius: 50%;"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                {{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}
+                                <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}">
+                                    <img src="{{ recommended_profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;">
+                                </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                                    {{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}
+                                </a>
                             </div>
                         </div>
 
