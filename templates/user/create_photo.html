@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Add a Photo to "{{ album.title }}"</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload Photo</button>
+</form>
+<a href="{% url 'user:photo_list' profile_user.id album.id %}">Back to "{{ album.title }}"</a>
+{% endblock %}

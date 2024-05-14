@@ -20,3 +20,26 @@ class UserProfile(models.Model):
     background_image = models.ImageField(upload_to='background_images/', blank=True, null=True, default='background_images/dummy_background_img.jpg')
     def __str__(self):
         return self.user.username
+
+
+
+# to add with migration if works
+class Album(models.Model):
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='albums')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.title} by {self.profile.user.username}"
+
+
+class Photo(models.Model):
+    album = models.ForeignKey(Album, on_delete=models.CASCADE, related_name='photos')
+    image = models.ImageField(upload_to='album_photos/')
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Photo {self.id} in {self.album.title} by {self.album.profile.user.username}"
