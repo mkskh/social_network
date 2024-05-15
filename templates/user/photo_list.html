@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-3">
+    <a href="{% url 'user:album_list' profile_user.id %}" class="btn btn-secondary mb-3">Back to Albums</a>
+    <h1>{{ album.title }}</h1>
+
+    {% if is_owner %}
+        <a href="{% url 'user:create_photo' profile_user.id album.id %}" class="btn btn-primary mb-3">Add New Photo</a>
+    {% endif %}
+
+    <div class="row">
+        {% for photo in photos %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.description }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ photo.description }}</h5>
+                    <p class="card-text"><small class="text-muted">Posted on {{ photo.created_at|date:"d-m-Y" }}</small></p>
+                    {% if is_owner %}
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'user:edit_photo' profile_user.id album.id photo.id %}" class="btn btn-info btn-sm">Edit</a>
+                            <a href="{% url 'user:delete_photo' profile_user.id album.id photo.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this photo?');">Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
