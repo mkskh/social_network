@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+
+    <style>
+        /* Basic styling for the added product list */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .header-title {
+            text-align: center;
+            margin-top: 30px; /* Adjust the value to increase or decrease the gap */
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .product-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .product-item {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+            overflow: hidden; /* Ensure proper alignment of image and text */
+        }
+        .product-image {
+            float: left;
+            margin-right: 10px;
+            max-width: 150px; /* Adjust image width as needed */
+            max-height: 150px; /* Adjust image height as needed */
+        }
+    </style>
+    <div class="container">
+        <h1 class="header-title">Added Products</h1>
+        <ul class="product-list">
+            {% for product in added_products %}
+            <li class="product-item">
+                <a href="{% url 'marketplace:product' product.pk %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                </a>
+                <div>
+                    <h3>{{ product.name }}</h3>
+                    <p>Description: {{ product.description }}</p>
+                    <p>Price: {{ product.price }}</p>
+                    <!-- Add additional product details here as needed -->
+                </div>
+                <div>
+                    <a href="{% url 'marketplace:delete_product' product.pk %}">Delete</a>
+                </div>
+            </li>
+            {% empty %}
+            <li>No product added yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
+{% endblock %}
