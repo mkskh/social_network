@@ -445,6 +445,7 @@ legend + * {
   -webkit-appearance: textfield;
 }
 
+
 /* rtl:raw:
 [type="tel"],
 [type="url"],
