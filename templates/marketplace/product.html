@@ -16,7 +16,7 @@
                     <div class="text-center">
                         <h5 class="card-title">{{ product.name }}</h5>
                         <p class="card-text">{{ product.description }}</p>
-                        <p class="card-text">Seller: <a href="#">{{ product.seller }}</a></p>
+                        <p class="card-text">Seller: <a href="{% url 'user:my_user_profile' user.id %}">{{ product.seller }}</a></p>
                         {% if product.is_sale %}
                             <span class="text-muted"><strike>€{{ product.price }}</strike></span>
                             <span class="text-danger ms-2">€{{ product.sale_price }}</span>
