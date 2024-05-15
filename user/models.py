@@ -32,6 +32,15 @@ class UserProfile(models.Model):
             return age
         else:
             return None
+    
+    def capitalized_gender(self):
+        return (self.gender).capitalize()
+    
+    def dob_another_format(self):
+        input_date_string = str(self.date_of_birth)
+        parsed_date = datetime.strptime(input_date_string, "%Y-%m-%d")
+        formatted_date = parsed_date.strftime("%d %B %Y")
+        return (formatted_date)
 
 
 
