@@ -10,6 +10,7 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
+- Finished User profile page
 - Search system on Search page implemented
 - Search page finished
 - Created demo version of User profile page
@@ -28,9 +29,13 @@ Also, each user can create an advertisement for the sale (or give away for free)
   
 ### "Search people" page:  
   
-![news_feed](./media/for_readme/search_people.png)   
+![Search people](./media/for_readme/search_people.png)   
   
-#### How search system works:
+### How search system works:
   
-![post](./media/for_readme/search_system.png) 
+![search system](./media/for_readme/search_system.png) 
+  
+### User profile page:
+  
+![User profile](./media/for_readme/user_profile.png) 
   
