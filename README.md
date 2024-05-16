@@ -10,6 +10,7 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
+- Implemented Subscription system
 - Finished User profile page
 - Search system on Search page implemented
 - Search page finished

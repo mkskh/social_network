@@ -18,6 +18,27 @@
     <!-- Clearfix to adjust flow after absolute positioning -->
     <div style="clear: both; margin-top: 100px;"></div>
 
+    <!-- Subscription -->
+    <div style="text-align: center;">
+        <p>Subscribers: {{ profile.count_subscribers }}</p>
+        <p>Subscription: {{ profile.count_subscribed_to }}</p>
+
+        <form method="POST">
+
+            {% csrf_token %}
+            <input type="hidden" name="profile_id" value={{profile.user.id}}>
+
+            <button type="submit">
+                {% if button_status %}
+                    Unsubscribe
+                {% else %}
+                    Subscribe
+                {% endif %}
+            </button>
+
+        </form>
+    </div>
+
     <!-- User Info and Description -->
     <div class="card-container" style="text-align: center; padding-top: 70px;">
 
@@ -38,7 +59,7 @@
     
     </div>
 
-
+    <!-- MY POSTS -->
     <div class="card" style="width: 65%; align-items: center; margin: 25px auto 25px auto;">
         <h3 style="margin: 20px;">My posts:</h3>
 
@@ -98,7 +119,7 @@
                 <div style="margin: 0 0 0 30px; display: flex; align-items: center;">
                     <div style="flex-shrink: 0;">
                         <button type="submit" class="ui button like-btn{{post.id}}">
-                            {% if profile not in post.liked.all %}
+                            {% if authenticated_profile not in post.liked.all %}
                                 Like
                             {% else %}
                                 Unlike

@@ -15,6 +15,8 @@ def news_feed(request):
     posts = models.Post.objects.all().order_by('-created_at')
     profile = UserProfile.objects.get(user=request.user)
 
+    print(request.user)
+
     #recommended profiles
     all_profiles = UserProfile.objects.all()
 
