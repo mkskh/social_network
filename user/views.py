@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from .forms import RegistrationForm, LoginForm, UserEditProfileForm, AlbumForm, PhotoForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -55,14 +56,14 @@ def user_logout(request):
 def user_profile_page(request, user_id):
     ''' Users can access profiles page'''   
     profile_user = User.objects.get(pk=user_id)
-    user_profile = profile_user.userprofile
+    profile = UserProfile.objects.get(user=request.user)
 
-    posts = Post.objects.filter(profile=user_profile).order_by('-created_at')
-    albums = Album.objects.filter(profile=user_profile).prefetch_related('photos')
+    posts = Post.objects.filter(profile=profile).order_by('-created_at')
+    albums = Album.objects.filter(profile=profile).prefetch_related('photos')
 
     context = {
         'profile_user': profile_user, # passing the whole user object for more flexibility.
-        'user_profile': user_profile,
+        'profile': profile,
         'posts': posts,
         'albums': albums,
         'is_owner': request.user == profile_user,
@@ -230,3 +231,39 @@ def edit_photo(request, user_id, album_id, photo_id):
         'photo': photo,
         'profile_user': user_profile.user
     })
+
+
+def like_unlike_post(request):
+    user = request.user
+
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        post_obj = Post.objects.get(id=post_id)
+        profile = UserProfile.objects.get(user=user)
+
+        if profile in post_obj.liked.all():
+            post_obj.liked.remove(profile)
+        else:
+            post_obj.liked.add(profile)
+
+        like, created = Like.objects.get_or_create(profile=profile, post_id=post_id)
+
+        if not created:
+            if like.value=='Like':
+                like.value='Unlike'
+            else:
+                like.value='Like'
+            post_obj.save()
+            like.save()
+        else:
+            like.value='Like'
+
+            post_obj.save()
+            like.save()
+
+        data = {
+            'value': like.value,
+            'likes': post_obj.liked.all().count()
+        }
+
+        return JsonResponse(data, safe=False)

@@ -4,10 +4,10 @@
 
 <div style="padding: 0; margin: 0;">
     <!-- Background Image with Conditional Rendering -->
-    <div class="profile-background mx-auto" style="position: relative; width: 70%; height: 300px; background-size: cover; background-position: center; background-image: url('{{ user_profile.background_image.url }}');">
+    <div class="profile-background mx-auto" style="position: relative; width: 70%; height: 300px; background-size: cover; background-position: center; background-image: url('{{ profile.background_image.url }}');">
         <!-- Profile Image Overlapping Background -->
         <div style="position: absolute; bottom: -110px; left: 15%; transform: translateX(-50%); width: 200px; height: 200px; display: flex; justify-content: center;">
-            <img src="{{ user_profile.image.url }}" alt="Profile Image" class="rounded-circle" style="width: 200px; height: 200px; border: 3px solid white;">
+            <img src="{{ profile.image.url }}" alt="Profile Image" class="rounded-circle" style="width: 200px; height: 200px; border: 3px solid white;">
         </div>
         <!-- Name Right to the Profile Image -->
         <div style="position: absolute; top: calc(105%); left: calc(23%);">
@@ -24,16 +24,16 @@
         <div class="card" style="display: inline-block; background-color: rgb(235, 235, 235); text-align: left; width: 30%; 
                                 height: 210px; vertical-align: top; margin-right: 45px; padding: 15px;">
             <h4 style="text-align: center;">User Info:</h4>
-            <p><strong>Gender:</strong> {{ user_profile.capitalized_gender }}</p>
-            <p><strong>Location:</strong> {{ user_profile.location }}</p>
-            <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
-            <p><strong>Date of Birth:</strong> {{ user_profile.dob_another_format }} ({{ user_profile.age }} years old)</p>
+            <p><strong>Gender:</strong> {{ profile.capitalized_gender }}</p>
+            <p><strong>Location:</strong> {{ profile.location }}</p>
+            <p><strong>Phone:</strong> {{ profile.phone }}</p>
+            <p><strong>Date of Birth:</strong> {{ profile.dob_another_format }} ({{ profile.age }} years old)</p>
         </div>
     
         <div class="card" style="background-color: rgb(235, 235, 235); height: 210px; display: inline-block; text-align: left; 
                                 margin-bottom: 10px; width: 30%; vertical-align: top; margin-left: 45px; padding: 15px;">
             <h4 style="text-align: center;">About me:</h4>
-            <p>{{ user_profile.description }}</p>
+            <p>{{ profile.description }}</p>
         </div>
     
     </div>
@@ -41,6 +41,7 @@
 
     <div class="card" style="width: 65%; align-items: center; margin: 25px auto 25px auto;">
         <h3 style="margin: 20px;">My posts:</h3>
+
         {% for post in posts %}
         <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
 
@@ -153,7 +154,54 @@
 
         </div>
         {% endfor %}
+
     </div>
 
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.like-form').click(function(e) {
+            e.preventDefault()
+            
+            const post_id = $(this).attr('id')
+            
+            const likeText = $(`.like-btn${post_id}`).text()
+            const trim = $.trim(likeText)
+            
+            const url = $(this).attr('action')
+            
+            let res;
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCount = parseInt(likes)
+            
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id':post_id,
+                },
+                success: function(response) {
+                    if(trim == 'Unlike') {
+                        $(`.like-btn${post_id}`).text('Like')
+                        res = trimCount - 1
+                    } else {
+                        $(`.like-btn${post_id}`).text('Unlike')
+                        res = trimCount + 1
+                    }
+
+                    $(`.like-count${post_id}`).text(res)
+
+                },
+                error: function(response) {
+                    console.log('error', response)
+                }
+
+            })
+        });
+    });
+</script>
 {% endblock %}
