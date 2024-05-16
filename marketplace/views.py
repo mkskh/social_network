@@ -3,8 +3,11 @@ from .models import Product, Category
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.urls import reverse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm
+from .cart import Cart
 
 
 # Create your views here.
@@ -60,6 +63,38 @@ def delete_product(request, product_id):
 def added_products(request):
 
         added_products = Product.objects.filter(seller=request.user)
+        return render(request, 'marketplace/added_products.html', {'added_products': added_products})
+
+
+def cart_summary(request):
+    cart = Cart(request)
+    cart_products = cart.get_prods
+    quantities = cart.get_quants
+    return render (request, "marketplace/cart_summary.html", {"cart_products":cart_products, "quantities":quantities})
+
+
+def cart_add(request):
+    cart = Cart(request)
+    product_id_str = request.POST.get('product_id')
+    if product_id_str:
+        product_id = int(product_id_str)
+        product_qty = int(request.POST.get('product_qty'))
+        product = get_object_or_404(Product, id=product_id)
+        cart.add(product=product, quantity=product_qty)
 
         
-        return render(request, 'marketplace/added_products.html', {'added_products': added_products})
+        cart_quantity = cart.__len__()
+        response = JsonResponse({'qty': cart_quantity})
+
+    else:
+        response = HttpResponseRedirect(reverse('marketplace:marketplace_page'))
+
+    return response
+
+
+def cart_delete(request, product_id):
+    
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    cart.remove(product)
+    return redirect('cart_summary')
