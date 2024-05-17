@@ -2,3 +2,6 @@
 __pycache__/
 .env
 backup/
+
+API_users/.env
+API_users/__pycache__/
