@@ -16,7 +16,7 @@ urlpatterns = [
     # might add these path after when function is fully done.
     path('profile/<int:user_id>/albums/create/', views.create_album, name='create_album'),
     path('profile/<int:user_id>/albums/', views.album_list, name='album_list'),
-     path('profile/<int:user_id>/albums/<int:album_id>/edit/', views.edit_album, name='edit_album'),
+    path('profile/<int:user_id>/albums/<int:album_id>/edit/', views.edit_album, name='edit_album'),
     path('profile/<int:user_id>/albums/<int:album_id>/delete/', views.delete_album, name='delete_album'),
 
     path('profile/<int:user_id>/albums/<int:album_id>/photos/add/', views.create_photo, name='create_photo'),
@@ -25,4 +25,3 @@ urlpatterns = [
     path('profile/<int:user_id>/albums/<int:album_id>/photos/<int:photo_id>/edit', views.edit_photo, name='edit_photo'),
 
 ]
-
