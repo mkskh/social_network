@@ -1,13 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+<<<<<<< HEAD
+from .forms import RegistrationForm, LoginForm, UserEditProfileForm, AlbumForm, PhotoForm
+=======
 from .forms import RegistrationForm, LoginForm, UserEditProfileForm, AlbumForm, PhotoForm, SubscriptionForm
+>>>>>>> 36d649a54f05207551ba76c6972f9d2c8125f476
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import Http404
+<<<<<<< HEAD
+from .models import UserProfile, Album, Photo
+=======
 from .models import UserProfile, Album, Photo, Subscription
 from feed.forms import LeaveCommentForm
 from feed.forms import Comment
+>>>>>>> 36d649a54f05207551ba76c6972f9d2c8125f476
 
 from feed.models import Post, Like
 
@@ -56,6 +64,20 @@ def user_logout(request):
 @login_required
 def user_profile_page(request, user_id):
     ''' Users can access profiles page'''   
+<<<<<<< HEAD
+    profile_user = User.objects.get(pk=user_id)
+    user_profile = profile_user.userprofile
+
+    posts = Post.objects.filter(profile=user_profile).order_by('-created_at')
+    albums = Album.objects.filter(profile=user_profile).prefetch_related('photos')
+
+    context = {
+        'profile_user': profile_user, # passing the whole user object for more flexibility.
+        'user_profile': user_profile,
+        'posts': posts,
+        'albums': albums,
+        'is_owner': request.user == profile_user,
+=======
     passed_user = User.objects.get(pk=user_id)
     passed_profile = UserProfile.objects.get(user=passed_user)
     authenticated_profile = UserProfile.objects.get(user=request.user)
@@ -132,6 +154,7 @@ def user_profile_page(request, user_id):
         'albums': albums,
         'authenticated_profile': authenticated_profile,
         'button_status': button_status,
+>>>>>>> 36d649a54f05207551ba76c6972f9d2c8125f476
     }
     return render(request, 'user/profile_page.html', context)
 
@@ -296,4 +319,7 @@ def edit_photo(request, user_id, album_id, photo_id):
         'photo': photo,
         'profile_user': user_profile.user
     })
+<<<<<<< HEAD
+=======
 
+>>>>>>> 36d649a54f05207551ba76c6972f9d2c8125f476
