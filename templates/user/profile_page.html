@@ -1,24 +1,4 @@
 {% extends "base.html" %}
-<<<<<<< HEAD
-{% load static %}
-
-{% block content %}
-<div class="container mt-3">
-    <!-- Background Image with Conditional Rendering -->
-    <div class="profile-background mx-auto" style="position: relative; width: 80%; height: 300px; background-size: cover; background-position: center; {% if user_profile.background_image %}background-image: url('{{ user_profile.background_image.url }}');{% else %}background-color: #f8f9fa;{% endif %}">
-        <!-- Profile Image Overlapping Background -->
-        <div style="position: absolute; bottom: -50px; left: 15%; transform: translateX(-50%); width: 200px; height: 200px; display: flex; justify-content: center;">
-            {% if user_profile.image %}
-                <img src="{{ user_profile.image.url }}" alt="Profile Image" class="rounded-circle" style="width: 200px; height: 200px; border: 3px solid white;">
-            {% else %}
-                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Image" class="rounded-circle" style="width: 200px; height: 200px; border: 3px solid white;">
-            {% endif %}
-        </div>
-        <!-- Name Right to the Profile Image -->
-        <div style="position: absolute; bottom: 10px; left: calc(25%);">
-            <h3>{{ profile_user.username }}</h3>
-            <p><strong>bio:</strong> {{ user_profile.description }}</p>
-=======
 
 {% block content %}
 
@@ -32,53 +12,12 @@
         <!-- Name Right to the Profile Image -->
         <div style="position: absolute; top: calc(105%); left: calc(23%);">
             <h1>{{ profile_user.first_name }} {{ profile_user.last_name }}</h1>
->>>>>>> 36d649a54f05207551ba76c6972f9d2c8125f476
         </div>
     </div>
     
     <!-- Clearfix to adjust flow after absolute positioning -->
     <div style="clear: both; margin-top: 100px;"></div>
 
-<<<<<<< HEAD
-    <!-- User Info and Description -->
-    <div class="row mt-5">
-        <div class="col-md-4">
-            <!-- User Info -->
-            <div class="p-3 bg-light rounded">
-                <h5>User Info</h5>
-                <p><strong>Date of Birth:</strong> {{ user_profile.date_of_birth|date:"Y-m-d" }}</p>
-                <p><strong>Gender:</strong> {{ user_profile.gender }}</p>
-                <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
-                <p><strong>Location:</strong> {{ user_profile.location }}</p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <!-- Description -->
-        </div>
-    </div>
-
-{% include "user/album_preview.html" %}
-
-    <!-- Posts Section -->
-    <div class="mt-4">
-        <h2>Your Publications/Timeline:</h2>
-        {% for post in posts %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <p>posted on {{ post.created_at|date:"D, d M Y H:i:s" }}</p>
-                <p>{{ post.text|safe }}</p>
-                {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="Post image" class="img-fluid mb-3">
-                {% endif %}
-                <p>Likes: {{ post.num_likes }}</p>
-            </div>
-        </div>
-        {% empty %}
-            <p>No posts yet.</p>
-        {% endfor %}
-    </div>
-</div>
-=======
     <!-- Subscription -->
     <div style="text-align: center;">
         <p>Subscribers: {{ profile.count_subscribers }}</p>
@@ -286,5 +225,4 @@
         });
     });
 </script>
->>>>>>> 36d649a54f05207551ba76c6972f9d2c8125f476
 {% endblock %}

@@ -12,7 +12,6 @@
         <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -31,27 +30,9 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hello, {{ user.username }}</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-<<<<<<< HEAD
-                                <li><a class="dropdown-item" href="#">My Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Edit Info</a></li>
-                                <li><a class="dropdown-item" href="{% url 'marketplace:added_products' %}">Your Products</a></li>
-=======
                                 <li><a class="dropdown-item" href="{% url 'user:my_user_profile' user.id %}">My Profile</a></li>  <!-- added my profile link in top menu-->
                                 <li><a class="dropdown-item" href="{% url 'user:edit_profile' user.id %}">Edit my profile</a></li>
->>>>>>> 36d649a54f05207551ba76c6972f9d2c8125f476
                                 <li><hr class="dropdown-divider" /></li>
-                                <li>
-                                  <div class="container">
-                                    <form class="d-flex">
-                                    <a href="{% url 'marketplace:cart_summary' %}" class="btn btn-outline-dark">
-                                        <i class="bi-cart-fill me-1"></i>
-                                        <i class="fa-solid fa-cart-shopping"></i>
-                                        Cart
-                                        <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span>
-                                    </a>
-                                  </form>
-                                </div>
-                                </li>
                                 <li><a class="dropdown-item" href="{% url 'user:logout' %}">Log Out</a></li>
                             </ul>
                         </li>
