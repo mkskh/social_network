@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Header-->
+    
+    <div style="padding-top: 100px;">
+        <div class="container">
+            <li class="nav-item dropdown d-inline-block">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'marketplace:marketplace_page' %}">All Products</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <!-- Loop through categories and generate dropdown items with category IDs -->
+                    {% for category in categories %}
+                        <li><a class="dropdown-item" href="{% url 'marketplace:category' category_id=category.id %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </div>
+    </div>
+         
+            
+        
+   
+    <!-- Section-->
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {% for product in products %}
+                    <div class="col mb-5">
+                        <div class="card h-100 shadow-sm">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <!-- Product name-->
+                                <h5 class="card-title fw-bolder">{{ product.name }}</h5>
+                                <!-- Product price-->
+                                <p class="card-text">
+                                    {% if product.is_sale %}
+                                        <span class="text-muted"><strike>€{{ product.price }}</strike></span>
+                                        <span class="text-danger ms-2">€{{ product.sale_price }}</span>
+                                        <span class="badge bg-danger text-white ms-2">Sale</span>
+                                    {% else %}
+                                        €{{ product.price }}
+                                    {% endif %}
+                                </p>
+                                <!-- Product category-->
+                                <p class="card-text small text-muted">Category: {{ product.category }}</p>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="d-grid">
+                                    <a class="btn btn-outline-dark mt-auto" href="{% if user.is_authenticated %}{% url 'marketplace:product' product.pk %}{% else %}{% url 'user:login' %}?next={% url 'marketplace:product' product.pk %}{% endif %}">View Product</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
