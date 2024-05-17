@@ -10,6 +10,12 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
+- Implemented Subscription system
+- Finished User profile page
+- Search system on Search page implemented
+- Search page finished
+- Created demo version of User profile page
+- Created demo version of Marketplace page
 - Created "News feed" page
 - Implemented Like button
 - Implemented Comments for every post
@@ -21,4 +27,16 @@ Also, each user can create an advertisement for the sale (or give away for free)
 #### Like button and comments (demo version)
   
 ![post](./media/for_readme/post.png)   
+  
+### "Search people" page:  
+  
+![Search people](./media/for_readme/search_people.png)   
+  
+### How search system works:
+  
+![search system](./media/for_readme/search_system.png) 
+  
+### User profile page:
+  
+![User profile](./media/for_readme/user_profile.png) 
   

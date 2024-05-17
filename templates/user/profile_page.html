@@ -1,64 +1,228 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block content %}
-<div class="container mt-3">
+
+<div style="padding: 0; margin: 0;">
     <!-- Background Image with Conditional Rendering -->
-    <div class="profile-background mx-auto" style="position: relative; width: 80%; height: 300px; background-size: cover; background-position: center; {% if user_profile.background_image %}background-image: url('{{ user_profile.background_image.url }}');{% else %}background-color: #f8f9fa;{% endif %}">
+    <div class="profile-background mx-auto" style="position: relative; width: 70%; height: 300px; background-size: cover; background-position: center; background-image: url('{{ profile.background_image.url }}');">
         <!-- Profile Image Overlapping Background -->
-        <div style="position: absolute; bottom: -50px; left: 15%; transform: translateX(-50%); width: 200px; height: 200px; display: flex; justify-content: center;">
-            {% if user_profile.image %}
-                <img src="{{ user_profile.image.url }}" alt="Profile Image" class="rounded-circle" style="width: 200px; height: 200px; border: 3px solid white;">
-            {% else %}
-                <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Image" class="rounded-circle" style="width: 200px; height: 200px; border: 3px solid white;">
-            {% endif %}
+        <div style="position: absolute; bottom: -110px; left: 15%; transform: translateX(-50%); width: 200px; height: 200px; display: flex; justify-content: center;">
+            <img src="{{ profile.image.url }}" alt="Profile Image" class="rounded-circle" style="width: 200px; height: 200px; border: 3px solid white;">
         </div>
         <!-- Name Right to the Profile Image -->
-        <div style="position: absolute; bottom: 10px; left: calc(25%);">
-            <h3>{{ profile_user.username }}</h3>
-            <p><strong>bio:</strong> {{ user_profile.description }}</p>
+        <div style="position: absolute; top: calc(105%); left: calc(23%);">
+            <h1>{{ profile_user.first_name }} {{ profile_user.last_name }}</h1>
         </div>
     </div>
     
     <!-- Clearfix to adjust flow after absolute positioning -->
     <div style="clear: both; margin-top: 100px;"></div>
 
-    <!-- User Info and Description -->
-    <div class="row mt-5">
-        <div class="col-md-4">
-            <!-- User Info -->
-            <div class="p-3 bg-light rounded">
-                <h5>User Info</h5>
-                <p><strong>Date of Birth:</strong> {{ user_profile.date_of_birth|date:"Y-m-d" }}</p>
-                <p><strong>Gender:</strong> {{ user_profile.gender }}</p>
-                <p><strong>Phone:</strong> {{ user_profile.phone }}</p>
-                <p><strong>Location:</strong> {{ user_profile.location }}</p>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <!-- Description -->
-        </div>
-    </div>
+    <!-- Subscription -->
+    <div style="text-align: center;">
+        <p>Subscribers: {{ profile.count_subscribers }}</p>
+        <p>Subscription: {{ profile.count_subscribed_to }}</p>
 
-{% include "user/album_preview.html" %}
+        <form method="POST">
 
-    <!-- Posts Section -->
-    <div class="mt-4">
-        <h2>Your Publications/Timeline:</h2>
-        {% for post in posts %}
-        <div class="card mb-3">
-            <div class="card-body">
-                <p>posted on {{ post.created_at|date:"D, d M Y H:i:s" }}</p>
-                <p>{{ post.text|safe }}</p>
-                {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="Post image" class="img-fluid mb-3">
+            {% csrf_token %}
+            <input type="hidden" name="profile_id" value={{profile.user.id}}>
+
+            <button type="submit">
+                {% if button_status %}
+                    Unsubscribe
+                {% else %}
+                    Subscribe
                 {% endif %}
-                <p>Likes: {{ post.num_likes }}</p>
-            </div>
-        </div>
-        {% empty %}
-            <p>No posts yet.</p>
-        {% endfor %}
+            </button>
+
+        </form>
     </div>
+
+    <!-- User Info and Description -->
+    <div class="card-container" style="text-align: center; padding-top: 70px;">
+
+        <div class="card" style="display: inline-block; background-color: rgb(235, 235, 235); text-align: left; width: 30%; 
+                                height: 210px; vertical-align: top; margin-right: 45px; padding: 15px;">
+            <h4 style="text-align: center;">User Info:</h4>
+            <p><strong>Gender:</strong> {{ profile.capitalized_gender }}</p>
+            <p><strong>Location:</strong> {{ profile.location }}</p>
+            <p><strong>Phone:</strong> {{ profile.phone }}</p>
+            <p><strong>Date of Birth:</strong> {{ profile.dob_another_format }} ({{ profile.age }} years old)</p>
+        </div>
+    
+        <div class="card" style="background-color: rgb(235, 235, 235); height: 210px; display: inline-block; text-align: left; 
+                                margin-bottom: 10px; width: 30%; vertical-align: top; margin-left: 45px; padding: 15px;">
+            <h4 style="text-align: center;">About me:</h4>
+            <p>{{ profile.description }}</p>
+        </div>
+    
+    </div>
+
+    <!-- MY POSTS -->
+    <div class="card" style="width: 65%; align-items: center; margin: 25px auto 25px auto;">
+        <h3 style="margin: 20px;">My posts:</h3>
+
+        {% for post in posts %}
+        <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
+
+            <!-- Header of the post -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="text-align: left; margin-right: auto; margin: 10px 0 0 20px;">
+                    <a href="{% url 'user:my_user_profile' post.profile.user.id %}"><img src="{{ post.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;"></a>
+                </div>
+                <div style="margin-left: 10px; width:750px;" >
+                    <a href="{% url 'user:my_user_profile' post.profile.user.id %}" style="text-decoration: none; color: inherit;">
+                        <p style="margin-top: 25px; margin-bottom: 0;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
+                    </a>                            
+                    <p style="font-size: 12px;">{{ post.created_at|timesince }} ago </p>
+                </div>
+
+
+                <!-- Dropdown button "Options" -->
+                <div class="dropdown">
+                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
+                        Options
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <!-- First action with delete button -->
+                        <li>
+                            <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
+                                {% csrf_token %}
+                                <button class="dropdown-item" type="submit">Delete</button>
+                            </form>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Edit post</a></li>
+                    </ul>
+                </div>
+
+            </div>
+            
+            <!-- Text of the post -->
+            <div style="text-align: left; margin-bottom: 0; margin-left: 30px; margin-top: 0; padding-top: 5px; margin-left: 30px;">
+                {{ post.text | safe }}
+            </div>
+
+            <!-- Check if we have image in post -->
+            {% if post.image %}
+            <div style="text-align: center; margin-bottom: 30px;">
+                <img src="{{ post.image.url }}" alt="product" width="750" height="550" class="preview-img" style="border-radius: 1%;">
+            </div>
+            {% else %}
+            <!-- Do nothing -->
+            {% endif %}
+
+            <!-- Like button -->
+            <form action="{% url 'feed:like_unlike_post' %}" method="POST" class='like-form' id='{{post.id}}'>
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value={{post.id}}>
+                <div style="margin: 0 0 0 30px; display: flex; align-items: center;">
+                    <div style="flex-shrink: 0;">
+                        <button type="submit" class="ui button like-btn{{post.id}}">
+                            {% if authenticated_profile not in post.liked.all %}
+                                Like
+                            {% else %}
+                                Unlike
+                            {% endif %}
+                        </button>
+                    </div>
+                    <div style="margin-left: 10px;">
+                        <div class="like-count{{post.id}}">{{post.num_likes}}</div>
+                    </div>
+                    <div>
+                        <div>&nbsp;likes</div>
+                    </div>
+                </div>
+            </form>
+
+            <hr style="margin-left: 15px; margin-right: 15px;">
+
+            <!-- Comments  -->
+
+            {% if post.comments.all %}
+            <h5 style="margin-left: 40px; margin-bottom: 5px; font-size: 18px;">Comments:</h5>
+            {% endif %}
+
+            {% for comment in post.comments.all %}
+
+            <div style="margin-left: 60px; display: flex; justify-content: space-between; align-items: center;">
+                <div></div>
+                <div style=" text-align: left; margin-right: auto; margin: 10px 0 0 20px;">
+                    <a href="{% url 'user:my_user_profile' comment.profile.user.id %}" style="text-decoration: none; color: inherit;">
+                        <img src="{{ comment.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%; margin-bottom: 15px;">
+                    </a>
+                </div>
+                <div style="margin-left: 10px; width:750px;" >
+                    <a href="{% url 'user:my_user_profile' comment.profile.user.id %}" style="text-decoration: none; color: inherit;">
+                        <p style="margin-top: 10px; margin-bottom: 0; font-size: 16px;">{{ comment.profile.user.first_name }} {{ comment.profile.user.last_name }}</p>
+                    </a>
+                    <p style="margin-bottom: 0; font-size: 16px;">{{ comment.text }}</p>
+                    <p style="font-size: 12px; margin-top: 1px;">{{ comment.created_at|timesince }} ago </p>
+                </div>
+            </div>
+            
+            {% endfor %}
+
+            <!-- Leave a comment form -->
+            <form method="post" style="margin-top: 5px;">
+                {% csrf_token %}
+                <input type="hidden" name="post_id_comment" value="{{ post.id }}">
+                <div class="mb-3" style="width: 70%; margin: 0 auto;">
+                    <input type="text" class="form-control" placeholder="Leave a comment" name="text">
+                </div>
+                <button type="submit" style="display: block; margin: 10px 0 15px 0; margin-left: auto; margin-right: auto;">Leave comment</button>
+            </form>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.like-form').click(function(e) {
+            e.preventDefault()
+            
+            const post_id = $(this).attr('id')
+            
+            const likeText = $(`.like-btn${post_id}`).text()
+            const trim = $.trim(likeText)
+            
+            const url = $(this).attr('action')
+            
+            let res;
+            const likes = $(`.like-count${post_id}`).text()
+            const trimCount = parseInt(likes)
+            
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
+                    'post_id':post_id,
+                },
+                success: function(response) {
+                    if(trim == 'Unlike') {
+                        $(`.like-btn${post_id}`).text('Like')
+                        res = trimCount - 1
+                    } else {
+                        $(`.like-btn${post_id}`).text('Unlike')
+                        res = trimCount + 1
+                    }
+
+                    $(`.like-count${post_id}`).text(res)
+
+                },
+                error: function(response) {
+                    console.log('error', response)
+                }
+
+            })
+        });
+    });
+</script>
 {% endblock %}

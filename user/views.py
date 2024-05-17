@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import RegistrationForm, LoginForm, UserEditProfileForm, AlbumForm, PhotoForm
+from .forms import RegistrationForm, LoginForm, UserEditProfileForm, AlbumForm, PhotoForm, SubscriptionForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import Http404
-from .models import UserProfile, Album, Photo
+from .models import UserProfile, Album, Photo, Subscription
+from feed.forms import LeaveCommentForm
+from feed.forms import Comment
 
 from feed.models import Post, Like
 
@@ -54,18 +56,82 @@ def user_logout(request):
 @login_required
 def user_profile_page(request, user_id):
     ''' Users can access profiles page'''   
-    profile_user = User.objects.get(pk=user_id)
-    user_profile = profile_user.userprofile
+    passed_user = User.objects.get(pk=user_id)
+    passed_profile = UserProfile.objects.get(user=passed_user)
+    authenticated_profile = UserProfile.objects.get(user=request.user)
 
-    posts = Post.objects.filter(profile=user_profile).order_by('-created_at')
-    albums = Album.objects.filter(profile=user_profile).prefetch_related('photos')
+    posts_passed_profile = Post.objects.filter(profile=passed_profile).order_by('-created_at')
+    albums = Album.objects.filter(profile=passed_profile).prefetch_related('photos')
+
+    try:
+        button_status = Subscription.objects.get(subscriber=authenticated_profile, subscribed_to=passed_profile)
+    except:
+        button_status = False
+
+    if request.method == "GET":
+        comment_form = LeaveCommentForm()
+        sub_form = SubscriptionForm()
+
+    if request.method == "POST":
+        comment_form = LeaveCommentForm(request.POST)
+        sub_form = SubscriptionForm(request.POST)
+
+        # COMMENT
+        post_id = request.POST.get('post_id_comment')
+        try:
+            post_obj = Post.objects.get(id=post_id)
+        except:
+            post_obj = None
+        if post_obj:
+            if comment_form.is_valid():
+                text = comment_form.cleaned_data['text']
+                
+                comment = Comment.objects.create(profile=authenticated_profile, text=text, post=post_obj)
+                comment.save()
+                return redirect(request.META.get('HTTP_REFERER', '/'))
+            else:
+                pass
+        
+        # Subscription
+        profile_id = request.POST.get('profile_id')
+        
+
+        print(profile_id)
+        if profile_id:
+            if sub_form.is_valid():
+                profile_id = sub_form.cleaned_data['profile_id']
+                subscriber_profile = request.user.userprofile
+                print(subscriber_profile)
+                subscribed_to_profile = UserProfile.objects.get(user_id=profile_id)
+
+                # Check if a subscription already exists
+                subscription_exists = Subscription.objects.filter(
+                    subscriber=subscriber_profile,
+                    subscribed_to=subscribed_to_profile
+                ).exists()
+
+                # Create or delete the subscription
+                if subscription_exists:
+                    Subscription.objects.filter(
+                        subscriber=subscriber_profile,
+                        subscribed_to=subscribed_to_profile
+                    ).delete()
+                else:
+                    Subscription.objects.create(
+                        subscriber=subscriber_profile,
+                        subscribed_to=subscribed_to_profile
+                    )
+                
+                return redirect(request.META.get('HTTP_REFERER', '/'))
+
 
     context = {
-        'profile_user': profile_user, # passing the whole user object for more flexibility.
-        'user_profile': user_profile,
-        'posts': posts,
+        'profile_user': passed_user, # passing the whole user object for more flexibility.
+        'profile': passed_profile,
+        'posts': posts_passed_profile,
         'albums': albums,
-        'is_owner': request.user == profile_user,
+        'authenticated_profile': authenticated_profile,
+        'button_status': button_status,
     }
     return render(request, 'user/profile_page.html', context)
 
