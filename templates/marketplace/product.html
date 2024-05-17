@@ -2,26 +2,27 @@
 
 {% block content %}
 
+<!-- cart logo -->
 <div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <!-- Your main content here -->
-        </div>
-        <div class="col-md-6 d-flex justify-content-end" style="padding-top: 20px;">
-          <form class="d-flex">
-          
-            <a href="{% url 'marketplace:cart_summary' %}" class="btn btn-outline-dark">
-                <i class="bi-cart-fill me-1"></i>
-                <i class="fa-solid fa-cart-shopping"></i>
-                Cart
-                <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span></a>
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        </form>
-        </div>
-    </div>
+  <div class="row">
+      <div class="col-md-6">
+          <!-- Your main content here -->
+      </div>
+      <div class="col-md-6 d-flex justify-content-end" style="padding-top: 20px;">
+        <form class="d-flex">
+        
+          <a href="{% url 'marketplace:cart_summary' %}" class="btn btn-outline-dark">
+              <i class="bi-cart-fill me-1"></i>
+              <i class="fa-solid fa-cart-shopping"></i>
+              Cart
+              <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span></a>
+              <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+      </form>
+      </div>
   </div>
+</div>
 
-  <div class="container">
+<div class="container">
     <br>
     <div class="card mb-3">
         <div class="row g-0">
@@ -44,30 +45,26 @@
                         {% endif %}
                     </div>
                     <br><br>
-                    <div class="row justify-content-center">
-                        <div class="col-md-2">Quantity:</div>
-                        <div class="col-md-2">
-                            <select class="form-select form-select-sm" id="qty-cart">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
+                    <form method="post" action="{% url 'marketplace:cart_add' %}">
+                        {% csrf_token %}
+                        <div class="row justify-content-center">
+                            <div class="col-md-2">Quantity:</div>
+                            <div class="col-md-2">
+                                <input type="number" class="form-control form-select-sm" name="product_qty" id="qty-cart" min="1" value="1">
+                            </div>
                         </div>
-                    </div>
-                    <br><br>
-                    <div class="text-center">
-                        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-secondary">Home</a>
-                        <button class="btn btn-secondary add-to-cart" data-product-id="{{ product.id }}">Add to Cart</button>
-                    </div>
+                        <br><br>
+                        <div class="text-center">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="btn btn-outline-dark mt-auto">Add to Cart</button>
+                            <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
-  
-
 {% endblock %}
+

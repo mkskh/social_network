@@ -75,26 +75,21 @@ def cart_summary(request):
 
 def cart_add(request):
     cart = Cart(request)
-    product_id_str = request.POST.get('product_id')
-    if product_id_str:
-        product_id = int(product_id_str)
-        product_qty = int(request.POST.get('product_qty'))
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        product_qty = request.POST.get('product_qty', 1)
         product = get_object_or_404(Product, id=product_id)
-        cart.add(product=product, quantity=product_qty)
-
+        cart.add(product=product, quantity=int(product_qty))
         
-        cart_quantity = cart.__len__()
-        response = JsonResponse({'qty': cart_quantity})
-
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('marketplace:marketplace_page')))
     else:
-        response = HttpResponseRedirect(reverse('marketplace:marketplace_page'))
-
-    return response
+        return redirect('marketplace:marketplace_page')
 
 
-def cart_delete(request, product_id):
-    
-    cart = Cart(request)
-    product = get_object_or_404(Product, id=product_id)
-    cart.remove(product)
-    return redirect('cart_summary')
+def cart_delete(request):
+    if request.method == 'POST':
+        cart = Cart(request)
+        product_id = request.POST.get('product_id')
+        product = get_object_or_404(Product, id=product_id)
+        cart.remove(product)
+        return redirect('marketplace:cart_summary')

@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
+
 {% block content %}
-    
+
+<!-- cart logo -->
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -19,7 +21,7 @@
         </form>
         </div>
     </div>
-  </div>
+</div>
 
 <br>
 <div class="container">
@@ -30,7 +32,7 @@
         <div class="card mb-3">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+                    <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="{{ product.name }}">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -43,38 +45,31 @@
                                 <span class="badge bg-danger text-white ms-2">Sale</span>
                             {% else %}
                                 €{{ product.price }}
-                                <br>ID : {{ product.id }}
+                                <br>
+                                <p class="product-id" id="product-id">ID : {{ product.id }}</p>
                             {% endif %}
                             <br><br>
-                            <div class="row justify-content-center">
-                                <div class="col-md-2">Quantity:</div>
-                                <div class="col-md-2">
-                                    <select class="form-select form-select-sm quantity-select" id="select{{ product.id }}">
-                                        
-
-                                {% for key, value in quantities.items %}
-                                    {% if key == product.id|slugify %}
-                                <option selected>{{ value }}</option>
-                                    {% endif %}
-                                {% endfor %}
-
-                                        
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <br><br>
-                            <div class="row justify-content-center">
-                                <div class="col-md-6">
-                                     <button type="button" class="btn btn-danger delete-product" data-product-id="{{ product.id }}">Delete</button>
+                            <form method="post" action="{% url 'marketplace:cart_delete' %}">
+                                {% csrf_token %}
+                                <div class="row justify-content-center">
                                     
-                                    <button class="btn btn-primary">Buy Product</button>
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <div class="col-md-2">
+                                        <button type="submit" class="btn btn-primary">Delete</button>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
+                                    </div>
                                 </div>
-                            </div>                                
+                            </form>
+                            <br><br>
+                            <form method="post" action="{% url 'marketplace:cart_delete' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <div class="row justify-content-center">
+                                    
+                                </div>                                
+                            </form>                            
                         </center>
                     </div>
                 </div>
@@ -87,64 +82,5 @@
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 {% endif %}
 </div>
-
-    <script>
-    $(document).ready(function(){
-        $('.quantity-select').change(function(){
-            
-            var selectedQuantity = $(this).val();
-            console.log(selectedQuantity); 
-    
-            
-            var productId = $(this).closest('.card').find('.product-id').val();
-    
-            
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'marketplace:cart_summary' %}",
-                data: {
-                    product_id: productId,
-                    quantity: selectedQuantity,
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    action: 'post'
-                },
-                success: function(data){
-                    
-                    console.log("Quantity updated successfully!");
-                },
-                error: function(xhr, errmsg, err){
-                    
-                    console.log("Error updating quantity:", errmsg);
-                }
-            });
-        });
-    });
-    </script>
-  
-
-
-  <script>
-    $(document).ready(function(){
-        $('.delete-product').click(function(){
-            var productId = $(this).data('product-id');
-            
-            $.ajax({
-                type: 'POST',
-                url: "{% url 'marketplace:cart_delete' %}",
-                data: {
-                    product_id: productId,  // Pass the product_id parameter
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                },
-                success: function(data){
-                    // Reload the cart summary page or update the UI as needed
-                    window.location.reload(); // Example: reload the page
-                },
-                error: function(xhr, errmsg, err){
-                    console.log("Error deleting product:", errmsg);
-                }
-            });
-        });
-    });
-    </script>
 
 {% endblock %}
