@@ -80,17 +80,27 @@ WSGI_APPLICATION = "conf.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DB_NAME2'),
+#         'USER': os.getenv('DB_USER2'),
+#         'PASSWORD': os.getenv('DB_PASSWORD2'),
+#         'HOST': os.getenv('DB_HOST2'),
+#         'PORT': os.getenv('DB_PORT2'),
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME2'),
-        'USER': os.getenv('DB_USER2'),
-        'PASSWORD': os.getenv('DB_PASSWORD2'),
-        'HOST': os.getenv('DB_HOST2'),
-        'PORT': os.getenv('DB_PORT2'),
+        'NAME': 'api_user_social_network',                      
+        'USER': 'api_user_sn_admin',
+        'PASSWORD': 'testapi1234',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
-
 
 
 # Password validation
