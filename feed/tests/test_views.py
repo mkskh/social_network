@@ -22,6 +22,8 @@ class TestViews(TestCase):
         self.post = Post.objects.create(profile=self.user_profile, text='Test')
 
         self.like_unlike_post_url = reverse('feed:like_unlike_post')
+        self.delete_post_url = reverse('feed:delete_post', args=[1])
+
 
     def test_news_feed_GET(self):
         response = self.client.get(self.news_feed_url)
@@ -32,16 +34,20 @@ class TestViews(TestCase):
 
     def test_news_feed_POST_add_comment(self):
 
+        self.assertFalse((self.post.comments).exists())
+
         Comment.objects.create(
             profile=self.user_profile, 
             text='Test comment', 
             post=self.post
         )
-
+        
         response = self.client.post(self.news_feed_url, {
             'text': 'Test comment',
             'post_id': self.post.id 
         })
+
+        self.assertTrue((self.post.comments).exists())
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse('feed:news_feed'))
@@ -65,6 +71,16 @@ class TestViews(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.post.num_likes(), initial_likes_count + 1)
 
+
+    def test_delete_post_POST(self):
+
+        self.assertTrue(Post.objects.filter(profile=self.user_profile, text='Test').exists())
+
+        response = self.client.post(self.delete_post_url)
+
+        self.assertEqual(response.status_code, 302)
+
+        self.assertFalse(Post.objects.filter(profile=self.user_profile, text='Test').exists())
 
 
 
