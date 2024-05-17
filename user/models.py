@@ -32,6 +32,21 @@ class UserProfile(models.Model):
             return age
         else:
             return None
+    
+    def capitalized_gender(self):
+        return (self.gender).capitalize()
+    
+    def dob_another_format(self):
+        input_date_string = str(self.date_of_birth)
+        parsed_date = datetime.strptime(input_date_string, "%Y-%m-%d")
+        formatted_date = parsed_date.strftime("%d %B %Y")
+        return (formatted_date)
+    
+    def count_subscribers(self):
+        return self.subscribers.count()
+    
+    def count_subscribed_to(self):
+        return self.subscriptions.count()
 
 
 
@@ -56,15 +71,9 @@ class Photo(models.Model):
         return f"Photo {self.id} in {self.album.title} by {self.album.profile.user.username}"
 
 
-class Subscribers(models.Model):
-    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+class Subscription(models.Model):
+    subscriber = models.ForeignKey(UserProfile, related_name="subscriptions", on_delete=models.CASCADE)
+    subscribed_to = models.ForeignKey(UserProfile, related_name="subscribers", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.profile.user.username
-
-
-class Subscribed(models.Model):
-    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.profile.user.username
+        return f"{self.subscriber} subscribed to {self.subscribed_to}"

@@ -77,3 +77,7 @@ class PhotoForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'cols': 80, 'rows': 20}),
         }
+
+
+class SubscriptionForm(forms.Form):
+    profile_id = forms.IntegerField(widget=forms.HiddenInput())
