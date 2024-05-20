@@ -27,5 +27,6 @@ urlpatterns = [
     path('feed/', include('feed.urls', namespace='feed')),
     path('marketplace/', include('marketplace.urls', namespace='marketplace')),
     path('search/', include('search.urls', namespace='search')),
+    path('messaging/', include('messaging.urls', namespace='messaging')),
     
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
