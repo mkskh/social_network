@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+
 from .models import Thread, Message
 from .forms import MessageForm
 from django.contrib.auth.models import User
@@ -34,6 +36,13 @@ def thread_detail(request, pk):
 @login_required
 def start_thread(request, user_id):
     user = User.objects.get(id=user_id)
-    thread = Thread.objects.create()
-    thread.participants.add(request.user, user)
+
+    existing_threads = Thread.objects.filter(Q(participants=request.user) & Q(participants=user)
+                        ).distinct().first()
+    
+    if existing_threads:
+        thread = existing_threads
+    else:
+        thread = Thread.objects.create()
+        thread.participants.add(request.user, user)
     return redirect(f'/messaging/thread/{thread.pk}/')
