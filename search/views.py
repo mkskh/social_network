@@ -98,7 +98,6 @@ def search(request):
             if sub_form.is_valid():
                 profile_id = sub_form.cleaned_data['profile_id']
                 subscriber_profile = request.user.userprofile
-                print(subscriber_profile)
                 subscribed_to_profile = UserProfile.objects.get(user_id=profile_id)
 
                 # Check if a subscription already exists

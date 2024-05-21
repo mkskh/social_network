@@ -15,6 +15,7 @@ def thread_list(request):
         unread_count=Count('messages', filter=Q(messages__timestamp__gt=ThreadUser.objects.filter(
             user=request.user, thread=models.OuterRef('pk')).values('last_read')[:1]))
     )
+
     return render(request, 'messaging/thread_list.html', {'threads': threads})
 
 
@@ -43,13 +44,13 @@ def thread_detail(request, pk):
 
 @login_required
 def start_thread(request, user_id):
-    user = User.objects.get(id=user_id)
-    existing_threads = Thread.objects.filter(Q(participants=request.user) & Q(participants=user)).distinct().first()
+    another_user = get_object_or_404(User, id=user_id)
+    existing_thread = Thread.objects.filter(participants=request.user).filter(participants=another_user).first()
 
-    if existing_threads:
-        thread = existing_threads
+    if existing_thread:
+        thread = existing_thread
     else:
         thread = Thread.objects.create()
-        thread.participants.add(request.user, user)
+        thread.participants.add(request.user, another_user)
 
     return redirect(f'/messaging/thread/{thread.pk}/')
