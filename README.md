@@ -10,6 +10,8 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
+- Added "Subscribe" and "Send a message" buttons on the Search page
+- Implemented Messaging system + notification of new message
 - Implemented Subscription system
 - Finished User profile page
 - Search system on Search page implemented
