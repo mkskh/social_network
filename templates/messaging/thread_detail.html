@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>Thread between {{ thread }}</h2>
+    <div>
+        {% for message in thread.messages.all %}
+            <p><strong>{{ message.sender.username }}:</strong> {{ message.content }}</p>
+        {% endfor %}
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Send</button>
+    </form>
+
+{% endblock %}

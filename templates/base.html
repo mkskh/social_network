@@ -32,6 +32,7 @@
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hello, {{ user.username }}</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="{% url 'user:my_user_profile' user.id %}">My Profile</a></li> 
+                                <li><a class="dropdown-item" href="{% url 'messaging:thread_list' %}">Messages</a></li> 
                                 <li><a class="dropdown-item" href="{% url 'user:edit_profile' user.id %}">Edit my profile</a></li>
                                 <li><a class="dropdown-item" href="{% url 'marketplace:added_products' %}">Your Products</a></li>
                                 <li>

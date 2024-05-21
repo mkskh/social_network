@@ -39,6 +39,12 @@
         </form>
     </div>
 
+    <!-- Messaging -->
+
+    <div>
+        <a href="{% url 'messaging:start_thread' profile.user.id %}">Send a message</a>
+    </div>
+
     <!-- User Info and Description -->
     <div class="card-container" style="text-align: center; padding-top: 70px;">
 
