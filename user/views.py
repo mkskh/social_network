@@ -95,8 +95,6 @@ def user_profile_page(request, user_id):
         # Subscription
         profile_id = request.POST.get('profile_id')
         
-
-        print(profile_id)
         if profile_id:
             if sub_form.is_valid():
                 profile_id = sub_form.cleaned_data['profile_id']

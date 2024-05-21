@@ -8,6 +8,7 @@ from .models import Thread, Message, ThreadUser
 from .forms import MessageForm
 from django.contrib.auth.models import User
 
+
 @login_required
 def thread_list(request):
     threads = request.user.threads.annotate(
@@ -15,6 +16,7 @@ def thread_list(request):
             user=request.user, thread=models.OuterRef('pk')).values('last_read')[:1]))
     )
     return render(request, 'messaging/thread_list.html', {'threads': threads})
+
 
 @login_required
 def thread_detail(request, pk):
