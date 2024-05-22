@@ -14,7 +14,7 @@ def thread_list(request):
     threads = request.user.threads.annotate(
         unread_count=Count('messages', filter=Q(messages__timestamp__gt=ThreadUser.objects.filter(
             user=request.user, thread=models.OuterRef('pk')).values('last_read')[:1]))
-    )
+    ).order_by('-created')
 
     return render(request, 'messaging/thread_list.html', {'threads': threads})
 
@@ -34,6 +34,7 @@ def thread_detail(request, pk):
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.save(commit=False)
+            message.content = request.POST['content']
             message.thread = thread
             message.sender = request.user
             message.save()
