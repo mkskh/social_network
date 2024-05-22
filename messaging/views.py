@@ -27,6 +27,7 @@ def thread_detail(request, pk):
 
     thread_user, created = ThreadUser.objects.get_or_create(user=request.user, thread=thread)
     thread_user.last_read = timezone.now()
+    thread_user.unread_count = 0
     thread_user.save()
 
     if request.method == 'POST':
@@ -36,6 +37,10 @@ def thread_detail(request, pk):
             message.thread = thread
             message.sender = request.user
             message.save()
+
+            # Increment unread count for other participants
+            ThreadUser.objects.filter(thread=thread).exclude(user=request.user).update(unread_count=models.F('unread_count'))
+
             return redirect(f'/messaging/thread/{thread.pk}/')
     else:
         form = MessageForm()
@@ -52,5 +57,8 @@ def start_thread(request, user_id):
     else:
         thread = Thread.objects.create()
         thread.participants.add(request.user, another_user)
+
+        ThreadUser.objects.create(user=request.user, thread=thread, unread_count=0)
+        ThreadUser.objects.create(user=another_user, thread=thread, unread_count=1)
 
     return redirect(f'/messaging/thread/{thread.pk}/')

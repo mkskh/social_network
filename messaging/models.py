@@ -25,6 +25,7 @@ class ThreadUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
     last_read = models.DateTimeField(auto_now_add=True)
+    unread_count = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ('user', 'thread')
