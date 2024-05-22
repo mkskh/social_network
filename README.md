@@ -10,6 +10,7 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
+- Created tests for "Feed" app
 - Created design for messaging templates 
 - Added "Subscribe" and "Send a message" buttons on the Search page
 - Implemented Messaging system + notification of new message

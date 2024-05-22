@@ -2,16 +2,33 @@
 
 {% block content %}
 
-    <div style="margin: 30px 100px 5px 100px; text-align: center; padding: 15px 0 10px 0; background-color: rgb(226, 226, 226);" class="card">
+    <div style="margin: 30px auto 5px auto; text-align: center; padding: 15px 0 10px 0; background-color: rgb(236, 236, 236); width: 1100px;" class="card">
         <form method="post" style="display: inline-block; vertical-align: top;">
             {% csrf_token %}
-            {% for field in form %}
+            <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                <div class="mb-3" style="width: 20%; margin: 0 auto;">
+                    <input type="text" class="form-control" placeholder="Search" name="content">
+                </div>
+                <div class="mb-3" style="width: 20%; margin: 0 auto;">
+                    <input type="text" class="form-control" placeholder="City" name="content">
+                </div>
+                <div class="mb-3" style="width: 12%; margin: 0 auto;">
+                    <select class="form-control" name="messageType">
+                        <option value="" disabled selected>Select gender</option>
+                        <option value="text">Male</option>
+                        <option value="image">Female</option>
+                    </select>
+                </div>
+                <div class="mb-3" style="width: 14%; margin: 0 auto;">
+                    <input type="number" class="form-control" placeholder="Age more than" name="content">
+                </div>
+                <div class="mb-3" style="width: 14%; margin: 0 auto;">
+                    <input type="number" class="form-control" placeholder="Age less than" name="content">
+                </div>
+                <button type="submit" class="btn btn-secondary" style="vertical-align: top; margin-right: 15px; margin-left: 11px; height: 39px;">Search</button>
+            </div>
 
-            {{ field.label_tag }}
-            {{ field }}
-
-            {% endfor %}
-            <button type="submit" class="btn btn-secondary" style="vertical-align: top; margin-left: 35px;">Search</button>
+            
         </form>
     </div>
 
