@@ -34,7 +34,7 @@ def thread_detail(request, pk):
         form = MessageForm(request.POST)
         if form.is_valid():
             message = form.save(commit=False)
-            message.content = request.POST['content']
+            message.content = form.cleaned_data['content']
             message.thread = thread
             message.sender = request.user
             message.save()
