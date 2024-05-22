@@ -15,8 +15,6 @@ def news_feed(request):
     posts = models.Post.objects.all().order_by('-created_at')
     profile = UserProfile.objects.get(user=request.user)
 
-    print(request.user)
-
     #recommended profiles
     all_profiles = UserProfile.objects.all()
 
@@ -28,7 +26,7 @@ def news_feed(request):
         else:
             sorted_profiles_list.append(profile_item)
     
-    recommended_profiles = random.sample(sorted_profiles_list, 4)
+    recommended_profiles = random.sample(sorted_profiles_list, min(4, len(sorted_profiles_list))) if len(sorted_profiles_list) > 3 else sorted_profiles_list
 
     if request.method == "GET":
 
@@ -107,9 +105,6 @@ def like_unlike_post(request):
 
         return JsonResponse(data, safe=False)
 
-
-from django.shortcuts import redirect
-from django.contrib import messages
 
 def delete_post(request, post_id):
     if request.method == "POST":

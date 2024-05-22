@@ -31,19 +31,17 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hello, {{ user.username }}</a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">My Profile</a></li>
-                                <li><a class="dropdown-item" href="#">Edit Info</a></li>
-                                <li><a class="dropdown-item" href="{% url 'marketplace:added_products' %}">Your Products</a></li>
-                                <li><a class="dropdown-item" href="{% url 'user:my_user_profile' user.id %}">My Profile</a></li>  <!-- added my profile link in top menu-->
+                                <li><a class="dropdown-item" href="{% url 'user:my_user_profile' user.id %}">My Profile</a></li> 
+                                <li><a class="dropdown-item" href="{% url 'messaging:thread_list' %}">Messages</a></li> 
                                 <li><a class="dropdown-item" href="{% url 'user:edit_profile' user.id %}">Edit my profile</a></li>
-                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="{% url 'marketplace:added_products' %}">Your Products</a></li>
                                 <li>
                                     <a href="{% url 'marketplace:cart_summary' %}" class="dropdown-item" style="text-decoration: none; color: black;">
                                         Shopping Cart
                                         <span class="badge bg-dark text-white ms-1 rounded-pill" id="cart_quantity">{{ cart|length }}</span>
                                     </a>
-                                
                                 </li>
+                                <li><hr class="dropdown-divider" /></li>
                                 <li><a class="dropdown-item" href="{% url 'user:logout' %}">Log Out</a></li>
                             </ul>
                         </li>
