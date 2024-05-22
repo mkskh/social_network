@@ -13,37 +13,47 @@
         <div style="position: absolute; top: calc(105%); left: calc(23%);">
             <h1>{{ profile_user.first_name }} {{ profile_user.last_name }}</h1>
         </div>
+        <!-- Subscribers -->
+        <div style="position: absolute; top: calc(110%); left: calc(53%);">
+            <h5>Subscribers: {{ profile.count_subscribers }}</h5>
+        </div>
+        <!-- Subscription -->
+        <div style="position: absolute; top: calc(110%); left: calc(64%);">
+            <h5>Subscription: {{ profile.count_subscribed_to }}</h5>
+        </div>
+        {% if profile_user != request.user %}
+        <!-- Messaging -->
+        <div style="position: absolute; top: calc(109%); left: calc(80%);">
+            <a href="{% url 'messaging:start_thread' profile.user.id %}">
+                <button>Send a message</button>
+            </a>
+        </div>
+        <!-- Subscription -->
+        <div style="position: absolute; top: calc(109%); left: calc(91%);">
+            <form method="POST">
+
+                {% csrf_token %}
+                <input type="hidden" name="profile_id" value={{profile.user.id}}>
+    
+                <button type="submit">
+                    {% if button_status %}
+                        Unsubscribe
+                    {% else %}
+                        Subscribe
+                    {% endif %}
+                </button>
+    
+            </form>
+        </div>
+        {% else %}
+            <!-- do nothing -->
+        {% endif %}
+        
     </div>
     
     <!-- Clearfix to adjust flow after absolute positioning -->
     <div style="clear: both; margin-top: 100px;"></div>
 
-    <!-- Subscription -->
-    <div style="text-align: center;">
-        <p>Subscribers: {{ profile.count_subscribers }}</p>
-        <p>Subscription: {{ profile.count_subscribed_to }}</p>
-
-        <form method="POST">
-
-            {% csrf_token %}
-            <input type="hidden" name="profile_id" value={{profile.user.id}}>
-
-            <button type="submit">
-                {% if button_status %}
-                    Unsubscribe
-                {% else %}
-                    Subscribe
-                {% endif %}
-            </button>
-
-        </form>
-    </div>
-
-    <!-- Messaging -->
-
-    <div>
-        <a href="{% url 'messaging:start_thread' profile.user.id %}">Send a message</a>
-    </div>
 
     <!-- User Info and Description -->
     <div class="card-container" style="text-align: center; padding-top: 70px;">
