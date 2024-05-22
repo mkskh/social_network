@@ -7,23 +7,31 @@
             {% csrf_token %}
             <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
                 <div class="mb-3" style="width: 20%; margin: 0 auto;">
-                    <input type="text" class="form-control" placeholder="Search" name="content">
+                    <input type="text" class="form-control" placeholder="Search" name="search" value="{{ form.search.value|default_if_none:'' }}">
                 </div>
                 <div class="mb-3" style="width: 20%; margin: 0 auto;">
-                    <input type="text" class="form-control" placeholder="City" name="content">
+                    <input type="text" class="form-control" placeholder="City" name="city" value="{{ form.city.value|default_if_none:'' }}">
                 </div>
                 <div class="mb-3" style="width: 12%; margin: 0 auto;">
-                    <select class="form-control" name="messageType">
-                        <option value="" disabled selected>Select gender</option>
-                        <option value="text">Male</option>
-                        <option value="image">Female</option>
+                    <select class="form-control" name="gender">
+                        {% if form.gender.value == "MALE" %}
+                            <option value="MALE">Male</option>
+                            <option value="FEMALE">Female</option>
+                        {% elif form.gender.value == "FEMALE" %}
+                            <option value="FEMALE">Female</option>
+                            <option value="MALE">Male</option>
+                        {% else %}
+                            <option value="" disabled selected>Select gender</option>
+                            <option value="MALE">Male</option>
+                            <option value="FEMALE">Female</option>
+                        {% endif %}
                     </select>
                 </div>
                 <div class="mb-3" style="width: 14%; margin: 0 auto;">
-                    <input type="number" class="form-control" placeholder="Age more than" name="content">
+                    <input type="number" class="form-control" placeholder="Age more than" name="age_more_than" value="{{ form.age_more_than.value }}">
                 </div>
                 <div class="mb-3" style="width: 14%; margin: 0 auto;">
-                    <input type="number" class="form-control" placeholder="Age less than" name="content">
+                    <input type="number" class="form-control" placeholder="Age less than" name="age_less_than" value="{{ form.age_less_than.value }}">
                 </div>
                 <button type="submit" class="btn btn-secondary" style="vertical-align: top; margin-right: 15px; margin-left: 11px; height: 39px;">Search</button>
             </div>
@@ -85,7 +93,7 @@
 
         <div style="text-align: center; margin-bottom: 16px;">
             <a href="{% url 'search:search' %}">
-                <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 80px;">Go back</button>
+                <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 100px;">Reset filter</button>
             </a>
         </div>
 
