@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'django.contrib.humanize',
     'search',
+    'messaging',
 ]
 
 MIDDLEWARE = [
