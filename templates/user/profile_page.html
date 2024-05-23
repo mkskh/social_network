@@ -19,11 +19,13 @@
         </div>
         <!-- Subscription -->
         <div style="position: absolute; top: calc(110%); left: calc(64%);">
-            <h5>Subscription: {{ profile.count_subscribed_to }}</h5>
+            <h5>Subscriptions: {{ profile.count_subscribed_to }}</h5>
         </div>
+
+        <!-- If I go to a page of another user -->
         {% if profile_user != request.user %}
         <!-- Messaging -->
-        <div style="position: absolute; top: calc(109%); left: calc(80%);">
+        <div style="position: absolute; top: calc(109%); left: calc(79%);">
             <a href="{% url 'messaging:start_thread' profile.user.id %}">
                 <button>Send a message</button>
             </a>
@@ -45,8 +47,14 @@
     
             </form>
         </div>
+
+        <!-- If I go to my own page -->
         {% else %}
-            <!-- do nothing -->
+            <div style="position: absolute; top: calc(109%); left: calc(85%);">
+                <a href="{% url 'user:edit_profile' user.id %}">
+                    <button>Edit my profile</button>
+                </a>
+            </div>
         {% endif %}
         
     </div>
@@ -58,26 +66,59 @@
     <!-- User Info and Description -->
     <div class="card-container" style="text-align: center; padding-top: 70px;">
 
+        <!-- User Info -->
         <div class="card" style="display: inline-block; background-color: rgb(235, 235, 235); text-align: left; width: 30%; 
                                 height: 210px; vertical-align: top; margin-right: 45px; padding: 15px;">
             <h4 style="text-align: center;">User Info:</h4>
-            <p><strong>Gender:</strong> {{ profile.capitalized_gender }}</p>
-            <p><strong>Location:</strong> {{ profile.location }}</p>
-            <p><strong>Phone:</strong> {{ profile.phone }}</p>
-            <p><strong>Date of Birth:</strong> {{ profile.dob_another_format }} ({{ profile.age }} years old)</p>
+            <p><strong>Gender:</strong> 
+                {% if profile.capitalized_gender %}
+                    {{ profile.capitalized_gender }}
+                {% else %}
+                    <!-- empty field -->
+                {% endif %}
+            </p>
+            <p><strong>Location:</strong> 
+                {% if profile.location %}
+                    {{ profile.location }}
+                {% else %}
+                    <!-- empty field -->
+                {% endif %}
+            </p>
+            <p><strong>Phone:</strong> 
+                {% if profile.phone %}
+                    {{ profile.phone }}
+                {% else %}
+                    <!-- empty field -->
+                {% endif %}
+            </p>
+            <p><strong>Date of Birth:</strong> 
+                {% if profile.dob_another_format %}
+                    {{ profile.dob_another_format }} ({{ profile.age }} years old)
+                {% else %}
+                    <!-- empty field -->
+                {% endif %}
+            </p>
         </div>
-    
+        
+        <!-- About me -->
         <div class="card" style="background-color: rgb(235, 235, 235); height: 210px; display: inline-block; text-align: left; 
                                 margin-bottom: 10px; width: 30%; vertical-align: top; margin-left: 45px; padding: 15px;">
             <h4 style="text-align: center;">About me:</h4>
-            <p>{{ profile.description }}</p>
+            {% if profile.description %}
+                <p>{{ profile.description }}</p>
+            {% else %}
+                <!-- empty field -->
+            {% endif %}
         </div>
     
     </div>
 
+
     <!-- MY POSTS -->
     <div class="card" style="width: 65%; align-items: center; margin: 25px auto 25px auto;">
         <h3 style="margin: 20px;">My posts:</h3>
+
+        {% if posts %}
 
         {% for post in posts %}
         <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
@@ -191,6 +232,14 @@
 
         </div>
         {% endfor %}
+
+        {% else %}
+            <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
+                                    margin-bottom: 30px; padding: 30px; align-items: center;">
+                <h5>You haven't published any post yet. </h5>
+                <h5>Once you do this you will see all your posts here.</h5>
+            </div>
+        {% endif  %}
 
     </div>
 
