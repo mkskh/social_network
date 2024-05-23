@@ -10,6 +10,8 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
+- Created tests for "Feed" app
+- Created design for messaging templates 
 - Added "Subscribe" and "Send a message" buttons on the Search page
 - Implemented Messaging system + notification of new message
 - Implemented Subscription system
@@ -41,4 +43,12 @@ Also, each user can create an advertisement for the sale (or give away for free)
 ### User profile page:
   
 ![User profile](./media/for_readme/user_profile.png) 
+  
+### Messages system. Page with all Chats:  
+  
+![Chats](./media/for_readme/chats.png) 
+  
+### Messages system. Page "Chat with another user":  
+  
+![Chats_with](./media/for_readme/chat_with.png) 
   
