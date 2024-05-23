@@ -44,3 +44,11 @@ Also, each user can create an advertisement for the sale (or give away for free)
   
 ![User profile](./media/for_readme/user_profile.png) 
   
+### Messages system. Page with all Chats:  
+  
+![Chats](./media/for_readme/chats.png) 
+  
+### Messages system. Page "Chat with another user":  
+  
+![Chats_with](./media/for_readme/chat_with.png) 
+  
