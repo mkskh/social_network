@@ -29,11 +29,17 @@ class SignUpForm(UserCreationForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'price', 'category', 'image']
+        fields = ['name', 'description', 'price', 'category', 'image', 'condition']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Name'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Description'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Price'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'condition': forms.Select(attrs={'class': 'form-control'}),
         }
+
+class PriceRangeForm(forms.Form):
+    product_name = forms.CharField(required=False)
+    price_min = forms.DecimalField(min_value=0, max_digits=10, decimal_places=2, required=False)
+    price_max = forms.DecimalField(min_value=0, max_digits=10, decimal_places=2, required=False)

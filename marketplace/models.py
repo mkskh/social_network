@@ -24,14 +24,22 @@ class Customer(models.Model):
         return f'{self.first_name} {self.last_name}'
 
 class Product(models.Model):
+    CONDITION_CHOICES = [
+        ('new', 'New'),
+        ('used', 'Used'),
+        ('refurbished', 'Refurbished')
+    ]
+
     name = models.CharField(max_length=100)
     price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1)
-    description = models.CharField(max_length=500, default='', blank=True, null=True)
+    description = models.CharField(max_length=700, default='', blank=True, null=True)
     image = models.ImageField(upload_to='upload/products')
+    quantity = models.IntegerField(default=55)
     is_sale = models.BooleanField(default=False)
     sale_price = models.DecimalField(default=0, decimal_places=2, max_digits=6)
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seller_detail', null=True, blank=True)
+    condition = models.CharField(max_length=12, choices=CONDITION_CHOICES, default='new')
 
     def __str__(self):
         return self.name + '   ' + str(self.id)
@@ -47,3 +55,17 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.product)
+    
+
+    
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class CartItem(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.quantity} of {self.product.name}"

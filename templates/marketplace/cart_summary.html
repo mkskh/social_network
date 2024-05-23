@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
-
-<!-- cart logo -->
 <div class="container">
     <div class="row">
         <div class="col-md-6">
@@ -21,62 +18,136 @@
 
 <br>
 <div class="container">
-{% if cart_products %}
-    {% for product in cart_products %}
-        
-        <br>
-        <div class="card mb-3">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="{{ product.name }}">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <center> 
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">{{ product.description }}</p>
-                            {% if product.is_sale %}
-                                <span class="text-muted"><strike>€{{ product.price }}</strike></span>
-                                <span class="text-danger ms-2">€{{ product.sale_price }}</span>
-                                <span class="badge bg-danger text-white ms-2">Sale</span>
-                            {% else %}
-                                €{{ product.price }}
-                                <br>
-                                <p class="product-id" id="product-id">ID : {{ product.id }}</p>
-                            {% endif %}
-                            <br><br>
-                            <form method="post" action="{% url 'marketplace:cart_delete' %}">
-                                {% csrf_token %}
+    {% if cart_products %}
+        {% for item in cart_products %}
+            <br>
+            <div class="card mb-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ item.product.image.url }}" class="img-fluid rounded-start" alt="{{ item.product.name }}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <center>
+                                <h5 class="card-title">{{ item.product.name }}</h5>
+                                <p class="card-text">{{ item.product.description }}</p>
+                                {% if item.product.is_sale %}
+                                    <span class="text-muted"><strike>€{{ item.product.price }}</strike></span>
+                                    <span class="text-danger ms-2">€{{ item.product.sale_price }}</span>
+                                    <span class="badge bg-danger text-white ms-2">Sale</span>
+                                {% else %}
+                                    €{{ item.product.price }}
+                                    <br>
+                                    <p class="product-id" id="product-id">ID : {{ item.product.id }}</p>
+                                {% endif %}
+                                <br><br>
                                 <div class="row justify-content-center">
-                                    
-                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <div class="col-md-2">Number of Products:</div>
                                     <div class="col-md-2">
-                                        <button type="submit" class="btn btn-primary">Delete</button>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
+                                        <input type="number" 
+                                               class="form-control form-select-sm product-quantity" 
+                                               data-price="{{ item.product.price }}" 
+                                               data-id="{{ item.product.id }}" 
+                                               name="product_qty" 
+                                               id="qty-cart-{{ item.product.id }}" 
+                                               min="1" 
+                                               value="1">
                                     </div>
                                 </div>
-                            </form>
-                            <br><br>
-                            <form method="post" action="{% url 'marketplace:cart_delete' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="product_id" value="{{ product.id }}">
-                                <div class="row justify-content-center">
-                                    
-                                </div>                                
-                            </form>                            
-                        </center>
+                                <br>
+                                <p>Total Price: <span class="total-price" id="total-price-{{ item.product.id }}">{{ item.total_price }}</span></p>
+                                <form method="post" action="{% url 'marketplace:cart_delete' %}" onsubmit="removeQuantityFromLocalStorage('{{ item.product.id }}');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </center>
+                        </div>
                     </div>
                 </div>
             </div>
+        {% endfor %}
+    {% else %}
+        <h1>There's Nothing In Your Cart...</h1>
+    {% endif %}
+
+    {% if cart_products %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <hr>
+                <h4 class="text-center">Total Price: <span id="total-cart-price">0.00</span></h4>
+            </div>
         </div>
-    {% endfor %}
-</div>
-{% else %}
-    <h1>There's Nothing In Your Cart...</h1>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-{% endif %}
+    {% endif %}
+
+    <div style="margin-bottom: 400px;"></div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.product-quantity');
+
+        inputs.forEach(input => {
+            const productId = input.getAttribute('data-id');
+            const storedQuantity = localStorage.getItem(`cart_quantity_${productId}`);
+            if (storedQuantity) {
+                input.value = storedQuantity;
+                updateQuantityAndPrice(input);
+            }
+
+            input.addEventListener('change', function() {
+                updateQuantityAndPrice(this);
+            });
+        });
+
+        calculateTotalCartPrice();
+    });
+
+    function updateQuantityAndPrice(input) {
+        const productId = input.getAttribute('data-id');
+        const price = parseFloat(input.getAttribute('data-price'));
+        const quantity = parseInt(input.value);
+        const totalPriceElement = document.getElementById(`total-price-${productId}`);
+        const totalPrice = price * quantity;
+
+        totalPriceElement.textContent = totalPrice.toFixed(2);
+
+        updateCartQuantity(productId, quantity);
+        calculateTotalCartPrice();
+        localStorage.setItem(`cart_quantity_${productId}`, quantity);
+    }
+
+    function calculateTotalCartPrice() {
+        let totalCartPrice = 0;
+        document.querySelectorAll('.total-price').forEach(element => {
+            totalCartPrice += parseFloat(element.textContent);
+        });
+        document.getElementById('total-cart-price').textContent = totalCartPrice.toFixed(2);
+    }
+
+    function updateCartQuantity(productId, quantity) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        fetch('{% url "marketplace:cart_update" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({ product_id: productId, quantity: quantity })
+        }).catch(error => console.error('Error updating quantity:', error));
+    }
+
+    function removeQuantityFromLocalStorage(productId) {
+        localStorage.removeItem(`cart_quantity_${productId}`);
+    }
+</script>
+
 {% endblock %}
+

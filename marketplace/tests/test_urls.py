@@ -18,11 +18,11 @@ class TestUrls(SimpleTestCase):
         self.assertEqual(resolve(url).func, marketplace_page)
 
     def test_product_url_resolves(self):
-        url = reverse('marketplace:product', args=[1])  # Assuming product ID 1
+        url = reverse('marketplace:product', args=[1])  
         self.assertEqual(resolve(url).func, product)
 
     def test_category_url_resolves(self):
-        url = reverse('marketplace:category', args=[1])  # Assuming category ID 1
+        url = reverse('marketplace:category', args=[1])  
         self.assertEqual(resolve(url).func, category)
 
     def test_add_product_url_resolves(self):
@@ -46,5 +46,5 @@ class TestUrls(SimpleTestCase):
         self.assertEqual(resolve(url).func, cart_delete)
 
     def test_delete_product_url_resolves(self):
-        url = reverse('marketplace:delete_product', args=[1])  # Assuming product ID 1
+        url = reverse('marketplace:delete_product', args=[1])  
         self.assertEqual(resolve(url).func, delete_product)
