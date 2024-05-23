@@ -1,0 +1,36 @@
+<!-- _album_preview.html -->
+<a href="{% url 'user:album_list' profile_user.id %}" class="btn btn-secondary mb-3">view all albums:</a>
+<div class="row">
+    {% if albums.exists %}
+        {% for album in albums %}
+        <div class="col-md-4 mb-5">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <a href="{% url 'user:photo_list' profile_user.id album.id %}">{{ album.title }}</a>
+                    </h4>
+                    <div class="card-footer">
+                        {% for photo in album.photos.all|slice:":4" %}
+                        <img src="{{ photo.image.url }}" alt="{{ photo.description }}" class="img-thumbnail" style="width: 50px; height: auto;">
+                        {% empty %}
+                        <p>No photos available.</p>
+                        {% endfor %}
+                    </div>
+                    <p class="card-text">{{ album.description }}</p>
+                    <p><small>Created on {{ album.created_at|date:"Y-m-d" }}</small></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-12 text-center mt-4">
+            <a href="{% url 'user:create_album' profile_user.id %}" class="btn btn-primary">Create a New Album</a>
+        </div>
+    {% else %}
+    <div class="col-12 text-center">
+        <p>No photos-albums found.</p>
+        {% if is_owner %}
+        <a href="{% url 'user:create_album' profile_user.id %}" class="btn btn-primary">Create a New Album</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

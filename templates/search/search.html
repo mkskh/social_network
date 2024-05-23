@@ -2,6 +2,177 @@
 
 {% block content %}
 
-This is the search page
+    <div style="margin: 30px 100px 5px 100px; text-align: center; padding: 15px 0 10px 0; background-color: rgb(226, 226, 226);" class="card">
+        <form method="post" style="display: inline-block; vertical-align: top;">
+            {% csrf_token %}
+            {% for field in form %}
+
+            {{ field.label_tag }}
+            {{ field }}
+
+            {% endfor %}
+            <button type="submit" class="btn btn-secondary" style="vertical-align: top; margin-left: 35px;">Search</button>
+        </form>
+    </div>
+
+    {% if searched %}
+    <!-- If POST request -->
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
+            <!-- BOX with all users -->
+            <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none; background-color: rgb(236, 236, 236);">
+                <h3 style="margin-top: 15px;">Search result:</h3>
+
+                {% for search_res_profile in search_res_with_status %}
+                
+                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                    <div>
+                        <a href="{% url 'user:my_user_profile' search_res_profile.profile.user.id  %}">
+                            <img src="{{search_res_profile.profile.image.url}}" alt="photo" width="70" height="70" style="border-radius: 50%; margin: 13px;"> 
+                        </a>
+                    </div>
+                    <div style="text-align: left; margin-top: 18px">
+                        <a href="{% url 'user:my_user_profile' search_res_profile.profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                            <h5>{{ search_res_profile.profile.user.first_name }} {{ search_res_profile.profile.user.last_name }}</h5>
+                        </a>
+                        <p>{{ search_res_profile.profile.age }} years, {{ search_res_profile.profile.location }}</p>
+                    </div>
+                    
+                    <div style="margin-top: 32px; margin-left: auto;">
+                        <!-- Subscribe -->
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="profile_id" value={{search_res_profile.profile.user.id}}>
+                            <button type="submit">
+                                {% if search_res_profile.is_subscribed %}
+                                    Unsubscribe
+                                {% else %}
+                                    Subscribe
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
+                        <!-- Send a message -->
+                        <a href="{% url 'messaging:start_thread' search_res_profile.profile.user.id %}">
+                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
+                        </a>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+            
+        </div>
+
+        <div style="text-align: center; margin-bottom: 16px;">
+            <a href="{% url 'search:search' %}">
+                <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 80px;">Go back</button>
+            </a>
+        </div>
+
+    {% else %}
+    <!-- If GET request -->
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 0;">
+            
+            <!-- BOX with recommended users -->
+            <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none; background-color: rgb(236, 236, 236);">
+                
+                <h4 style="margin-top: 15px;">People you may know:</h4>
+
+                {% for recommended_profile in recommended_profiles_with_status %}
+
+                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%; align-items: center;">
+                    <div>
+                        <a href="{% url 'user:my_user_profile' recommended_profile.profile.user.id  %}">
+                            <img src="{{recommended_profile.profile.image.url}}" alt="photo" width="70" height="70" style="border-radius: 50%; margin: 13px;"> 
+                        </a>
+                    </div>
+                    <div style="text-align: left; margin-top: 18px;">
+                        <a href="{% url 'user:my_user_profile' recommended_profile.profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                            <h5>{{ recommended_profile.profile.user.first_name }} {{ recommended_profile.profile.user.last_name }}</h5>
+                        </a>
+                        <p>{{ recommended_profile.profile.age }} years, {{ recommended_profile.profile.location }}</p>
+                    </div>
+            
+                    <div style="margin-top: 5px; margin-left: auto;">
+                        <!-- Subscribe -->
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="profile_id" value={{recommended_profile.profile.user.id}}>
+                            <button type="submit">
+                                {% if recommended_profile.is_subscribed %}
+                                    Unsubscribe
+                                {% else %}
+                                    Subscribe
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div style="margin-left: 10px; margin-top: 5px; margin-right: 15px;">
+                        <!-- Send a message -->
+                        <a href="{% url 'messaging:start_thread' recommended_profile.profile.user.id %}">
+                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 5px;">
+
+            <!-- BOX with all users -->
+            <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 0; border: none; background-color: rgb(236, 236, 236);">
+                <h4 style="margin-top: 15px;">All people:</h4>
+
+                {% for sorted_profile in all_profiles_with_status %}
+                
+                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                    <div>
+                        <a href="{% url 'user:my_user_profile' sorted_profile.profile.user.id  %}">
+                            <img src="{{sorted_profile.profile.image.url}}" alt="photo" width="70" height="70" style="border-radius: 50%; margin: 13px;"> 
+                        </a>
+                    </div>
+                    <div style="text-align: left; margin-top: 18px">
+                        <a href="{% url 'user:my_user_profile' sorted_profile.profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                            <h5>{{ sorted_profile.profile.user.first_name }} {{ sorted_profile.profile.user.last_name }}</h5>
+                        </a>
+                        <p>{{ sorted_profile.profile.age }} years, {{ sorted_profile.profile.location }}</p>
+                    </div>
+                    
+                    <div style="margin-top: 32px; margin-left: auto;">
+                        <!-- Subscribe -->
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="profile_id" value={{sorted_profile.profile.user.id}}>
+                            <button type="submit">
+                                {% if sorted_profile.is_subscribed %}
+                                    Unsubscribe
+                                {% else %}
+                                    Subscribe
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
+                        <!-- Send a message -->
+                        <a href="{% url 'messaging:start_thread' sorted_profile.profile.user.id %}">
+                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
+                        </a>
+                    </div>
+                </div>
+
+                {% endfor %}
+            </div>
+            
+        </div>
+
+    {% endif %}
 
 {% endblock %}

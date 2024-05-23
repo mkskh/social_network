@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 # import Userprofile from models.py
-from .models import UserProfile
+from .models import UserProfile, Album, Photo
 
 
 class RegistrationForm(UserCreationForm):
@@ -55,3 +55,29 @@ class UserEditProfileForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control'}),
             'background_image': forms.FileInput(attrs={'class': 'form-control'}),
         }
+
+
+# to add with migrations if works:
+
+
+class AlbumForm(forms.ModelForm):
+    class Meta:
+        model = Album
+        fields = ['title', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Enter album title'}),
+            'description': forms.Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+
+
+class PhotoForm(forms.ModelForm):
+    class Meta:
+        model = Photo
+        fields = ['image', 'description']
+        widgets = {
+            'description': forms.Textarea(attrs={'cols': 80, 'rows': 20}),
+        }
+
+
+class SubscriptionForm(forms.Form):
+    profile_id = forms.IntegerField(widget=forms.HiddenInput())
