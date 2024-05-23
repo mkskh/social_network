@@ -10,18 +10,24 @@
 
     <div style="display: flex; justify-content: center; align-items: center; margin-top: 0;">
         <div class="card" style="width: 850px; margin-bottom: 20px; margin-top: 20px; border: none; background-color: rgb(236, 236, 236); padding: 10px;">
-            {% for message in thread.messages.all %}
-                {% if message.sender == request.user %}
-                    <p style="margin: 10px; text-align: right;">
-                        <span style="display: inline-block; padding: 10px 15px; border-radius: 10px; background-color: gray; color: white;">{{ message.content }}</span>
-                    </p>
-                {% else %}
-                    <p style="margin: 10px; text-align: left;">
-                        <img src="{{message.sender.userprofile.image.url}}" alt="photo" width="40" height="40" style="border-radius: 50%; margin-right: 8px;">
-                        <span style="display: inline-block; padding: 10px 15px; border-radius: 10px; background-color: gray; color: white;">{{ message.content }}</span>
-                    </p>
-                {% endif %}
-            {% endfor %}
+            {% if not thread.messages.all %}
+                <h4 style="margin: 10px; text-align: center; margin: 80px auto;">
+                    Start a conversation. Send your first message.
+                </h4>
+            {% else %}
+                {% for message in thread.messages.all %}
+                    {% if message.sender == request.user %}
+                        <p style="margin: 10px; text-align: right;">
+                            <span style="display: inline-block; padding: 10px 15px; border-radius: 10px; background-color: gray; color: white;">{{ message.content }}</span>
+                        </p>
+                    {% else %}
+                        <p style="margin: 10px; text-align: left;">
+                            <img src="{{message.sender.userprofile.image.url}}" alt="photo" width="40" height="40" style="border-radius: 50%; margin-right: 8px;">
+                            <span style="display: inline-block; padding: 10px 15px; border-radius: 10px; background-color: gray; color: white;">{{ message.content }}</span>
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
     
