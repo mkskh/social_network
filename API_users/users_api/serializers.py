@@ -4,6 +4,7 @@ from .models import ApiUser, ApiUserProfile
 
 
 
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ApiUser
