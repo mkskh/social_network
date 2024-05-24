@@ -33,13 +33,19 @@
 
                         <p class="card-text">{{ product.description }}</p>
                         
-                        <p class="card-text">Message the Seller: <a href="{% url 'user:my_user_profile' user.id %}"  style="text-decoration: none; color: inherit;">{{ product.seller.first_name }} {{ product.seller.last_name }}</a></p>
+                        <p class="card-text">Message the Seller: <a href="{% url 'user:my_user_profile' product.seller.id %}"  style="text-decoration: none; color: inherit;">{{ product.seller.first_name }} {{ product.seller.last_name }}</a></p>
+                        <div class="row justify-content-center">
+                            
+                        </div>
+                        <br>
+                        
+                        
                         {% if product.is_sale %}
                             <span class="text-muted"><strike>€{{ product.price }}</strike></span>
                             <span class="text-danger ms-2">€{{ product.sale_price }}</span>
                             <span class="badge bg-danger text-white ms-2">Sale</span>
                         {% else %}
-                            €{{ product.price }}
+                            Product price €{{ product.price }}
                             <br>Product Condition : {{ product.condition|capfirst }}
                         {% endif %}
                         
@@ -52,15 +58,13 @@
                     <form method="post" action="{% url 'marketplace:cart_add' %}">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" value="{{ product.id }}">
-                        <!-- Pass the selected quantity as 'selected_quantity' -->
                         
-                        <!-- You can add input for selecting quantity here -->
                         
                         <br><br>
                         <div class="d-inline-flex gap-2" role="group">
                             <button type="submit" class="btn btn-outline-dark mt-auto">Add to Cart</button>
                             <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
-                            <button type="submit" class="btn btn-outline-dark mt-auto">Buy Now</button>
+                            <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary">Buy Now</a>
                         </div>
                     </form>
                 </div>
