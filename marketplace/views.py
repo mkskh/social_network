@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Category
+from .models import Product, Category, Cart, Customer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm
+from .forms import ProductForm, ShippingForm
 from .cart import Cart
-
+from decimal import Decimal
 
 # Create your views here.
 
@@ -20,7 +20,7 @@ def category(request, category_id):
         return render(request, 'marketplace/category.html', {'products': products, 'category': category, 'categories': categories})
     except Category.DoesNotExist:
         messages.success(request, "That category doesn't exist!")
-        return redirect('marketplace_page')
+        return redirect('marketplace:marketplace_page')
 
 
 def product(request, pk):
@@ -31,7 +31,41 @@ def product(request, pk):
 def marketplace_page(request):
     categories = Category.objects.all()
     products = Product.objects.all()
-    return render(request, 'marketplace/marketplace.html', {'categories': categories, 'products': products})
+    
+    
+    if request.method == 'GET':
+        product_name = request.GET.get('product_name')
+        price_min = request.GET.get('price_min')
+        price_max = request.GET.get('price_max')
+
+        
+        if price_min:
+            try:
+                price_min = Decimal(price_min)
+            except ValueError:
+                price_min = None
+        if price_max:
+            try:
+                price_max = Decimal(price_max)
+            except ValueError:
+                price_max = None
+
+        
+        filters = {}
+        if product_name:
+            filters['name__icontains'] = product_name
+        if price_min is not None:
+            filters['price__gte'] = price_min
+        if price_max is not None:
+            filters['price__lte'] = price_max
+        
+        if filters:
+            products = products.filter(**filters)
+    
+    return render(request, 'marketplace/marketplace.html', {
+        'categories': categories,
+        'products': products,
+    })
 
 @login_required
 def add_product(request):
@@ -65,27 +99,64 @@ def added_products(request):
         added_products = Product.objects.filter(seller=request.user)
         return render(request, 'marketplace/added_products.html', {'added_products': added_products})
 
-
+@login_required
 def cart_summary(request):
     cart = Cart(request)
-    cart_products = cart.get_prods
-    quantities = cart.get_quants
-    return render (request, "marketplace/cart_summary.html", {"cart_products":cart_products, "quantities":quantities})
+    cart_items = []
+
+    for product in cart.get_prods():
+        product_id = str(product.id)
+        quantity = cart.get_quants().get(product_id, 0)
+        total_price = product.price * quantity
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'total_price': total_price,
+        })
+
+    context = {
+        'cart_products': cart_items,
+        'cart': cart,
+    }
+    return render(request, 'marketplace/cart_summary.html', context)
 
 
+@login_required
 def cart_add(request):
     cart = Cart(request)
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         product_qty = request.POST.get('product_qty', 1)
+        selected_quantity = request.POST.get('selected_quantity', 1)  
+        try:
+            quantity = int(selected_quantity)
+        except ValueError:
+            
+            quantity = 1 
         product = get_object_or_404(Product, id=product_id)
-        cart.add(product=product, quantity=int(product_qty))
+        cart.add(product=product, quantity=quantity)
+        
+        
+        request.session[f'cart_quantity_{product_id}'] = 1
         
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('marketplace:marketplace_page')))
     else:
         return redirect('marketplace:marketplace_page')
+    
+@login_required
+def cart_update(request):
+    if request.method == 'POST':
+        cart = Cart(request)
+        product_id = request.POST.get('product_id')
+        product_qty = int(request.POST.get('product_qty', 1))
+        product = get_object_or_404(Product, id=product_id)
+        cart.update(product=product, quantity=product_qty)
+        
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
 
 
+@login_required
 def cart_delete(request):
     if request.method == 'POST':
         cart = Cart(request)
@@ -93,3 +164,57 @@ def cart_delete(request):
         product = get_object_or_404(Product, id=product_id)
         cart.remove(product)
         return redirect('marketplace:cart_summary')
+
+
+@login_required
+def payment_view(request):
+    if request.method == 'POST':
+
+        payment_successful = True
+        
+        if payment_successful:
+            cart = Cart(request)
+            cart_products = cart.get_prods()
+            cart_quantities = cart.get_quants()
+            cart.clear()
+            return redirect('marketplace:success_page')
+
+    return render(request, 'marketplace/payment.html')
+
+
+
+@login_required
+def shipping_form_view(request):
+    if request.method == 'POST':
+        form = ShippingForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            
+            customer, created = Customer.objects.get_or_create(
+                email=user.email,
+                defaults={
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'phone': '',
+                    'password': user.password,
+                }
+            )
+            
+            shipping_address = form.save(commit=False)
+            shipping_address.user = user
+            shipping_address.save()
+
+            cart = Cart(request)
+            cart_products = cart.get_prods()
+            cart_quantities = cart.get_quants()
+
+            cart.clear()
+            
+            return render(request, 'marketplace/payment.html', {'shipping_info': shipping_address})
+    else:
+        form = ShippingForm()
+    return render(request, 'marketplace/shipping_form.html', {'form': form})
+
+@login_required
+def success_page(request):
+    return render(request, 'marketplace/success_page.html')

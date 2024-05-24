@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container d-flex flex-column align-items-center" style="max-width: 800px; margin: auto; padding-top: 50px;">
+    <form method="GET" action="{% url 'marketplace:marketplace_page' %}">
+        <div id="search-container" style="display: flex; justify-content: space-between; background-color: #f8f9fa; padding: 10px; border-radius: 5px;">
+            <div class="nav-item dropdown d-inline-block">
+                <button class="btn btn-outline-dark mt-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem; white-space: nowrap;">
+                    All Categories
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'marketplace:marketplace_page' %}">All Products</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    {% for category in categories %}
+                        <li><a class="dropdown-item" href="{% url 'marketplace:category' category_id=category.id %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <input type="text" name="product_name" placeholder="Search by name..." value="{{ request.GET.product_name|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
+            <input type="number" name="price_min" placeholder="Price Range: Min" step="0.01" value="{{ request.GET.price_min|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
+            <input type="number" name="price_max" placeholder="Price Range: Max" step="0.01" value="{{ request.GET.price_max|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
+            <button type="submit" style="color: #fff; background-color: #007bff; border-color: #007bff; padding: .375rem .75rem;">Search</button>
+        </div>
+    </form>
+</div>
+    <!-- Section-->
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {% for product in products %}
+                    <div class="col mb-5">
+                        <div class="card h-100 shadow-sm">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <!-- Product name-->
+                                <h5 class="card-title fw-bolder">{{ product.name }}</h5>
+                                <!-- Product price-->
+                                <p class="card-text">
+                                    {% if product.is_sale %}
+                                        <span class="text-muted"><strike>€{{ product.price }}</strike></span>
+                                        <span class="text-danger ms-2">€{{ product.sale_price }}</span>
+                                        <span class="badge bg-danger text-white ms-2">Sale</span>
+                                    {% else %}
+                                        €{{ product.price }}
+                                    {% endif %}
+                                </p>
+                                <!-- Product category-->
+                                <p class="card-text small text-muted">Category: {{ product.category }}</p>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="d-grid">
+                                    <a class="btn btn-outline-dark mt-auto" href="{% if user.is_authenticated %}{% url 'marketplace:product' product.pk %}{% else %}{% url 'user:login' %}?next={% url 'marketplace:product' product.pk %}{% endif %}">View Product</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

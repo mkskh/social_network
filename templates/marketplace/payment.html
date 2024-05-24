@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if request.method == "POST" %}
+    <div class="container mt-5">
+        <h3>Your Details</h3>
+        <ul>
+            <li><strong>Full Name:</strong> {{ request.POST.shipping_full_name }}</li>
+            <li><strong>Email Address:</strong> {{ request.POST.shipping_email }}</li>
+            <li><strong>Address 1:</strong> {{ request.POST.shipping_address1 }}</li>
+            <li><strong>Address 2:</strong> {{ request.POST.shipping_address2 }}</li>
+            <li><strong>City:</strong> {{ request.POST.shipping_city }}</li>
+            <li><strong>State:</strong> {{ request.POST.shipping_state }}</li>
+            <li><strong>Zipcode:</strong> {{ request.POST.shipping_zipcode }}</li>
+            <li><strong>Country:</strong> {{ request.POST.shipping_country }}</li>
+        </ul>
+    
+        {% endif %}
+    </div>
+
+        
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title text-center mb-4">Payment Details</h3>
+                        <form method="POST" action="{% url 'marketplace:success_page' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="card_number">Card Number</label>
+                                <input type="text" id="card_number" name="card_number" class="form-control" placeholder="Enter your card number">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="expiry_date">Expiry Date</label>
+                                    <input type="text" id="expiry_date" name="expiry_date" class="form-control" placeholder="MM/YY">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" id="cvv" name="cvv" class="form-control" placeholder="CVV">
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-primary">Make Payment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+{% endblock %}
