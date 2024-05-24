@@ -10,12 +10,11 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
-<<<<<<< HEAD
-=======
+
 - Implemented the system where in the news feed we can see only posts from our subscriptions
 - Created tests for "Feed" app
 - Created design for messaging templates 
->>>>>>> 65fc9b61951bb4525ade0e841e91572f9cf96c28
+
 - Added "Subscribe" and "Send a message" buttons on the Search page
 - Implemented Messaging system + notification of new message
 - Implemented Subscription system
@@ -47,9 +46,7 @@ Also, each user can create an advertisement for the sale (or give away for free)
 ### User profile page:
   
 ![User profile](./media/for_readme/user_profile.png) 
-<<<<<<< HEAD
-  
-=======
+
   
 ### Messages system. Page with all Chats:  
   
@@ -59,4 +56,5 @@ Also, each user can create an advertisement for the sale (or give away for free)
   
 ![Chats_with](./media/for_readme/chat_with.png) 
   
->>>>>>> 65fc9b61951bb4525ade0e841e91572f9cf96c28
+
+
