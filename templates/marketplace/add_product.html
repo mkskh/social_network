@@ -12,7 +12,6 @@
                         {% csrf_token %}
                         <!-- Form Fields -->
                         <!-- Name -->
-                        
                         <div class="mb-3">
                             <label for="product name" class="form-label">Product Name</label>
                             {{ form.name }}
@@ -58,6 +57,20 @@
                             {{ form.image }}
                             {% if form.image.errors %}
                                 {% for error in form.image.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <!-- Condition -->
+                        <div class="mb-3">
+                            <label for="condition" class="form-label">Condition</label>
+                            <select name="condition" id="condition" class="form-select">
+                                {% for key, value in form.fields.condition.choices %}
+                                    <option value="{{ key }}">{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.condition.errors %}
+                                {% for error in form.condition.errors %}
                                     <div class="invalid-feedback">{{ error }}</div>
                                 {% endfor %}
                             {% endif %}

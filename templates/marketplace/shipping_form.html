@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Shipping Information</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.shipping_full_name.id_for_label }}">Full Name</label>
+            {{ form.shipping_full_name }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.shipping_email.id_for_label }}">Email Address</label>
+            {{ form.shipping_email }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.shipping_address1.id_for_label }}">Address 1</label>
+            {{ form.shipping_address1 }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.shipping_address2.id_for_label }}">Address 2</label>
+            {{ form.shipping_address2 }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.shipping_city.id_for_label }}">City</label>
+            {{ form.shipping_city }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.shipping_state.id_for_label }}">State</label>
+            {{ form.shipping_state }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.shipping_zipcode.id_for_label }}">Zipcode</label>
+            {{ form.shipping_zipcode }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.shipping_country.id_for_label }}">Country</label>
+            {{ form.shipping_country }}
+        </div>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
