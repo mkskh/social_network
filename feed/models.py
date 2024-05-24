@@ -5,7 +5,7 @@ from ckeditor.fields import RichTextField
 
 
 class Post(models.Model):
-    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='posts')
     created_at = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True, blank=True) 
     image = models.ImageField(upload_to='post_images/', blank=True, null=True)
