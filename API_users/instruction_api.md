@@ -103,16 +103,12 @@ TRUNCATE TABLE users_api_apiuserprofile  RESTART IDENTITY CASCADE;
 ```
 
 ### TO access the API endpoints :
-There is authentication level for the API endpoints (users need to be authenticated to access any API endpoints). 
-- The home page requires user to log-in or register. 
-- 2 type of roles:
-    - The user created with manage.py creatsuperuser has admin level and can access to all of the API endpoint.
-    - if registering a new user from the register/login view in the homepage. the user will NOT have the admin privileges and will have restricted access, to read-only endpoints.
-
-i made the home page to point to the different endpoints(views od the api) when logged in.
-(visible links depending on the user type: admin or not.)
 
 
+- to be authorized to use the API endpoints, you will need to add the Authorization header like so :
+Authorization: Token <your_token>
+
+- you can create a token in the admin panel. select a user and save. will generate a token for that user.
 
 
 ## API User Actions (API UserProfile follow the exact same logic)
