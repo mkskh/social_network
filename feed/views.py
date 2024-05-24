@@ -12,30 +12,63 @@ from .forms import PublishPostForm, LeaveCommentForm
 
 def news_feed(request):
 
+    # all people from subscriptions and people who have posts (rest_posts) /// We need it for recommendation section
+    covered_people = []
+
+    # Collect the posts from subscriptions
     posts_from_subscriptions = []
 
     all_subscriptions = request.user.userprofile.subscriptions.all()
     for subscription in all_subscriptions:
+        covered_people.append(subscription.subscribed_to)
         for post in subscription.subscribed_to.posts.all():
             posts_from_subscriptions.append(post)
     
     posts_from_subscriptions.sort(key=lambda post: post.created_at, reverse=True)
 
-    # posts = models.Post.objects.all().order_by('-created_at')
-    profile = UserProfile.objects.get(user=request.user)
+    # Collect the rest of the posts
+    rest_posts = []
 
-    #recommended profiles
-    all_profiles = UserProfile.objects.all()
+    posts = models.Post.objects.all()
+    for post in posts:
+        if post not in posts_from_subscriptions:
+            rest_posts.append(post)
 
-    sorted_profiles_list = []
+    rest_posts.sort(key=lambda post: post.created_at, reverse=True)
 
-    for profile_item in all_profiles:
-        if profile_item == profile:
+
+    #RECOMMENDATION section
+    my_profile = UserProfile.objects.get(user=request.user)
+    recommended_profiles = set()
+
+    for post in rest_posts:
+        if post.profile == my_profile:
             pass
         else:
-            sorted_profiles_list.append(profile_item)
+            recommended_profiles.add(post.profile)
     
-    recommended_profiles = random.sample(sorted_profiles_list, min(4, len(sorted_profiles_list))) if len(sorted_profiles_list) > 3 else sorted_profiles_list
+    if len(list(recommended_profiles)) <= 4:
+        for profile in list(recommended_profiles):
+            covered_people.append(profile)
+        
+        quantity_profiles_needed = 5 - len(recommended_profiles)
+
+        all_profiles = UserProfile.objects.exclude(user=request.user)
+        all_additional_profiles_list = []
+
+        for profile_item in all_profiles:
+            print(profile_item)
+            if profile_item not in covered_people:
+                all_additional_profiles_list.append(profile_item)
+    
+        additional_profiles = random.sample(all_additional_profiles_list, min(quantity_profiles_needed, len(all_additional_profiles_list))) if len(all_additional_profiles_list) > (quantity_profiles_needed - 1) else all_additional_profiles_list
+
+        recommended_profiles_result = list(recommended_profiles) + additional_profiles
+
+    elif len(list(recommended_profiles)) >= 5:
+
+        recommended_profiles_result = random.sample(list(recommended_profiles), min(5, len(list(recommended_profiles)))) if len(list(recommended_profiles)) > 4 else list(recommended_profiles)
+
 
     if request.method == "GET":
 
@@ -76,7 +109,12 @@ def news_feed(request):
             messages.error(request, "Form is not valid. Please check your input.")
 
     return render(request, 'feed/news_feed.html', 
-                {'posts': posts_from_subscriptions, 'profile': profile, 'recommended_profiles': recommended_profiles, 'form': form, 'comment_form': comment_form})
+                {'posts': posts_from_subscriptions, 
+                'profile': my_profile, 
+                'recommended_profiles': recommended_profiles_result, 
+                'form': form, 
+                'comment_form': comment_form,
+                'rest_posts': rest_posts})
 
 
 def like_unlike_post(request):

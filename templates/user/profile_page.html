@@ -233,11 +233,20 @@
         </div>
         {% endfor %}
 
-        {% else %}
+        <!-- If there are no posts  -->
+        {% elif not posts and profile_user == request.user %}
+            <!-- For authenticated user -->
             <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
                                     margin-bottom: 30px; padding: 30px; align-items: center;">
                 <h5>You haven't published any post yet. </h5>
                 <h5>Once you do this you will see all your posts here.</h5>
+            </div>
+        {% elif not posts and profile_user != request.user %}
+            <!-- For other users -->
+            <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
+                                    margin-bottom: 30px; padding: 30px; align-items: center;">
+                <h5>This user hasn't published any post yet. </h5>
+                <h5>Once he does this you will see all his posts here.</h5>
             </div>
         {% endif  %}
 
