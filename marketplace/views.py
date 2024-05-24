@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Category, Cart
+from .models import Product, Category, Cart, Customer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm
+from .forms import ProductForm, ShippingForm
 from .cart import Cart
 from decimal import Decimal
 
@@ -99,7 +99,7 @@ def added_products(request):
         added_products = Product.objects.filter(seller=request.user)
         return render(request, 'marketplace/added_products.html', {'added_products': added_products})
 
-
+@login_required
 def cart_summary(request):
     cart = Cart(request)
     cart_items = []
@@ -121,7 +121,7 @@ def cart_summary(request):
     return render(request, 'marketplace/cart_summary.html', context)
 
 
-
+@login_required
 def cart_add(request):
     cart = Cart(request)
     if request.method == 'POST':
@@ -143,7 +143,7 @@ def cart_add(request):
     else:
         return redirect('marketplace:marketplace_page')
     
-
+@login_required
 def cart_update(request):
     if request.method == 'POST':
         cart = Cart(request)
@@ -156,6 +156,7 @@ def cart_update(request):
     return JsonResponse({'success': False})
 
 
+@login_required
 def cart_delete(request):
     if request.method == 'POST':
         cart = Cart(request)
@@ -165,5 +166,55 @@ def cart_delete(request):
         return redirect('marketplace:cart_summary')
 
 
+@login_required
 def payment_view(request):
+    if request.method == 'POST':
+
+        payment_successful = True
+        
+        if payment_successful:
+            cart = Cart(request)
+            cart_products = cart.get_prods()
+            cart_quantities = cart.get_quants()
+            cart.clear()
+            return redirect('marketplace:success_page')
+
     return render(request, 'marketplace/payment.html')
+
+
+
+@login_required
+def shipping_form_view(request):
+    if request.method == 'POST':
+        form = ShippingForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            
+            customer, created = Customer.objects.get_or_create(
+                email=user.email,
+                defaults={
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'phone': '',
+                    'password': user.password,
+                }
+            )
+            
+            shipping_address = form.save(commit=False)
+            shipping_address.user = user
+            shipping_address.save()
+
+            cart = Cart(request)
+            cart_products = cart.get_prods()
+            cart_quantities = cart.get_quants()
+
+            cart.clear()
+            
+            return render(request, 'marketplace/payment.html', {'shipping_info': shipping_address})
+    else:
+        form = ShippingForm()
+    return render(request, 'marketplace/shipping_form.html', {'form': form})
+
+@login_required
+def success_page(request):
+    return render(request, 'marketplace/success_page.html')

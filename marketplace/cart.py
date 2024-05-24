@@ -44,3 +44,7 @@ class Cart:
         if product_id in self.cart:
             self.cart[product_id] = quantity
             self.session.modified = True
+
+    def clear(self):
+        del self.session[self.CART_SESSION_ID]
+        self.session.modified = True
