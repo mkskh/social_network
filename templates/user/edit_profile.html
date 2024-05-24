@@ -2,7 +2,9 @@
 
 {% block content %}
 <div class="container mt-3">
-    <h1>Edit your profile</h1>
+
+    <h1 style="text-align: center; margin: 40px auto;">Edit your profile</h1>
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
@@ -12,13 +14,17 @@
                     {% if form.image.value %}
                     <img src="{{ form.image.value.url }}" alt="Profile Image" class="img-fluid mb-3 rounded">
                     {% endif %}
-                    {{ form.image }}
+                    <div style="width: 360px;">
+                        {{ form.image }}
+                    </div>
                 </div>
             </div>
             <div class="col-md-8">
                 <div class="mb-3">
                     <label for="{{ form.background_image.id_for_label }}" class="form-label">Background Image:</label>
-                    {{ form.background_image }}
+                    <div style="width: 860px;">
+                        {{ form.background_image }}
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -44,7 +50,13 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <div style="display: flex; justify-content: center; align-items: center; margin: 20px auto 35px auto">
+            <button type="submit" class="btn btn-primary" style="margin-right: 10px;">Update Profile</button>
+            <a href="{% url 'user:my_user_profile' request.user.id %}">
+                <button type="button" class="btn btn-primary">Go back</button>
+            </a>
+        </div>
+        
     </form>
 </div>
 {% endblock %}

@@ -5,14 +5,23 @@ from django.contrib import messages
 import markdown2
 
 from . import models
-from user.models import UserProfile
+from user.models import UserProfile, Subscription
 from .models import Post, Like, Comment
 from .forms import PublishPostForm, LeaveCommentForm
 
 
 def news_feed(request):
 
-    posts = models.Post.objects.all().order_by('-created_at')
+    posts_from_subscriptions = []
+
+    all_subscriptions = request.user.userprofile.subscriptions.all()
+    for subscription in all_subscriptions:
+        for post in subscription.subscribed_to.posts.all():
+            posts_from_subscriptions.append(post)
+    
+    posts_from_subscriptions.sort(key=lambda post: post.created_at, reverse=True)
+
+    # posts = models.Post.objects.all().order_by('-created_at')
     profile = UserProfile.objects.get(user=request.user)
 
     #recommended profiles
@@ -67,7 +76,7 @@ def news_feed(request):
             messages.error(request, "Form is not valid. Please check your input.")
 
     return render(request, 'feed/news_feed.html', 
-                {'posts': posts, 'profile': profile, 'recommended_profiles': recommended_profiles, 'form': form, 'comment_form': comment_form})
+                {'posts': posts_from_subscriptions, 'profile': profile, 'recommended_profiles': recommended_profiles, 'form': form, 'comment_form': comment_form})
 
 
 def like_unlike_post(request):
