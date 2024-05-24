@@ -73,14 +73,14 @@ class CartItem(models.Model):
 
 class ShippingAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    shipping_full_name = models.CharField(max_length=225)
-    shipping_email = models.CharField(max_length=225)
-    shipping_address1 = models.CharField(max_length=225)
-    shipping_address2 = models.CharField(max_length=225)
-    city = models.CharField(max_length=225)
-    state = models.CharField(max_length=225, null=True, blank=True)
-    zipcode = models.CharField(max_length=225, null=True, blank=True)
-    country = models.CharField(max_length=225)
+    shipping_full_name = models.CharField(max_length=100)
+    shipping_email = models.CharField(max_length=100)
+    shipping_address1 = models.CharField(max_length=100)
+    shipping_address2 = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100, null=True, blank=True)
+    zipcode = models.CharField(max_length=100, null=True, blank=True)
+    country = models.CharField(max_length=100)
 
 
     class Meta:

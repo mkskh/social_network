@@ -152,5 +152,30 @@
     }
 </script>
 
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Your existing code here
+
+        // Function to calculate the total cart price
+        function calculateTotalCartPrice() {
+            let totalCartPrice = 0;
+            // Loop through each item in the cart
+            document.querySelectorAll('.total-price').forEach(element => {
+                // Get the price of the item and parse it as a float
+                const price = parseFloat(element.textContent);
+                // Add the price to the total cart price
+                totalCartPrice += price;
+            });
+            // Update the content of the total price span with the calculated total cart price
+            document.getElementById('total-cart-price').textContent = totalCartPrice.toFixed(2);
+        }
+
+        // Call the function initially
+        calculateTotalCartPrice();
+    });
+</script>
+
 {% endblock %}
 

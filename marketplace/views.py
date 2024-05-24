@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Category, Cart, Customer
+from .models import Product, Category, Cart, Customer, ShippingAddress
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -121,6 +121,8 @@ def cart_summary(request):
     return render(request, 'marketplace/cart_summary.html', context)
 
 
+
+
 @login_required
 def cart_add(request):
     cart = Cart(request)
@@ -166,20 +168,17 @@ def cart_delete(request):
         return redirect('marketplace:cart_summary')
 
 
-@login_required
 def payment_view(request):
     if request.method == 'POST':
-
-        payment_successful = True
         
-        if payment_successful:
-            cart = Cart(request)
-            cart_products = cart.get_prods()
-            cart_quantities = cart.get_quants()
-            cart.clear()
-            return redirect('marketplace:success_page')
+        cart = Cart(request)
+        total_price = cart.get_total_price()
+        request.session['total_price'] = total_price
+        cart.clear()
+        return redirect('marketplace:success_page')
 
     return render(request, 'marketplace/payment.html')
+
 
 
 
@@ -204,11 +203,6 @@ def shipping_form_view(request):
             shipping_address.user = user
             shipping_address.save()
 
-            cart = Cart(request)
-            cart_products = cart.get_prods()
-            cart_quantities = cart.get_quants()
-
-            cart.clear()
             
             return render(request, 'marketplace/payment.html', {'shipping_info': shipping_address})
     else:
@@ -216,5 +210,18 @@ def shipping_form_view(request):
     return render(request, 'marketplace/shipping_form.html', {'form': form})
 
 @login_required
+
 def success_page(request):
-    return render(request, 'marketplace/success_page.html')
+    # Retrieve relevant information such as purchased products or shipping details
+    cart = Cart(request)
+    cart_products = cart.get_prods()
+    shipping_info = ShippingAddress.objects.filter(user=request.user).latest('id')
+
+    # Clear the cart after displaying success page
+    cart.clear()
+
+    context = {
+        'cart_products': cart_products,
+        'shipping_info': shipping_info,
+    }
+    return render(request, 'marketplace/success_page.html', context)
