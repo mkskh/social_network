@@ -1,0 +1,27 @@
+{% extends "base_api.html" %}
+
+{% block content %}
+
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>    
+    {% endfor %}
+{% endif %}
+
+<h1 style="margin: 20px 260px 10px 260px; padding: 20px 260px; text-align: center;">Please enter your registration details</h1>
+
+<div style="margin: 20px 260px; padding: 20px 260px; text-align: left;">
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-secondary" style="display: block; margin: 0 auto;">Sign Up</button>
+    </form>
+
+</div>
+
+{% endblock %}
