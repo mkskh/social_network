@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .forms import ProductForm, ShippingForm
 from .cart import Cart
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 # Create your views here.
 
@@ -23,11 +23,13 @@ def category(request, category_id):
         return redirect('marketplace:marketplace_page')
 
 
+@login_required
 def product(request, pk):
     product = Product.objects.get(id=pk)
     return render(request, 'marketplace/product.html', {'product':product})
 
 
+@login_required
 def marketplace_page(request):
     categories = Category.objects.all()
     products = Product.objects.all()
@@ -39,26 +41,19 @@ def marketplace_page(request):
         price_max = request.GET.get('price_max')
 
         
-        if price_min:
-            try:
-                price_min = Decimal(price_min)
-            except ValueError:
-                price_min = None
-        if price_max:
-            try:
-                price_max = Decimal(price_max)
-            except ValueError:
-                price_max = None
-
-        
         filters = {}
+
         if product_name:
             filters['name__icontains'] = product_name
-        if price_min is not None:
-            filters['price__gte'] = price_min
-        if price_max is not None:
-            filters['price__lte'] = price_max
-        
+
+        try:
+            if price_min:
+                filters['price__gte'] = Decimal(price_min)
+            if price_max:
+                filters['price__lte'] = Decimal(price_max)
+        except InvalidOperation:
+            pass
+
         if filters:
             products = products.filter(**filters)
     

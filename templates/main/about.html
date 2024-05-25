@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container" style="display:flex;flex-direction:column;justify-content:center">
+    <!--h1 style="text-align: center;">Welcome to In Touch - Social Network</h1-->
+
+    <div class="container" style="padding-top:30px;padding-bottom:30px;max-width:80%">
+        <h1 style="text-align: center; padding-bottom: 20px;">About Us</h1>
+        <p>
+            Welcome to our platform! We're a unique social network with a twist – think of us as your digital hub where connections are made, ideas are shared, and treasures find new homes.
+        </p> 
+        <p>
+            At our core, we're all about fostering meaningful connections. Whether it's sharing your latest adventures, discussing the hottest topics, or simply reaching out to old friends, our platform is designed to bring people together.
+        </p>
+        <p>
+            But we're not just about socializing; we're also a vibrant marketplace where you can buy, sell, or even give away items you no longer need. Need to declutter your space or find that perfect vintage piece? Look no further. Our community is here to help you find what you're looking for and maybe discover something you never knew you needed.
+        </p>
+        <p>
+            Join us today and become part of our growing community. Together, let's share, connect, and discover the endless possibilities that await.    
+        </p>
+    </div>
+    <!--hr-->
+    <div class="container-fluid" style="width:60%;margin-bottom:10px">
+        <div id="demo" class="carousel slide" data-bs-ride="carousel">
+
+            <!-- Indicators/dots -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+            </div>
+
+            <!-- The slideshow/carousel -->
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://visiblenetworklabs.com/wp-content/uploads/2023/01/Foundations-SNA.png" style="height:400px" class="d-block w-100">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://ewm.swiss/application/files/5716/0379/3279/social_media_.jpg" style="height:400px" class="d-block w-100">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://t4.ftcdn.net/jpg/01/95/78/87/360_F_195788717_Ba8397mYBadW3JUx5SQejAxpRN02DyEF.jpg" style="height:400px" class="d-block w-100">
+                </div>
+            </div>
+
+            <!-- Left and right controls/icons -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
+    </div>
+    <div class="container-fluid" style="display:flex;justify-content:center;padding-top:30px;padding-bottom:30px">
+        <a class="btn btn-secondary" href="{% url 'main:home' %}" style="margin:10px">
+            Main Page
+        </a>
+    </div>
+</div>
+
+{% endblock %}

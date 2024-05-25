@@ -2,26 +2,17 @@
 
 {% block content %}
 
-<!-- Header-->
-<header class="bg-grey py-5" style="background-color: rgb(201, 201, 201);">
-    <div class="container px-4 px-lg-5 my-5" style="background-color: rgb(201, 201, 201);">
-        <div class="text-center text-black">
-            <h1 class="display-4 fw-bolder">Sign Up</h1>
-            <p class="lead fw-normal text-black-50 mb-0" style="font-size: larger;">We are glad that you will become part of our community</p>
-        </div>
+    <h1 style="margin: 20px 260px 10px 260px; padding: 80px 260px 30px 260px; text-align: center;">Please enter your registration details</h1>
+
+    <div style="margin: 20px 260px; padding: 20px 260px; text-align: left;">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div style="text-align: center; padding-top: 30px;">
+                <button type="submit" class="btn btn-secondary" style="display: inline-block; margin: 0 10px;">Sign Up</button>
+                <a href="{% url 'main:home' %}" class="btn btn-secondary" style="display: inline-block; margin: 0 10px;">Go Back</a>
+            </div>
+        </form>
     </div>
-</header>
-
-<h1 style="margin: 20px 260px 10px 260px; padding: 20px 260px; text-align: center;">Please enter your registration details</h1>
-
-<div style="margin: 20px 260px; padding: 20px 260px; text-align: left;">
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-secondary" style="display: block; margin: 0 auto;">Sign Up</button>
-    </form>
-
-</div>
 
 {% endblock %}

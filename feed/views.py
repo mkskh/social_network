@@ -3,6 +3,7 @@ from django.http import JsonResponse
 import random
 from django.contrib import messages
 import markdown2
+from django.contrib.auth.decorators import login_required
 
 from . import models
 from user.models import UserProfile, Subscription
@@ -10,7 +11,10 @@ from .models import Post, Like, Comment
 from .forms import PublishPostForm, LeaveCommentForm
 
 
+@login_required
 def news_feed(request):
+
+    my_profile = UserProfile.objects.get(user=request.user)
 
     # all people from subscriptions and people who have posts (rest_posts) /// We need it for recommendation section
     covered_people = []
@@ -28,6 +32,13 @@ def news_feed(request):
     
     posts_from_subscriptions.sort(key=lambda post: post.created_at, reverse=True)
 
+    # if all posts only from authenticated user then will be recommend users for subscription 
+    recommend_users_for_subscription = True
+    for post in posts_from_subscriptions:
+        if post.profile != my_profile:
+            recommend_users_for_subscription = False
+
+
     # Collect the rest of the posts
     rest_posts = []
 
@@ -40,7 +51,6 @@ def news_feed(request):
 
 
     #RECOMMENDATION section
-    my_profile = UserProfile.objects.get(user=request.user)
     recommended_profiles = set()
 
     for post in rest_posts:
@@ -115,9 +125,11 @@ def news_feed(request):
                 'recommended_profiles': recommended_profiles_result, 
                 'form': form, 
                 'comment_form': comment_form,
-                'rest_posts': rest_posts})
+                'rest_posts': rest_posts,
+                'recommend_users_for_subscription': recommend_users_for_subscription})
 
 
+@login_required
 def like_unlike_post(request):
     user = request.user
 
@@ -154,6 +166,7 @@ def like_unlike_post(request):
         return JsonResponse(data, safe=False)
 
 
+@login_required
 def delete_post(request, post_id):
     if request.method == "POST":
         try:

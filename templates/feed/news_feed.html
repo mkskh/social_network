@@ -51,11 +51,14 @@
                 </div>
                 
                 <!-- POSTS -->
+
+                <!-- If there are no posts -->
                 {% if not posts %}
 
                 <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
                                     margin-bottom: 30px; padding: 30px; align-items: center;">
                     <h5>You haven't subscribed to anyone yet to see your friends' news.</h5>
+                    <h5>Or maybe the people you follow haven't posted anything yet</h5>
                     <br>
                     <h5>Here are some people you might know and you can follow:</h5>
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow-x: auto; margin-top: 30px;">
@@ -191,8 +194,32 @@
 
                 {% endif %}
 
+                <!-- If posts only from authenticated user -->
+                {% if recommend_users_for_subscription %}
+                    <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
+                                        margin-bottom: 30px; padding: 30px; align-items: center;">
+                        <h5>You haven't subscribed to anyone yet to see your friends' news.</h5>
+                        <h5>Or maybe the people you follow haven't posted anything yet</h5>
+                        <br>
+                        <h5>Here are some people you might know and you can follow:</h5>
+                        <div style="display: flex; align-items: center; white-space: nowrap; overflow-x: auto; margin-top: 30px;">
+                            {% for recommended_profile in recommended_profiles %}
+                            <div style="text-align: center; margin-right: auto; margin: 15px 0 0 20px;">
+                                <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}">
+                                    <img src="{{ recommended_profile.image.url }}" alt="profile_photo" width="100" height="100" style="border-radius: 50%; margin: 0 15px 0 5px;">
+                                </a>
+                                <p style="font-size: 19px; margin-top: 5px;">
+                                    <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                                        <strong>{{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}</strong>
+                                    </a>
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
 
-                <!-- THE REST OF THE POSTS -->
+                <!-- Recommended content //// THE REST OF THE POSTS -->
 
                 {% if rest_posts %}
 
@@ -217,21 +244,22 @@
 
 
                             <!-- Dropdown button "Options" -->
-                            <div class="dropdown">
-                                <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
-                                    Options
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <!-- First action with delete button -->
-                                    <li>
-                                        <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
-                                            {% csrf_token %}
-                                            <button class="dropdown-item" type="submit">Delete</button>
-                                        </form>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Edit post</a></li>
-                                </ul>
-                            </div>
+                            {% if post.profile.user == request.user %}
+                                <div class="dropdown">
+                                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
+                                        Options
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <!-- First action with delete button -->
+                                        <li>
+                                            <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
+                                                {% csrf_token %}
+                                                <button class="dropdown-item" type="submit">Delete</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endif %}
 
                         </div>
                         

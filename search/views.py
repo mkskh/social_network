@@ -3,12 +3,14 @@ import random
 import requests
 import os
 from dotenv import load_dotenv
+from django.contrib.auth.decorators import login_required
 
 from user.models import UserProfile, Subscription
 from .forms import SearchForm
 from user.forms import SubscriptionForm
 
 
+@login_required
 def search(request):
 
     #API

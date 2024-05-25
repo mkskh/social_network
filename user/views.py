@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, LoginForm, UserEditProfileForm, AlbumForm, PhotoForm, SubscriptionForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import Http404
@@ -155,9 +156,7 @@ def edit_profile(request, user_id):
     return render(request, 'user/edit_profile.html', {'form': form})
 
 
-
-
-
+@login_required
 def create_album(request, user_id):
     user_profile = get_object_or_404(UserProfile, user__id=user_id)
     if request.method == 'POST':
@@ -186,6 +185,7 @@ def album_list(request, user_id):
     })
 
 
+@login_required
 def edit_album(request, user_id, album_id):
     ''' User owner of the profile/album can edit it.'''
     album = get_object_or_404(Album, id=album_id, profile__user__id=user_id)
@@ -206,7 +206,6 @@ def edit_album(request, user_id, album_id):
         'form': form,
         'album': album
     })
-
 
 
 @login_required
@@ -243,6 +242,8 @@ def create_photo(request, album_id, user_id):
         'profile_user': user_profile.user
     })
 
+
+@login_required
 def photo_list(request, user_id, album_id):
     ''' Users can access photos page'''
     user_profile = get_object_or_404(UserProfile, user__id=user_id)
@@ -257,8 +258,6 @@ def photo_list(request, user_id, album_id):
     })
 
 
-
-
 @login_required
 def delete_photo(request, user_id, album_id, photo_id):
     ''' User can delete it their own photos '''
@@ -271,7 +270,6 @@ def delete_photo(request, user_id, album_id, photo_id):
     else:
         messages.error(request, "You do not have permission to delete this photo.")
         return redirect('user:photo_list', user_id=user_id, album_id=album_id)
-
 
 
 def edit_photo(request, user_id, album_id, photo_id):

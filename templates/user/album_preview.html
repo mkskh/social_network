@@ -1,5 +1,5 @@
 <!-- _album_preview.html -->
-<a href="{% url 'user:album_list' profile_user.id %}" class="btn btn-secondary mb-3">view all albums:</a>
+
 <div class="row">
     {% if albums.exists %}
         {% for album in albums %}
@@ -33,4 +33,5 @@
         {% endif %}
     </div>
     {% endif %}
+    <a href="{% url 'user:album_list' profile_user.id %}" class="btn btn-secondary mb-3">view all albums:</a>
 </div>
