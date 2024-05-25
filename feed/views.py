@@ -23,6 +23,8 @@ def news_feed(request):
         covered_people.append(subscription.subscribed_to)
         for post in subscription.subscribed_to.posts.all():
             posts_from_subscriptions.append(post)
+    for post in request.user.userprofile.posts.all():
+        posts_from_subscriptions.append(post)
     
     posts_from_subscriptions.sort(key=lambda post: post.created_at, reverse=True)
 
@@ -57,7 +59,6 @@ def news_feed(request):
         all_additional_profiles_list = []
 
         for profile_item in all_profiles:
-            print(profile_item)
             if profile_item not in covered_people:
                 all_additional_profiles_list.append(profile_item)
     
@@ -90,7 +91,7 @@ def news_feed(request):
             if comment_form.is_valid():
                 text = comment_form.cleaned_data['text']
                 
-                comment = Comment.objects.create(profile=profile, text=text, post=post_obj)
+                comment = Comment.objects.create(profile=my_profile, text=text, post=post_obj)
                 comment.save()
                 messages.success(request, "You have added a comment.")
                 return redirect('/feed/')
@@ -101,7 +102,7 @@ def news_feed(request):
         if form.is_valid():
             text = markdown2.markdown(form.cleaned_data['text'])
             image = form.cleaned_data['image']
-            post = Post.objects.create(profile=profile, text=text, image=image)
+            post = Post.objects.create(profile=my_profile, text=text, image=image)
             post.save()
             messages.success(request, "You have added a new post.")
             return redirect('/feed/')
@@ -163,8 +164,5 @@ def delete_post(request, post_id):
             messages.error(request, "Post does not exist.")
         except Exception as e:
             messages.error(request, f"An error occurred: {str(e)}")
-    else:
-        print(f"Invalid request method: {request.method}")  # Debug output
-        messages.error(request, "Invalid request method.")
 
     return redirect('/feed/')
