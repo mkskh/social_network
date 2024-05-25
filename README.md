@@ -10,6 +10,8 @@
 Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
   
 ### Features and Updates:  
+- Implemented search system for "dummy users" from API.  
+For example if we want to find people from Berlin except real users we will see dummy users also (if api is working)
 - Implemented API into the program code. When we go to the "Search" page, we have 78 dummy users now
 - Created API with token authentication level
 - Implemented recommendation section on the templates for users who don't have subscriptions

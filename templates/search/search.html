@@ -87,6 +87,47 @@
                 </div>
 
                 {% endfor %}
+
+                <!-- API -->
+                {% if search_res_profile and search_res_user %}
+
+                    {% for profile in search_res_profile %}
+                        {% for user in search_res_user %}
+                            {% if profile.id == user.id %}
+
+                                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                                    <div>
+                                        <a href="#">
+                                            <img src="/media/user_images/dummy-profile-picture.png" alt="photo" width="70" height="70" style="border-radius: 50%; margin: 13px;"> 
+                                        </a>
+                                    </div>
+                                    <div style="text-align: left; margin-top: 18px">
+                                        <a href="#" style="text-decoration: none; color: inherit;">
+                                            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                                        </a>
+                                        <p>{{ profile.age }} years, {{ profile.location }}</p>
+                                    </div>
+                                    
+                                    <div style="margin-top: 32px; margin-left: auto;">
+                                        <!-- Subscribe -->
+                                        <button>
+                                            Subscribe
+                                        </button>
+                                    </div>
+                                    
+                                    <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
+                                        <!-- Send a message -->
+                                        <a href="#">
+                                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+
+                {% endif %}
             </div>
             
         </div>
@@ -96,6 +137,7 @@
                 <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 100px;">Reset filter</button>
             </a>
         </div>
+
 
     {% else %}
     <!-- If GET request -->
@@ -205,12 +247,12 @@
 
                                 <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
                                     <div>
-                                        <a href="#">
+                                        <a href="">
                                             <img src="/media/user_images/dummy-profile-picture.png" alt="photo" width="70" height="70" style="border-radius: 50%; margin: 13px;"> 
                                         </a>
                                     </div>
                                     <div style="text-align: left; margin-top: 18px">
-                                        <a href="#" style="text-decoration: none; color: inherit;">
+                                        <a href="" style="text-decoration: none; color: inherit;">
                                             <h5>{{ user.first_name }} {{ user.last_name }}</h5>
                                         </a>
                                         <p>{{ profile.age }} years, {{ profile.location }}</p>
@@ -225,9 +267,7 @@
                                     
                                     <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
                                         <!-- Send a message -->
-                                        <a href="#">
-                                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
-                                        </a>
+                                        <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
                                     </div>
                                 </div>
                                 

@@ -58,15 +58,13 @@ def search(request):
         try:
             response_profile = requests.get(url_profile, headers=headers).json()
             response_user = requests.get(url_user, headers=headers).json()
-            numbers = range(1, len(response_user))
 
             return render(request, 'search/search.html', {'all_profiles_with_status': all_profiles_with_status,
                                                     'form': form, 'searched': searched,
                                                     'sub_form': sub_form,
                                                     'recommended_profiles_with_status': recommended_profiles_with_status,
                                                     'response_profile': response_profile,
-                                                    'response_user': response_user,
-                                                    'numbers': numbers})
+                                                    'response_user': response_user})
         except:
             pass
 
@@ -99,7 +97,7 @@ def search(request):
                         search_res.append(item)
             
             if location:
-                search_res = [item for item in search_res if item.location == location]
+                search_res = [item for item in search_res if str(item.location).lower() == str(location).lower()]
 
             if gender:
                 search_res = [item for item in search_res if item.gender == gender]
@@ -120,6 +118,46 @@ def search(request):
                     'profile': profile,
                     'is_subscribed': is_subscribed,
                 })
+            
+            # API 
+
+            try:
+                response_profile = requests.get(url_profile, headers=headers).json()
+                response_user = requests.get(url_user, headers=headers).json()
+                
+                search_res_user = []
+
+                for item in response_user:
+                    if not key:
+                        search_res.append(item)
+                    else:
+                        if key in str(item['first_name']).lower() or key in str(item['last_name']).lower():
+                            search_res_user.append(item)
+                
+                if location:
+                    response_profile = [item  for item in response_profile if str(item['location']).lower() == str(location).lower()]
+                
+                if gender:
+                    response_profile = [item for item in response_profile if item['gender'] == gender]
+                    
+
+                if age_more_than:
+                    response_profile = [item for item in response_profile if int(item['age']) > age_more_than]
+                    
+
+                if age_less_than:
+                    response_profile = [item for item in response_profile if int(item['age']) < age_less_than]
+                
+                if not search_res_user:
+                    search_res_user = response_user
+                
+                return render(request, 'search/search.html', {'search_res_with_status': search_res_with_status,
+                                                            'form': form,
+                                                            'searched': searched,
+                                                            'search_res_profile': response_profile,
+                                                            'search_res_user': search_res_user})
+            except:
+                pass
 
         # Subscription
         profile_id = request.POST.get('profile_id')
