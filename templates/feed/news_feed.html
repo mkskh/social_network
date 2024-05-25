@@ -92,21 +92,22 @@
 
 
                             <!-- Dropdown button "Options" -->
-                            <div class="dropdown">
-                                <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
-                                    Options
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <!-- First action with delete button -->
-                                    <li>
-                                        <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
-                                            {% csrf_token %}
-                                            <button class="dropdown-item" type="submit">Delete</button>
-                                        </form>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Edit post</a></li>
-                                </ul>
-                            </div>
+                            {% if post.profile.user == request.user %}
+                                <div class="dropdown">
+                                    <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
+                                        Options
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <!-- First action with delete button -->
+                                        <li>
+                                            <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
+                                                {% csrf_token %}
+                                                <button class="dropdown-item" type="submit">Delete</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endif %}
 
                         </div>
                         
