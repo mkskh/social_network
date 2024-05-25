@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 import random
+import requests
+import os
+from dotenv import load_dotenv
 
 from user.models import UserProfile, Subscription
 from .forms import SearchForm
@@ -7,6 +10,17 @@ from user.forms import SubscriptionForm
 
 
 def search(request):
+
+    #API
+    load_dotenv()
+    url_profile = "http://127.0.0.1:9000/profile/list/"
+    url_user = "http://127.0.0.1:9000/user/list/"
+
+    token = os.getenv('TOKEN')
+    headers = {
+        "Authorization": f"token {token}"
+    }
+
 
     authenticated_profile = UserProfile.objects.get(user=request.user)
 
@@ -37,13 +51,29 @@ def search(request):
             is_subscribed = Subscription.objects.filter(subscriber=authenticated_profile, subscribed_to=profile).exists()
             recommended_profiles_with_status.append({
                 'profile': profile,
-                'is_subscribed': is_subscribed,
+                'is_subscribed': is_subscribed
             })
+
+
+        try:
+            response_profile = requests.get(url_profile, headers=headers).json()
+            response_user = requests.get(url_user, headers=headers).json()
+            numbers = range(1, len(response_user))
+
+            return render(request, 'search/search.html', {'all_profiles_with_status': all_profiles_with_status,
+                                                    'form': form, 'searched': searched,
+                                                    'sub_form': sub_form,
+                                                    'recommended_profiles_with_status': recommended_profiles_with_status,
+                                                    'response_profile': response_profile,
+                                                    'response_user': response_user,
+                                                    'numbers': numbers})
+        except:
+            pass
 
         return render(request, 'search/search.html', {'all_profiles_with_status': all_profiles_with_status,
                                                     'form': form, 'searched': searched,
                                                     'sub_form': sub_form,
-                                                    'recommended_profiles_with_status': recommended_profiles_with_status})
+                                                    'recommended_profiles_with_status': recommended_profiles_with_status,})
 
     elif request.method == "POST":
         searched = True
