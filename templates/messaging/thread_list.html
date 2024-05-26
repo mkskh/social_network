@@ -34,8 +34,10 @@
                             
                             {% if thread.unread_count %}
                                 <span style="background-color: red; padding: 5px; border-radius: 10px; font-weight: bold; color: white; font-size: 20px;">{{ thread.unread_count }} new</span>
-                            {% else %}
-                            <span style="padding: 5px; border-radius: 10px; font-weight: bold;"> Last message: {{ thread.updated|date:"F j" }} {{thread.updated | time:"H:i"}}</span>
+                            {% elif thread.messages.all %}
+                                <span style="padding: 5px; border-radius: 10px; font-weight: bold;"> Last message: {{ thread.updated|date:"F j" }} {{thread.updated | time:"H:i"}}</span>
+                            {% elif not thread.messages.all %}
+                                <span style="padding: 5px; border-radius: 10px; font-weight: bold;"> Chat was created: {{ thread.updated|date:"F j" }} {{thread.updated | time:"H:i"}}</span>
                             {% endif %}
                         </div>
                     </div>

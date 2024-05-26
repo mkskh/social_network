@@ -41,16 +41,14 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            messages.success(request, ("You have been logged in"))
             return redirect('/')
         else:
-            messages.error(request, ("Incorrect information were provided. Please try again"))
+            messages.error(request, ("Incorrect login or password. Please try again"))
             return render(request, 'user/login.html', {})
 
 
 def user_logout(request):
     logout(request)
-    messages.success(request, ("You have been logged out"))
     return redirect('/')
 
 

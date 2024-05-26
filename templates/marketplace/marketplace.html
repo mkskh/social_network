@@ -98,20 +98,5 @@
 </div>
 {% endif %}
 
-<div class="pagination-container" style="display: flex; justify-content: center; margin: 20px 0;">
-    <div class="pagination" style="display: flex; align-items: center;">
-        <span class="step-links">
-            {% if products.has_previous %}
-                <a href="?page={{ products.previous_page_number }}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}"><button class="btn btn-secondary">Previous</button></a>
-            {% endif %}
-            <span class="current" style="font-size: 18px; color: rgb(114, 114, 114); font-weight: bold;">
-                Page {{ products.number }} of {{ products.paginator.num_pages }}
-            </span>
-            {% if products.has_next %}
-                <a href="?page={{ products.next_page_number }}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.price_min %}&price_min={{ request.GET.price_min }}{% endif %}{% if request.GET.price_max %}&price_max={{ request.GET.price_max }}{% endif %}"><button class="btn btn-secondary">Next</button></a>
-            {% endif %}
-        </span>
-    </div>
-</div>
 
 {% endblock %}

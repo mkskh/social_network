@@ -21,7 +21,7 @@
     {% if cart_products %}
         {% for item in cart_products %}
             <br>
-            <div class="card mb-3">
+            <div class="card mb-3" style="padding: 30px;">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="{{ item.product.image.url }}" class="img-fluid rounded-start" alt="{{ item.product.name }}">
