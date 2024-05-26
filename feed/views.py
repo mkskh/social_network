@@ -38,6 +38,10 @@ def news_feed(request):
         if post.profile != my_profile:
             recommend_users_for_subscription = False
 
+    # if there is 0 posts show Recommended users only once
+    if len(posts_from_subscriptions) == 0:
+        recommend_users_for_subscription = False
+
 
     # Collect the rest of the posts
     rest_posts = []
