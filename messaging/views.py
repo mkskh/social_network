@@ -14,7 +14,7 @@ def thread_list(request):
     threads = request.user.threads.annotate(
         unread_count=Count('messages', filter=Q(messages__timestamp__gt=ThreadUser.objects.filter(
             user=request.user, thread=models.OuterRef('pk')).values('last_read')[:1]))
-    ).order_by('-created')
+    ).order_by('-updated')
 
     return render(request, 'messaging/thread_list.html', {'threads': threads})
 
@@ -38,6 +38,8 @@ def thread_detail(request, pk):
             message.thread = thread
             message.sender = request.user
             message.save()
+            thread.updated = timezone.now()
+            thread.save()
 
             # Increment unread count for other participants
             ThreadUser.objects.filter(thread=thread).exclude(user=request.user).update(unread_count=models.F('unread_count'))
