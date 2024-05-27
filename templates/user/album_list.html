@@ -1,42 +1,62 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-3">
-    <a href="{% url 'user:my_user_profile' profile_user.id %}" class="btn btn-secondary mb-3">Back to Profile</a>
-    <h1>Albums of {{ profile_user.username }}</h1>
-    {% if is_owner %}
-        <a href="{% url 'user:create_album' profile_user.id %}" class="btn btn-primary mb-3">Create New Album</a>
-    {% endif %}
 
-    <div class="row">
+    
+    <h1 style="text-align: center; margin: 30px auto;">Albums of {{ profile_user.first_name }} {{ profile_user.last_name }}:</h1>
+    
+
+<div style="display: flex; justify-content: center;">
+    <div class="row" style="margin: auto;">
         {% for album in albums %}
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <a href="{% url 'user:photo_list' profile_user.id album.id %}">{{ album.title }}</a>
-                    </h5>
-                    <p class="card-text">{{ album.description }}</p>
-                    <p><small>Created on {{ album.created_at|date:"Y-m-d" }}</small></p>
-                </div>
-                <div class="card-body">
-                    {% for photo in album.photos.all|slice:":4" %} <!-- Display up to 4 photo thumbnails -->
-                    <img src="{{ photo.image.url }}" alt="{{ photo.description }}" class="img-thumbnail" style="width: 50px; height: auto;">
+        <div class="card" style="width: 500px; height: 360px; margin: 20px 60px; ">
+
+
+                <h2 class="card-title" style="text-align: center; margin-top: 15px;">
+                    <a href="{% url 'user:photo_list' profile_user.id album.id %}" style="text-decoration: none; color: black;">{{ album.title }}</a>
+                </h2>
+                
+                
+                <p class="card-text" style="margin-left: 20px;">{{ album.description }}</p>
+
+                
+                <div class="card-body" style="text-align: center; background-color: rgba(225, 225, 225, 0.846); margin: 0 20px;">
+                    {% for photo in album.photos.all|slice:":8" %} <!-- Display up to 4 photo thumbnails -->
+                    <a href="{% url 'user:photo_list' profile_user.id album.id %}">
+                        <img src="{{ photo.image.url }}" alt="{{ photo.description }}" class="img-thumbnail" style="width: 60px; height: auto;">
+                    </a>
                     {% empty %}
                     <p>No photos available.</p>
                     {% endfor %}
+                    
+                </div>
+                <div style="margin-left: 20px;">
+                    <p><small>Created on {{ album.created_at|date:"d.m.Y" }}</small></p>
                 </div>
                 {% if is_owner %}
-                    <a href="{% url 'user:edit_album' profile_user.id album.id %}" class="btn btn-info">Edit</a>
-                    <a href="{% url 'user:delete_album' profile_user.id album.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this album?');">Delete Album</a>
+                    <div style="text-align: center; margin: 5px auto 15px auto;">
+                        <a href="{% url 'user:edit_album' profile_user.id album.id %}" class="btn btn-secondary" style="margin-bottom: 8px;">Edit</a>
+                        <a href="{% url 'user:delete_album' profile_user.id album.id %}" class="btn btn-danger" style="margin-bottom: 8px;" onclick="return confirm('Are you sure you want to delete this album?');">Delete Album</a>
+                    </div>
                 {% endif %}
-            </div>
+
         </div>
         {% empty %}
         <div class="col-12">
-            <p>No albums found.</p>
+            <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
+                                margin-bottom: 30px; padding: 30px; align-items: center; margin-top: 10px;">
+                <h5>You don't have any albums created yet.</h5>
+                <h5>To create an album, click "Create New Album"</h5>
+            </div>
         </div>
         {% endfor %}
     </div>
+    
+</div>
+<div style="display: flex; justify-content: center; margin: 30px auto;">
+    <a href="{% url 'user:my_user_profile' profile_user.id %}" style="margin-right: 10px;" class="btn btn-secondary mb-3">Back to Profile</a>
+    {% if is_owner %}
+        <a href="{% url 'user:create_album' profile_user.id %}" class="btn btn-secondary mb-3">Create New Album</a>
+    {% endif %}
 </div>
 {% endblock %}

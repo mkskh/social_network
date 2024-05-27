@@ -157,6 +157,7 @@ def edit_profile(request, user_id):
 @login_required
 def create_album(request, user_id):
     user_profile = get_object_or_404(UserProfile, user__id=user_id)
+    
     if request.method == 'POST':
         form = AlbumForm(request.POST, request.FILES)
         if form.is_valid():
