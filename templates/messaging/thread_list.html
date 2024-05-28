@@ -2,41 +2,58 @@
 
 {% block content %}
 
-    <h1 style="margin-top: 20px; text-align: center;">Chats:</h1>
+    <h1 style="margin-top: 30px; text-align: center;">Chats:</h1>
 
     <div style="display: flex; justify-content: center; align-items: center; margin-top: 0;">
 
         <div class="card" style="text-align: center; width: 850px; margin-bottom: 20px; margin-top: 20px; border: none; background-color: rgb(236, 236, 236);">
-        {% for thread in threads %}
+            
+            {% if threads %}
+                {% for thread in threads %}
 
-            <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%; align-items: center;">
-                <div>
-                    <a href="{% url 'messaging:thread_detail' thread.pk %}">
-                        {% if thread.participants.first == request.user %}
-                            <img src="{{thread.participants.last.userprofile.image.url}}" alt="photo" width="80" height="80" style="border-radius: 50%; margin: 18px;">
-                        {% else %}
-                            <img src="{{thread.participants.first.userprofile.image.url}}" alt="photo" width="80" height="80" style="border-radius: 50%; margin: 18px;"> 
-                        {% endif %}
-                    </a>
-                </div>
-                <div style="text-align: left; margin-top: 0;">
-                    <a href="{% url 'messaging:thread_detail' thread.pk %}" style="text-decoration: none; color: inherit;">
-                        {% if thread.participants.first == request.user %}
-                            <h3>{{ thread.participants.last.first_name }} {{ thread.participants.last.last_name }}</h3>
-                        {% else %}
-                            <h3>{{ thread.participants.first.first_name }} {{ thread.participants.first.last_name }}</h3>
-                        {% endif %}
-                    </a>
-                </div>
-                <div style=" margin-left: auto; margin-right: 35px;" >
-                    
-                    {% if thread.unread_count %}
-                        <span style="background-color: red; padding: 5px; border-radius: 10px; font-weight: bold; color: white; font-size: 20px;">{{ thread.unread_count }} new</span>
-                    {% endif %}
-                </div>
-            </div>
+                    <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%; align-items: center;">
+                        <div>
+                            <a href="{% url 'messaging:thread_detail' thread.pk %}">
+                                {% if thread.participants.first == request.user %}
+                                    <img src="{{thread.participants.last.userprofile.image.url}}" alt="photo" width="80" height="80" style="border-radius: 50%; margin: 18px;">
+                                {% else %}
+                                    <img src="{{thread.participants.first.userprofile.image.url}}" alt="photo" width="80" height="80" style="border-radius: 50%; margin: 18px;"> 
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div style="text-align: left; margin-top: 0;">
+                            <a href="{% url 'messaging:thread_detail' thread.pk %}" style="text-decoration: none; color: inherit;">
+                                {% if thread.participants.first == request.user %}
+                                    <h3>{{ thread.participants.last.first_name }} {{ thread.participants.last.last_name }}</h3>
+                                {% else %}
+                                    <h3>{{ thread.participants.first.first_name }} {{ thread.participants.first.last_name }}</h3>
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div style=" margin-left: auto; margin-right: 35px;" >
+                            
+                            {% if thread.unread_count %}
+                                <span style="background-color: red; padding: 5px; border-radius: 10px; font-weight: bold; color: white; font-size: 20px;">{{ thread.unread_count }} new</span>
+                            {% elif thread.messages.all %}
+                                <span style="padding: 5px; border-radius: 10px; font-weight: bold;"> Last message: {{ thread.updated|date:"F j" }} {{thread.updated | time:"H:i"}}</span>
+                            {% elif not thread.messages.all %}
+                                <span style="padding: 5px; border-radius: 10px; font-weight: bold;"> Chat was created: {{ thread.updated|date:"F j" }} {{thread.updated | time:"H:i"}}</span>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        {% endfor %}
+                {% endfor %}
+            
+            {% else %}
+
+                <div class="inner-card" style="width: 815px; background-color: rgb(235, 235, 235); 
+                                        padding: 30px; align-items: center;">
+                    <h5>You don't have any chats with users yet.</h5>
+                    <h5>As soon as you write to someone, you will immediately see the chat here.</h5>
+                </div>
+            
+            {% endif %}
+
         </div>
     
     </div>

@@ -37,12 +37,13 @@
                         
                         <div style="display: flex; justify-content: space-between; margin-top: 20px;">
 
-                            <div class="form-group">
-                                <input type="file" name="image" class="form-control-file" id="id_image" accept="image/*">
+                            
+                            <div style="width: 240px;">
+                                {{ form.image }}
                             </div>
                             
                             <div>
-                                <button type="submit" style="border-radius: 5%; border-width: 1px; height: 30px; width: 90px;">Submit</button>
+                                <button type="submit" class="btn btn-light" style="border-radius: 5%; border-width: 1px; width: 90px; background-color: #ffffff; border-color: #aaaaaa; color: rgb(0, 0, 0);">Submit</button>
                             </div>
                             
                         </div>
@@ -51,11 +52,14 @@
                 </div>
                 
                 <!-- POSTS -->
+
+                <!-- If there are no posts -->
                 {% if not posts %}
 
-                <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
+                <div class="card" name='no_posts' style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
                                     margin-bottom: 30px; padding: 30px; align-items: center;">
                     <h5>You haven't subscribed to anyone yet to see your friends' news.</h5>
+                    <h5>Or maybe the people you follow haven't posted anything yet</h5>
                     <br>
                     <h5>Here are some people you might know and you can follow:</h5>
                     <div style="display: flex; align-items: center; white-space: nowrap; overflow-x: auto; margin-top: 30px;">
@@ -74,39 +78,42 @@
                     </div>
                 </div>
 
+                <!-- If there are posts -->
                 {% else %}
+                
                     {% for post in posts %}
                     <div class="card" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; margin-bottom: 20px;">
 
                         <!-- Header of the post -->
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="text-align: left; margin-right: auto; margin: 10px 0 0 20px;">
-                                <a href="{% url 'user:my_user_profile' post.profile.user.id %}"><img src="{{ post.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;"></a>
+                                <a href="{% url 'user:my_user_profile' post.profile.user.id %}"><img src="{{ post.profile.image.url }}" alt="profile_photo" width="60" height="60" style="border-radius: 50%;"></a>
                             </div>
                             <div style="margin-left: 10px; width:750px;" >
                                 <a href="{% url 'user:my_user_profile' post.profile.user.id %}" style="text-decoration: none; color: inherit;">
-                                    <p style="margin-top: 25px; margin-bottom: 0;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
+                                    <p style="margin-top: 25px; margin-bottom: 0; font-size: 20px;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
                                 </a>                            
                                 <p style="font-size: 12px;">{{ post.created_at|timesince }} ago </p>
                             </div>
 
 
                             <!-- Dropdown button "Options" -->
-                            <div class="dropdown">
-                                <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
-                                    Options
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <!-- First action with delete button -->
-                                    <li>
-                                        <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
-                                            {% csrf_token %}
-                                            <button class="dropdown-item" type="submit">Delete</button>
-                                        </form>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Edit post</a></li>
-                                </ul>
-                            </div>
+                            {% if post.profile.user == request.user %}
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-secondary" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
+                                        Options
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <!-- First action with delete button -->
+                                        <li>
+                                            <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
+                                                {% csrf_token %}
+                                                <button class="dropdown-item" type="submit">Delete</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endif %}
 
                         </div>
                         
@@ -130,7 +137,7 @@
                             <input type="hidden" name="post_id" value={{post.id}}>
                             <div style="margin: 0 0 0 30px; display: flex; align-items: center;">
                                 <div style="flex-shrink: 0;">
-                                    <button type="submit" class="ui button like-btn{{post.id}}">
+                                    <button type="submit" class="btn btn-secondary like-btn{{post.id}}">
                                         {% if profile not in post.liked.all %}
                                             Like
                                         {% else %}
@@ -182,7 +189,7 @@
                             <div class="mb-3" style="width: 70%; margin: 0 auto;">
                                 <input type="text" class="form-control" placeholder="Leave a comment" name="text">
                             </div>
-                            <button type="submit" style="display: block; margin: 10px 0 15px 0; margin-left: auto; margin-right: auto;">Leave comment</button>
+                            <button type="submit" class="btn btn-secondary" style="display: block; margin: 10px 0 15px 0; margin-left: auto; margin-right: auto;">Leave comment</button>
                         </form>
 
                     </div>
@@ -190,8 +197,32 @@
 
                 {% endif %}
 
+                <!-- If posts only from authenticated user -->
+                {% if recommend_users_for_subscription %}
+                    <div class="card" name="posts_only_from_me" style="width: 815px; background-color: rgb(235, 235, 235); margin-right: 0px; 
+                                        margin-bottom: 30px; padding: 30px; align-items: center;">
+                        <h5>You haven't subscribed to anyone yet to see your friends' news.</h5>
+                        <h5>Or maybe the people you follow haven't posted anything yet</h5>
+                        <br>
+                        <h5>Here are some people you might know and you can follow:</h5>
+                        <div style="display: flex; align-items: center; white-space: nowrap; overflow-x: auto; margin-top: 30px;">
+                            {% for recommended_profile in recommended_profiles %}
+                            <div style="text-align: center; margin-right: auto; margin: 15px 0 0 20px;">
+                                <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}">
+                                    <img src="{{ recommended_profile.image.url }}" alt="profile_photo" width="100" height="100" style="border-radius: 50%; margin: 0 15px 0 5px;">
+                                </a>
+                                <p style="font-size: 19px; margin-top: 5px;">
+                                    <a href="{% url 'user:my_user_profile' recommended_profile.user.id  %}" style="text-decoration: none; color: inherit;">
+                                        <strong>{{ recommended_profile.user.first_name }} {{ recommended_profile.user.last_name }}</strong>
+                                    </a>
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
 
-                <!-- THE REST OF THE POSTS -->
+                <!-- Recommended content //// THE REST OF THE POSTS -->
 
                 {% if rest_posts %}
 
@@ -205,32 +236,33 @@
                         <!-- Header of the post -->
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div style="text-align: left; margin-right: auto; margin: 10px 0 0 20px;">
-                                <a href="{% url 'user:my_user_profile' post.profile.user.id %}"><img src="{{ post.profile.image.url }}" alt="profile_photo" width="50" height="50" style="border-radius: 50%;"></a>
+                                <a href="{% url 'user:my_user_profile' post.profile.user.id %}"><img src="{{ post.profile.image.url }}" alt="profile_photo" width="60" height="60" style="border-radius: 50%;"></a>
                             </div>
                             <div style="margin-left: 10px; width:750px;" >
                                 <a href="{% url 'user:my_user_profile' post.profile.user.id %}" style="text-decoration: none; color: inherit;">
-                                    <p style="margin-top: 25px; margin-bottom: 0;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
+                                    <p style="margin-top: 25px; margin-bottom: 0; font-size: 20px;">{{ post.profile.user.first_name }} {{ post.profile.user.last_name }}</p>
                                 </a>                            
                                 <p style="font-size: 12px;">{{ post.created_at|timesince }} ago </p>
                             </div>
 
 
                             <!-- Dropdown button "Options" -->
-                            <div class="dropdown">
-                                <button type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
-                                    Options
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <!-- First action with delete button -->
-                                    <li>
-                                        <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
-                                            {% csrf_token %}
-                                            <button class="dropdown-item" type="submit">Delete</button>
-                                        </form>
-                                    </li>
-                                    <li><a class="dropdown-item" href="#">Edit post</a></li>
-                                </ul>
-                            </div>
+                            {% if post.profile.user == request.user %}
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-secondary" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 20px;">
+                                        Options
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <!-- First action with delete button -->
+                                        <li>
+                                            <form method="post" action="{% url 'feed:delete_post' post_id=post.id %}">
+                                                {% csrf_token %}
+                                                <button class="dropdown-item" type="submit">Delete</button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </div>
+                            {% endif %}
 
                         </div>
                         
@@ -254,7 +286,7 @@
                             <input type="hidden" name="post_id" value={{post.id}}>
                             <div style="margin: 0 0 0 30px; display: flex; align-items: center;">
                                 <div style="flex-shrink: 0;">
-                                    <button type="submit" class="ui button like-btn{{post.id}}">
+                                    <button type="submit" class="btn btn-secondary like-btn{{post.id}}">
                                         {% if profile not in post.liked.all %}
                                             Like
                                         {% else %}
@@ -306,7 +338,7 @@
                             <div class="mb-3" style="width: 70%; margin: 0 auto;">
                                 <input type="text" class="form-control" placeholder="Leave a comment" name="text">
                             </div>
-                            <button type="submit" style="display: block; margin: 10px 0 15px 0; margin-left: auto; margin-right: auto;">Leave comment</button>
+                            <button type="submit" class="btn btn-secondary" style="display: block; margin: 10px 0 15px 0; margin-left: auto; margin-right: auto;">Leave comment</button>
                         </form>
 
                     </div>

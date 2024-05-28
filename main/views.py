@@ -7,3 +7,7 @@ def home(request):
         return redirect('/feed/')
     
     return render(request, 'main/home.html')
+
+
+def about(request):
+    return render(request, 'main/about.html')

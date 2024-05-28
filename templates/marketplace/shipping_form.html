@@ -2,44 +2,37 @@
 
 {% block content %}
 
-<div class="container mt-5">
-    <h2>Shipping Information</h2>
+<div class="container mt-5" style="width: 800px;">
+    <h2 style="text-align: center; margin: 15px auto;">Shipping Information</h2>
+    <p style="text-align: center; margin: 20px auto;">To place an order please enter your delivery details</p>
     <form method="POST">
         {% csrf_token %}
-        <div class="form-group">
-            <label for="{{ form.shipping_full_name.id_for_label }}">Full Name</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_full_name }}
         </div>
-        <div class="form-group">
-            <label for="{{ form.shipping_email.id_for_label }}">Email Address</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_email }}
         </div>
-        <div class="form-group">
-            <label for="{{ form.shipping_address1.id_for_label }}">Address 1</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_address1 }}
         </div>
-        <div class="form-group">
-            <label for="{{ form.shipping_address2.id_for_label }}">Address 2</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_address2 }}
         </div>
-        <div class="form-group">
-            <label for="{{ form.shipping_city.id_for_label }}">City</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_city }}
         </div>
-        <div class="form-group">
-            <label for="{{ form.shipping_state.id_for_label }}">State</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_state }}
         </div>
-        <div class="form-group">
-            <label for="{{ form.shipping_zipcode.id_for_label }}">Zipcode</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_zipcode }}
         </div>
-        <div class="form-group">
-            <label for="{{ form.shipping_country.id_for_label }}">Country</label>
+        <div class="form-group" style="margin: 10px auto;">
             {{ form.shipping_country }}
         </div>
         <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-secondary">Submit</button>
         </div>
     </form>
 </div>

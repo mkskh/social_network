@@ -1,10 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Thread(models.Model):
     participants = models.ManyToManyField(User, related_name='threads')
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         name1 = self.participants.all().first()

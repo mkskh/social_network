@@ -1,11 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Add a Photo to "{{ album.title }}"</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Upload Photo</button>
-</form>
-<a href="{% url 'user:photo_list' profile_user.id album.id %}">Back to "{{ album.title }}"</a>
+
+<h1 style="text-align: center; margin: 190px auto 30px auto;">Add a Photo to "{{ album.title }}"</h1>
+<div style="text-align: center;">
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style="margin: 10px auto; width: 50%;">
+            <label for="image" class="form-label">Image</label>
+            <input type="file" class="form-control" name="image" id="image">
+        </div>
+        
+        <div style="margin: 10px auto; width: 50%;">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" style="height: 95px;" name="description" id="description"></textarea>
+        </div>
+        
+        <div style="text-align: center; padding-top: 40px; margin-bottom: 40px;">
+            <button type="submit" class="btn btn-success">Upload Photo</button>
+            <a href="{% url 'user:photo_list' profile_user.id album.id %}" class="btn btn-secondary mt-3">Back to "{{ album.title }}"</a>
+        </div>
+    </form>
+</div>
+
 {% endblock %}

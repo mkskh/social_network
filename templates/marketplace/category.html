@@ -19,7 +19,7 @@
             <input type="text" name="product_name" placeholder="Search by name..." value="{{ request.GET.product_name|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
             <input type="number" name="price_min" placeholder="Price Range: Min" step="0.01" value="{{ request.GET.price_min|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
             <input type="number" name="price_max" placeholder="Price Range: Max" step="0.01" value="{{ request.GET.price_max|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
-            <button type="submit" style="color: #fff; background-color: #007bff; border-color: #007bff; padding: .375rem .75rem;">Search</button>
+            <button type="submit" class="btn btn-secondary">Search</button>
         </div>
     </form>
 </div>

@@ -13,9 +13,6 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-import os
-from dotenv import load_dotenv
-
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'marketplace.context_processor.cart',
+                'messaging.context_processors.new_messages',
             ],
         },
     },

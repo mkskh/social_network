@@ -4,17 +4,18 @@
 
 <div class="container" style="margin-top: 250px;">
     <div class="row justify-content-center">
-        <div class="col-md-4 text-center" style="margin-top: 40px;">
+        <div class="col-md-4 text-center" style="margin-top: 34px;">
             <h1>Welcome to In Touch</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+            <p>This is a social network where you can find friends, share ideas and life events, and even shop. 
+                <br>Try it for free now</p>
         </div>
         <div class="col-md-1 d-flex align-items-center justify-content-center" >
             <div style="width: 1px; height: 200%; background-color: #ccc;"></div>
         </div>
         <div class="col-md-3 text-center">
-            <p>Already a member?</p>
-            <a href="{% url 'user:login' %}" class="btn btn-primary mb-3" style="width: 80%;">Sign In</a>
-            <p>Not yet a member? </p>
+            <p style="margin-bottom: 8px;">Already a member?</p>
+            <a href="{% url 'user:login' %}" class="btn btn-secondary mb-3" style="width: 80%;">Sign In</a>
+            <p style="margin-bottom: 8px;">Not yet a member? </p>
             <a href="{% url 'user:registration' %}" class="btn btn-secondary" style="width: 80%;">Create a new account</a>
         </div>
     </div>

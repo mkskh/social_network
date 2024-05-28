@@ -30,6 +30,7 @@ class ApiUserProfile(models.Model):
     phone = models.CharField(max_length=15, blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=300, blank=True, null=True)
+    age = models.IntegerField(default=29)
 
     def __str__(self):
         return self.user.username

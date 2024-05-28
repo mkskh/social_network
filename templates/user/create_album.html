@@ -1,11 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Create New Album</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
-<a href="{% url 'user:album_list' profile_user.user.id %}" class="btn btn-primary">Back to Albums</a>
+
+<h1 style="text-align: center; margin: 190px auto 30px auto;">Create New Album</h1>
+<div style="text-align: center;">
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div style=" margin: 10px auto; width: 50%;">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" name="title" id="title">
+        </div>
+        <div style="margin: 10px auto; width: 50%;">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" style="height: 95px;" name="description" id="description"></textarea>
+        </div>
+        
+        <div style="text-align: center; padding-top: 40px; margin-bottom: 40px;">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <a href="{% url 'user:album_list' profile_user.user.id %}" class="btn btn-secondary">Back to Albums</a>
+        </div>
+    </form>
+</div>
+
+
 {% endblock %}

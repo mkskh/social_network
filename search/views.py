@@ -1,12 +1,28 @@
 from django.shortcuts import render, redirect
 import random
+import requests
+import os
+from dotenv import load_dotenv
+from django.contrib.auth.decorators import login_required
 
 from user.models import UserProfile, Subscription
 from .forms import SearchForm
 from user.forms import SubscriptionForm
 
 
+@login_required
 def search(request):
+
+    #API
+    load_dotenv()
+    url_profile = "http://127.0.0.1:9000/profile/list/"
+    url_user = "http://127.0.0.1:9000/user/list/"
+
+    token = os.getenv('TOKEN')
+    headers = {
+        "Authorization": f"token {token}"
+    }
+
 
     authenticated_profile = UserProfile.objects.get(user=request.user)
 
@@ -37,13 +53,27 @@ def search(request):
             is_subscribed = Subscription.objects.filter(subscriber=authenticated_profile, subscribed_to=profile).exists()
             recommended_profiles_with_status.append({
                 'profile': profile,
-                'is_subscribed': is_subscribed,
+                'is_subscribed': is_subscribed
             })
+
+
+        try:
+            response_profile = requests.get(url_profile, headers=headers).json()
+            response_user = requests.get(url_user, headers=headers).json()
+
+            return render(request, 'search/search.html', {'all_profiles_with_status': all_profiles_with_status,
+                                                    'form': form, 'searched': searched,
+                                                    'sub_form': sub_form,
+                                                    'recommended_profiles_with_status': recommended_profiles_with_status,
+                                                    'response_profile': response_profile,
+                                                    'response_user': response_user})
+        except:
+            pass
 
         return render(request, 'search/search.html', {'all_profiles_with_status': all_profiles_with_status,
                                                     'form': form, 'searched': searched,
                                                     'sub_form': sub_form,
-                                                    'recommended_profiles_with_status': recommended_profiles_with_status})
+                                                    'recommended_profiles_with_status': recommended_profiles_with_status,})
 
     elif request.method == "POST":
         searched = True
@@ -69,7 +99,7 @@ def search(request):
                         search_res.append(item)
             
             if location:
-                search_res = [item for item in search_res if item.location == location]
+                search_res = [item for item in search_res if str(item.location).lower() == str(location).lower()]
 
             if gender:
                 search_res = [item for item in search_res if item.gender == gender]
@@ -90,6 +120,46 @@ def search(request):
                     'profile': profile,
                     'is_subscribed': is_subscribed,
                 })
+            
+            # API 
+
+            try:
+                response_profile = requests.get(url_profile, headers=headers).json()
+                response_user = requests.get(url_user, headers=headers).json()
+                
+                search_res_user = []
+
+                for item in response_user:
+                    if not key:
+                        search_res.append(item)
+                    else:
+                        if key in str(item['first_name']).lower() or key in str(item['last_name']).lower():
+                            search_res_user.append(item)
+                
+                if location:
+                    response_profile = [item  for item in response_profile if str(item['location']).lower() == str(location).lower()]
+                
+                if gender:
+                    response_profile = [item for item in response_profile if item['gender'] == gender]
+                    
+
+                if age_more_than:
+                    response_profile = [item for item in response_profile if int(item['age']) > age_more_than]
+                    
+
+                if age_less_than:
+                    response_profile = [item for item in response_profile if int(item['age']) < age_less_than]
+                
+                if not search_res_user:
+                    search_res_user = response_user
+                
+                return render(request, 'search/search.html', {'search_res_with_status': search_res_with_status,
+                                                            'form': form,
+                                                            'searched': searched,
+                                                            'search_res_profile': response_profile,
+                                                            'search_res_user': search_res_user})
+            except:
+                pass
 
         # Subscription
         profile_id = request.POST.get('profile_id')

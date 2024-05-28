@@ -68,7 +68,7 @@
                         <form method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="profile_id" value={{search_res_profile.profile.user.id}}>
-                            <button type="submit">
+                            <button type="submit" class="btn btn-secondary" style="font-size: 15px; height: 35px;">
                                 {% if search_res_profile.is_subscribed %}
                                     Unsubscribe
                                 {% else %}
@@ -81,21 +81,61 @@
                     <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
                         <!-- Send a message -->
                         <a href="{% url 'messaging:start_thread' search_res_profile.profile.user.id %}">
-                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
+                            <button class="btn btn-secondary" style="border-width: 2px;  font-size: 15px; height: 35px;">Send a message</button>
                         </a>
                     </div>
                 </div>
 
                 {% endfor %}
+
+                <!-- API -->
+                {% if search_res_profile and search_res_user %}
+
+                    {% for profile in search_res_profile %}
+                        {% for user in search_res_user %}
+                            {% if profile.id == user.id %}
+
+                                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                                    <div>
+                                        <a href="#">
+                                            <img src="/media/user_images/dummy-profile-picture.png" alt="photo" width="70" height="70" style="border-radius: 50%; margin: 13px;"> 
+                                        </a>
+                                    </div>
+                                    <div style="text-align: left; margin-top: 18px">
+                                        <a href="#" style="text-decoration: none; color: inherit;">
+                                            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                                        </a>
+                                        <p>{{ profile.age }} years, {{ profile.location }}</p>
+                                    </div>
+                                    
+                                    <div style="margin-top: 32px; margin-left: auto; font-size: 15px; height: 40px;">
+                                        <!-- Subscribe -->
+                                        <button type="submit" class="btn btn-secondary" style="font-size: 15px; height: 40px;">
+                                            Subscribe
+                                        </button>
+                                    </div>
+                                    
+                                    <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
+                                        <!-- Send a message -->
+                                        <button class="btn btn-secondary" style="border-width: 2px;  font-size: 15px; height: 40px;">Send a message</button>
+                                    </div>
+                                </div>
+                                
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+
+                {% endif %}
             </div>
             
         </div>
 
         <div style="text-align: center; margin-bottom: 16px;">
             <a href="{% url 'search:search' %}">
-                <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 100px;">Reset filter</button>
+                <button class="btn btn-secondary">Reset filter</button>
             </a>
         </div>
+
 
     {% else %}
     <!-- If GET request -->
@@ -127,7 +167,7 @@
                         <form method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="profile_id" value={{recommended_profile.profile.user.id}}>
-                            <button type="submit">
+                            <button type="submit" class="btn btn-secondary" style="font-size: 15px; height: 35px;">
                                 {% if recommended_profile.is_subscribed %}
                                     Unsubscribe
                                 {% else %}
@@ -140,11 +180,12 @@
                     <div style="margin-left: 10px; margin-top: 5px; margin-right: 15px;">
                         <!-- Send a message -->
                         <a href="{% url 'messaging:start_thread' recommended_profile.profile.user.id %}">
-                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
+                            <button class="btn btn-secondary" style="border-width: 2px;  font-size: 15px; height: 35px;">Send a message</button>
                         </a>
                     </div>
                 </div>
                 {% endfor %}
+                
             </div>
             
         </div>
@@ -175,7 +216,7 @@
                         <form method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="profile_id" value={{sorted_profile.profile.user.id}}>
-                            <button type="submit">
+                            <button type="submit" class="btn btn-secondary" style="font-size: 15px; height: 35px;">
                                 {% if sorted_profile.is_subscribed %}
                                     Unsubscribe
                                 {% else %}
@@ -188,12 +229,52 @@
                     <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
                         <!-- Send a message -->
                         <a href="{% url 'messaging:start_thread' sorted_profile.profile.user.id %}">
-                            <button style="border-radius: 5%; border-width: 2px; height: 30px; width: 140px;">Send a message</button>
+                            <button class="btn btn-secondary" style="border-width: 2px;  font-size: 15px; height: 35px;">Send a message</button>
                         </a>
                     </div>
                 </div>
 
                 {% endfor %}
+
+                <!-- API -->
+                {% if response_profile and response_user %}
+
+                    {% for profile in response_profile %}
+                        {% for user in response_user %}
+                            {% if profile.id == user.id %}
+
+                                <div class="inner-card" style="margin: 0 0 0 15px; display: flex; border-radius: 3%;">
+                                    <div>
+                                        <a href="">
+                                            <img src="/media/user_images/dummy-profile-picture.png" alt="photo" width="70" height="70" style="border-radius: 50%; margin: 13px;"> 
+                                        </a>
+                                    </div>
+                                    <div style="text-align: left; margin-top: 18px">
+                                        <a href="" style="text-decoration: none; color: inherit;">
+                                            <h5>{{ user.first_name }} {{ user.last_name }}</h5>
+                                        </a>
+                                        <p>{{ profile.age }} years, {{ profile.location }}</p>
+                                    </div>
+                                    
+                                    <div style="margin-top: 32px; margin-left: auto; font-size: 15px; height: 40px;">
+                                        <!-- Subscribe -->
+                                        <button type="submit" class="btn btn-secondary" style="font-size: 15px; height: 40px;">
+                                            Subscribe
+                                        </button>
+                                    </div>
+                                    
+                                    <div style="margin-left: 10px; margin-top: 32px; margin-right: 15px;">
+                                        <!-- Send a message -->
+                                        <button class="btn btn-secondary" style="border-width: 2px;  font-size: 15px; height: 40px;">Send a message</button>
+                                    </div>
+                                </div>
+                                
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+
+                {% endif %}
+
             </div>
             
         </div>
