@@ -24,4 +24,5 @@ urlpatterns = [
     path('profile/<int:user_id>/albums/<int:album_id>/photos/<int:photo_id>/delete', views.delete_photo, name='delete_photo'),
     path('profile/<int:user_id>/albums/<int:album_id>/photos/<int:photo_id>/edit', views.edit_photo, name='edit_photo'),
 
+    path('profile/<int:user_id>/albums/<int:album_id>/photos/<int:photo_id>/', views.photo_gallery, name='photo_gallery')
 ]

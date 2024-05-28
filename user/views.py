@@ -257,6 +257,8 @@ def photo_list(request, user_id, album_id):
     })
 
 
+
+
 @login_required
 def delete_photo(request, user_id, album_id, photo_id):
     ''' User can delete it their own photos '''
@@ -289,5 +291,23 @@ def edit_photo(request, user_id, album_id, photo_id):
         'form': form,
         'album': album,
         'photo': photo,
+        'profile_user': user_profile.user
+    })
+
+
+@login_required
+def photo_gallery(request, user_id, album_id, photo_id):
+    ''' View a photo in full size with navigation '''
+    user_profile = get_object_or_404(UserProfile, user__id=user_id)
+    album = get_object_or_404(Album, id=album_id, profile__user__id=user_id)
+    photos = album.photos.all()
+    current_photo = get_object_or_404(Photo, id=photo_id, album=album)
+    is_owner = request.user.userprofile == user_profile
+
+    return render(request, 'user/photo_gallery.html', {
+        'album': album,
+        'photos': photos,
+        'current_photo': current_photo,
+        'is_owner': is_owner,
         'profile_user': user_profile.user
     })

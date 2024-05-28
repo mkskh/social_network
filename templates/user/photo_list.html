@@ -9,7 +9,9 @@
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
         {% for photo in photos %}
             <div class="card" style="width: 300px; height: auto; margin: 20px 60px;">
-                <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.description }}" style="padding: 10px;">
+                <a href="{% url 'user:photo_gallery' profile_user.id album.id photo.id %}">
+                    <img src="{{ photo.image.url }}" class="card-img-top" alt="{{ photo.description }}" style="padding: 10px;">
+                </a>
                 <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
                     <div style="margin-top: auto;">
                         <h5 class="card-title">{{ photo.description }}</h5>
