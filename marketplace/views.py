@@ -10,7 +10,6 @@ from .forms import ProductForm, ShippingForm
 from .cart import Cart
 from decimal import Decimal, InvalidOperation
 
-# Create your views here.
 
 def category(request, category_id):
     try:
@@ -62,6 +61,7 @@ def marketplace_page(request):
         'products': products,
     })
 
+
 @login_required
 def add_product(request):
     if request.method == 'POST':
@@ -78,7 +78,6 @@ def add_product(request):
     return render(request, 'marketplace/add_product.html', {'form': form})
 
 
-
 @login_required
 def delete_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -87,12 +86,12 @@ def delete_product(request, product_id):
     return redirect('marketplace:added_products')
 
 
-
 @login_required
 def added_products(request):
 
         added_products = Product.objects.filter(seller=request.user)
         return render(request, 'marketplace/added_products.html', {'added_products': added_products})
+
 
 @login_required
 def cart_summary(request):
@@ -116,8 +115,6 @@ def cart_summary(request):
     return render(request, 'marketplace/cart_summary.html', context)
 
 
-
-
 @login_required
 def cart_add(request):
     cart = Cart(request)
@@ -139,7 +136,8 @@ def cart_add(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('marketplace:marketplace_page')))
     else:
         return redirect('marketplace:marketplace_page')
-    
+
+
 @login_required
 def cart_update(request):
     if request.method == 'POST':
@@ -175,8 +173,6 @@ def payment_view(request):
     return render(request, 'marketplace/payment.html')
 
 
-
-
 @login_required
 def shipping_form_view(request):
     if request.method == 'POST':
@@ -204,8 +200,8 @@ def shipping_form_view(request):
         form = ShippingForm()
     return render(request, 'marketplace/shipping_form.html', {'form': form})
 
-@login_required
 
+@login_required
 def success_page(request):
     # Retrieve relevant information such as purchased products or shipping details
     cart = Cart(request)

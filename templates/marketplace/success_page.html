@@ -6,6 +6,9 @@
         <h1>Payment Successful!</h1>
         <p>Your order has been placed successfully.</p>
     </div>
-    <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-primary">Go to Home</a>
+    <div class="d-flex justify-content-center gap-2" role="group">
+        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-secondary" style="text-align: center;">Go to Home</a>
+    </div>
+    
 </div>
 {% endblock %}

@@ -27,41 +27,45 @@
             </div>
             <div class="col-md-8">
                 <div class="card-body">
-                    <div class="text-center">
-                        <h5 class="card-title">{{ product.name }}</h5>
-                        <br><br>
-
+                    <div class="text-left" style="margin-left: 40px;">
+                        <h4 class="card-title" style="text-align: center;">{{ product.name }}</h4>
+                        <br>
+                        <p class="card-text"><strong>Seller:</strong> 
+                            <a href="{% url 'user:my_user_profile' product.seller.id %}"  style="text-decoration: none; color: inherit;">
+                                {{ product.seller.first_name }} {{ product.seller.last_name }}
+                            </a>
+                        </p>
+                        <p class="card-text"><strong>Category:</strong> {{ product.category }}</p>
                         <p class="card-text">{{ product.description }}</p>
-                        
-                        <p class="card-text">Message the Seller: <a href="{% url 'user:my_user_profile' product.seller.id %}"  style="text-decoration: none; color: inherit;">{{ product.seller.first_name }} {{ product.seller.last_name }}</a></p>
                         <div class="row justify-content-center">
                             
                         </div>
-                        <br>
-                        
                         
                         {% if product.is_sale %}
                             <span class="text-muted"><strike>€{{ product.price }}</strike></span>
                             <span class="text-danger ms-2">€{{ product.sale_price }}</span>
                             <span class="badge bg-danger text-white ms-2">Sale</span>
                         {% else %}
-                            Product price €{{ product.price }}
-                            <br>Product Condition : {{ product.condition|capfirst }}
+                            <p class="card-text"><strong>Product price:</strong> €{{ product.price }}</p>
                         {% endif %}
-                        
+                        <p class="card-text"><strong>Product condition:</strong> {{ product.condition|capfirst }}</p>
                         <!-- Display available quantity -->
-                        <div style="margin-top: 10px;"> 
-                            <p class="card-text">Available Quantity: {{ product.quantity }}</p>
+                        <div> 
+                            <p class="card-text"><strong>Available quantity:</strong> {{ product.quantity }}</p>
                         </div>
+                        <p class="card-text">
+                            <p class="card-text">
+                                <a href="{% url 'messaging:start_thread' product.seller.id %}"  class="btn btn-secondary">
+                                    Write to the Seller
+                                </a>
+                            </p>
                     </div>
                     <br><br>
                     <form method="post" action="{% url 'marketplace:cart_add' %}">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" value="{{ product.id }}">
                         
-                        
-                        <br><br>
-                        <div class="d-inline-flex gap-2" role="group">
+                        <div class="d-flex justify-content-center gap-3" role="group">
                             <button type="submit" class="btn btn-outline-dark mt-auto">Add to Cart</button>
                             <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
                             <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary">Buy Now</a>

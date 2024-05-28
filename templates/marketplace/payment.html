@@ -18,24 +18,32 @@
     </div>
 </div>
 
-<div class="container mt-5">
-    <h3>Your Details</h3>
-    <ul>
-        <li><strong>Full Name:</strong> {{ request.POST.shipping_full_name }}</li>
-        <li><strong>Email Address:</strong> {{ request.POST.shipping_email }}</li>
-        <li><strong>Address 1:</strong> {{ request.POST.shipping_address1 }}</li>
-        <li><strong>Address 2:</strong> {{ request.POST.shipping_address2 }}</li>
-        <li><strong>City:</strong> {{ request.POST.shipping_city }}</li>
-        <li><strong>State:</strong> {{ request.POST.shipping_state }}</li>
-        <li><strong>Zipcode:</strong> {{ request.POST.shipping_zipcode }}</li>
-        <li><strong>Country:</strong> {{ request.POST.shipping_country }}</li>
-    </ul>
+<div class="container mt-5" style="text-align: center;">
+    <h3>Your shipping details</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    
+                        <p><strong>Full Name:</strong> {{ request.POST.shipping_full_name }}</p>
+                        <p><strong>Email Address:</strong> {{ request.POST.shipping_email }}</p>
+                        <p><strong>Address 1:</strong> {{ request.POST.shipping_address1 }}</p>
+                        <p><strong>Address 2:</strong> {{ request.POST.shipping_address2 }}</p>
+                        <p><strong>City:</strong> {{ request.POST.shipping_city }}</p>
+                        <p><strong>State:</strong> {{ request.POST.shipping_state }}</p>
+                        <p><strong>Zipcode:</strong> {{ request.POST.shipping_zipcode }}</p>
+                        <p><strong>Country:</strong> {{ request.POST.shipping_country }}</p>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card">
+            <div class="card" style="margin-bottom: 25px;">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Payment Details</h3>
                     <!-- Display total price -->
@@ -57,7 +65,7 @@
                             </div>
                         </div>
                         <div class="mt-4">
-                            <button type="submit" class="btn btn-primary">Make Payment</button>
+                            <button type="submit" class="btn btn-secondary">Make Payment</button>
                         </div>
                     </form>
                 </div>

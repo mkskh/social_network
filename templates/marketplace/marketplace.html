@@ -24,7 +24,7 @@
             <input type="text" name="product_name" placeholder="Search by name..." value="{{ request.GET.product_name|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
             <input type="number" name="price_min" placeholder="Price Range: Min" step="0.01" value="{{ request.GET.price_min|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
             <input type="number" name="price_max" placeholder="Price Range: Max" step="0.01" value="{{ request.GET.price_max|default_if_none:'' }}" style="border: 1px solid #ced4da; padding: .375rem .75rem; margin-right: .5rem;">
-            <button type="submit" style="color: #fff; background-color: #007bff; border-color: #007bff; padding: .375rem .75rem;">Search</button>
+            <button type="submit" class="btn btn-secondary">Search</button>
         </div>
     </form>
 </div>
@@ -32,7 +32,7 @@
 
 
 <!-- Sell Product Button -->
-<div class="container mt-4 mb-4 text-center">
+<div class="container mt-4 mb-0 text-center" style="margin-bottom: 0;">
     {% if user.is_authenticated %}
         <a href="{% url 'marketplace:add_product' %}" class="btn btn-outline-dark mt-auto">Sell Product</a>
     {% else %}
@@ -42,7 +42,7 @@
 </div>
 
 <!-- Marketplace Products Section -->
-<section class="py-5">
+<section class="py-0">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for product in products %}
@@ -50,7 +50,7 @@
                     <div class="card h-100 shadow-sm">
                         <!-- Product image-->
                         <a href="{% if user.is_authenticated %}{% url 'marketplace:product' product.pk %}{% else %}{% url 'user:login' %}?next={% url 'marketplace:product' product.pk %}{% endif %}">
-                            <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
+                            <img class="card-img-top" style="padding: 10px;" src="{{ product.image.url }}" alt="{{ product.name }}" />
                         </a>
                         <!-- Product details-->
                         <div class="card-body p-4">
