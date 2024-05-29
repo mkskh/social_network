@@ -1,35 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-    /* Custom styles for carousel and descriptions */
-    .carousel-image {
-        max-width: 100%;
-        max-height: 500px;
-        object-fit: contain;
-    }
-    .photo-description {
-        text-align: center;
-        margin-top: 15px;
-    }
-</style>
-<div class="container mt-3">
-    <div class="mb-3">
-        <a href="{% url 'user:album_list' profile_user.id %}" class="btn btn-secondary">Back to Albums</a>
-        {% if is_owner %}
-            <a href="{% url 'user:create_photo' profile_user.id album.id %}" class="btn btn-primary">Add New Photo</a>
-        {% endif %}
-    </div>
-
+<div class="card-container" style="text-align: center; margin-top: 40px;">
+    
     <h1>{{ album.title }}</h1>
-
+    
     {% if photos %}
-    <div id="photoCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000"> <!-- Adjust the slide interval here -->
+ 
+    <div id="photoCarousel" class="carousel slide" data-ride="carousel" data-interval="false"> <!-- Adjust the slide interval here -->
         <div class="carousel-inner">
             {% for photo in photos %}
-            <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                <img src="{{ photo.image.url }}" class="d-block w-100 carousel-image" alt="Photo">
-                <div class="photo-description">
+            <div class="carousel-item{% if photo.id == current_photo.id %} active{% endif %}">
+                <img src="{{ photo.image.url }}" class="d-block w-100" alt="{{photo.description}}" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+                <div class="photo-description" style="text-align: center; margin-top: 15px;">
                     <h4>{{photo.description}}</h4>
                     <p>{{photo.created_at}}</p>
                 </div>
@@ -37,16 +20,46 @@
             {% endfor %}
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="carousel-control-prev-icon" aria-hidden="true"  style="filter: invert(1);"></span>
             <span class="visually-hidden">Previous</span>
         </button>
         <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="carousel-control-next-icon" aria-hidden="true"  style="filter: invert(1);"></span>
             <span class="visually-hidden">Next</span>
         </button>
     </div>
     {% else %}
     <p>No photos found in this album.</p>
     {% endif %}
+
+    <div class="mb-3">
+        <a href="{% url 'user:album_list' profile_user.id %}" class="btn btn-secondary">Back to Albums</a>
+        {% if is_owner %}
+            <a href="{% url 'user:create_photo' profile_user.id album.id %}" class="btn btn-primary">Add New Photo</a>
+        {% endif %}
+    </div>
+
 </div>
+
+<script>
+    // Enable manual sliding for carousel controls
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = new bootstrap.Carousel(document.getElementById('photoCarousel'), {
+            interval: false
+        });
+
+        var carouselControls = document.querySelectorAll('[data-bs-slide]');
+        carouselControls.forEach(function (control) {
+            control.addEventListener('click', function () {
+                var slideDirection = this.getAttribute('data-bs-slide');
+                if (slideDirection === 'prev') {
+                    carousel.prev();
+                } else if (slideDirection === 'next') {
+                    carousel.next();
+                }
+            });
+        });
+    });
+</script>
+
 {% endblock %}
