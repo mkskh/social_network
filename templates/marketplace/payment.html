@@ -74,4 +74,12 @@
     </div>
 </div>
 
+<script>
+
+    const totalCartPrice = localStorage.getItem('totalCartPrice');
+    if (totalCartPrice) {
+        document.getElementById('total-cart-price').textContent = totalCartPrice;
+    }
+</script>
+
 {% endblock %}

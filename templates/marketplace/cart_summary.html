@@ -67,9 +67,9 @@
                                         <div class="col-md-2">
                                             <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
                                         </div>
-                                        <div class="col-md-2">
+                                        <!-- <div class="col-md-2">
                                             <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary" onclick="clearQuantitiesFromLocalStorage()">Buy Now</a>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </form>
                             </center>
@@ -84,9 +84,13 @@
 
     {% if cart_products %}
         <div class="row justify-content-end">
+            
             <div class="col-md-3">
                 <hr>
                 <h4 style="text-align: right;"><strong>Total Price:</strong> €<span id="total-cart-price">0.00</span></h4>
+                <div class="row justify-content-end">
+                    <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary" onclick="clearQuantitiesFromLocalStorage()">Buy Now</a>
+                </div>
             </div>
         </div>
     {% endif %}
@@ -172,4 +176,5 @@
         });
     }
 </script>
+
 {% endblock %}
