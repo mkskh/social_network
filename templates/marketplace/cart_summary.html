@@ -21,56 +21,58 @@
     {% if cart_products %}
         {% for item in cart_products %}
             <br>
-            <div class="card mb-3" style="padding: 30px;">
+            <div class="card mb-3">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="{{ item.product.image.url }}" class="img-fluid rounded-start" alt="{{ item.product.name }}">
                     </div>
                     <div class="col-md-8">
-                        <div class="card-body" style="margin-left: 40px;">
-                            
-                                <h4 class="card-title" style="text-align: center;">{{ item.product.name }}</h4>
-                                <br>
+                        <div class="card-body">
+                            <center>
+                                <h5 class="card-title">{{ item.product.name }}</h5>
                                 <p class="card-text">{{ item.product.description }}</p>
-                                <center>
-                                    {% if item.product.is_sale %}
-                                        <span class="text-muted"><strike>€{{ item.product.price }}</strike></span>
-                                        <span class="text-danger ms-2">€{{ item.product.sale_price }}</span>
-                                        <span class="badge bg-danger text-white ms-2">Sale</span>
-                                    {% else %}
-                                        <br>
-                                        <strong>Product price:</strong> €{{ item.product.price }}
-                                        
-                                    {% endif %}
-                                    <br><br>
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-2.5"><strong>Number of Products:</strong></div>
-                                        <div class="col-md-2">
-                                            <input type="number" 
-                                                    class="form-control form-select-sm product-quantity" 
-                                                    data-price="{{ item.product.price }}" 
-                                                    data-id="{{ item.product.id }}" 
-                                                    name="product_qty" 
-                                                    id="qty-cart-{{ item.product.id }}" 
-                                                    min="1" 
-                                                    value="1">
-                                        </div>
+                                {% if item.product.is_sale %}
+                                    <span class="text-muted"><strike>€{{ item.product.price }}</strike></span>
+                                    <span class="text-danger ms-2">€{{ item.product.sale_price }}</span>
+                                    <span class="badge bg-danger text-white ms-2">Sale</span>
+                                {% else %}
+                                    €{{ item.product.price }}
+                                    <br>
+                                    <p class="product-id" id="product-id">ID : {{ item.product.id }}</p>
+                                {% endif %}
+                                <br><br>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-2.5"><strong>Number of Products:</strong></div>
+                                    <div class="col-md-2">
+                                        <input type="number" 
+                                            class="form-control form-select-sm product-quantity" 
+                                            data-price="{{ item.product.price }}" 
+                                            data-id="{{ item.product.id }}" 
+                                            data-max-quantity="{{ item.product.quantity }}"
+                                            name="product_qty" 
+                                            id="qty-cart-{{ item.product.id }}" 
+                                            min="1" 
+                                            value="1">
                                     </div>
-                                    <br>
-                                    <p><strong>Total Price:</strong> €<span class="total-price" id="total-price-{{ item.product.id }}">{{ item.total_price }}</span></p>
-                                    <br>
-                                </center>
+                                </div>
+                                <br>
+                                <p>Total Price: <span class="total-price" id="total-price-{{ item.product.id }}">{{ item.total_price }}</span></p>
                                 <form method="post" action="{% url 'marketplace:cart_delete' %}" onsubmit="removeQuantityFromLocalStorage('{{ item.product.id }}');">
                                     {% csrf_token %}
                                     <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                                    <div class="d-flex justify-content-center gap-3" role="group">
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
-                                        <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary">Buy Now</a>
-                                        
+                                    <div class="row justify-content-center">
+                                        <div class="col-md-2">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
+                                        </div>
+                                        <!-- <div class="col-md-2">
+                                            <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary" onclick="clearQuantitiesFromLocalStorage()">Buy Now</a>
+                                        </div> -->
                                     </div>
                                 </form>
-                            
+                            </center>
                         </div>
                     </div>
                 </div>
@@ -82,9 +84,13 @@
 
     {% if cart_products %}
         <div class="row justify-content-end">
+            
             <div class="col-md-3">
                 <hr>
                 <h4 style="text-align: right;"><strong>Total Price:</strong> €<span id="total-cart-price">0.00</span></h4>
+                <div class="row justify-content-end">
+                    <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary" onclick="clearQuantitiesFromLocalStorage()">Buy Now</a>
+                </div>
             </div>
         </div>
     {% endif %}
@@ -102,6 +108,9 @@
             if (storedQuantity) {
                 input.value = storedQuantity;
                 updateQuantityAndPrice(input);
+            } else {
+                input.value = 1;  // Default to 1 if no stored quantity
+                updateQuantityAndPrice(input);
             }
 
             input.addEventListener('change', function() {
@@ -115,15 +124,22 @@
     function updateQuantityAndPrice(input) {
         const productId = input.getAttribute('data-id');
         const price = parseFloat(input.getAttribute('data-price'));
-        const quantity = parseInt(input.value);
+        let quantity = parseInt(input.value);
+        const maxQuantity = parseInt(input.getAttribute('data-max-quantity')); // Get the max quantity attribute value
         const totalPriceElement = document.getElementById(`total-price-${productId}`);
-        const totalPrice = price * quantity;
+        
+        // Check if quantity exceeds max quantity, if so, set it to max quantity
+        if (quantity > maxQuantity) {
+            quantity = maxQuantity;
+            input.value = maxQuantity; // Update input value to max quantity
+        }
 
+        const totalPrice = price * quantity;
         totalPriceElement.textContent = totalPrice.toFixed(2);
 
-        updateCartQuantity(productId, quantity);
+        updateCartQuantity(productId, quantity); // Use updated quantity
         calculateTotalCartPrice();
-        localStorage.setItem(`cart_quantity_${productId}`, quantity);
+        localStorage.setItem(`cart_quantity_${productId}`, quantity); // Use updated quantity
     }
 
     function calculateTotalCartPrice() {
@@ -132,6 +148,7 @@
             totalCartPrice += parseFloat(element.textContent);
         });
         document.getElementById('total-cart-price').textContent = totalCartPrice.toFixed(2);
+        localStorage.setItem('totalCartPrice', totalCartPrice.toFixed(2));  // Store total price in localStorage
     }
 
     function updateCartQuantity(productId, quantity) {
@@ -149,32 +166,15 @@
     function removeQuantityFromLocalStorage(productId) {
         localStorage.removeItem(`cart_quantity_${productId}`);
     }
-</script>
 
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Your existing code here
-
-        // Function to calculate the total cart price
-        function calculateTotalCartPrice() {
-            let totalCartPrice = 0;
-            // Loop through each item in the cart
-            document.querySelectorAll('.total-price').forEach(element => {
-                // Get the price of the item and parse it as a float
-                const price = parseFloat(element.textContent);
-                // Add the price to the total cart price
-                totalCartPrice += price;
-            });
-            // Update the content of the total price span with the calculated total cart price
-            document.getElementById('total-cart-price').textContent = totalCartPrice.toFixed(2);
-        }
-
-        // Call the function initially
-        calculateTotalCartPrice();
-    });
+    function clearQuantitiesFromLocalStorage() {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+            if (key.startsWith('cart_quantity_')) {
+                localStorage.removeItem(key);
+            }
+        });
+    }
 </script>
 
 {% endblock %}
-

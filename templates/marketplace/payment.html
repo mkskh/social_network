@@ -47,7 +47,7 @@
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Payment Details</h3>
                     <!-- Display total price -->
-                    <p>Total Price: €{{ request.session.total_price|default:"0.00" }}</p>
+                    <p>Total Price: €<span id="total-cart-price">0.00</span></p>
                     <form method="POST" action="{% url 'marketplace:success_page' %}">
                         {% csrf_token %}
                         <div class="form-group">
@@ -73,4 +73,13 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    const totalCartPrice = localStorage.getItem('totalCartPrice');
+    if (totalCartPrice) {
+        document.getElementById('total-cart-price').textContent = totalCartPrice;
+    }
+</script>
+
 {% endblock %}
