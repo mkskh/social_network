@@ -61,4 +61,9 @@
             </div>
         </div>
     </section>
+    {% if request.GET.product_name or request.GET.price_min or request.GET.price_max or request.resolver_match.url_name == 'category' %}
+    <div class="container mt-4 mb-4 text-center">
+        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-secondary">Reset</a>
+    </div>
+    {% endif %}
 {% endblock %}

@@ -61,15 +61,23 @@
                             </p>
                     </div>
                     <br><br>
-                    <form method="post" action="{% url 'marketplace:cart_add' %}">
+                    <form method="post" action="{% url 'marketplace:cart_add' %}" class="text-center" id="add-to-cart-form">
                         {% csrf_token %}
                         <input type="hidden" name="product_id" value="{{ product.id }}">
-                        
-                        <div class="d-flex justify-content-center gap-3" role="group">
-                            <button type="submit" class="btn btn-outline-dark mt-auto">Add to Cart</button>
+                        <input type="hidden" name="quantity" value="1">
+                    
+                        <br><br>
+                        <div class="d-flex justify-content-center gap-2" role="group">
+                            <button type="submit" class="btn btn-outline-dark mt-auto" id="add-to-cart-btn">Add to Cart</button>
                             <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-outline-dark mt-auto">Home</a>
-                            <a href="{% url 'marketplace:shipping_form' %}" class="btn btn-outline-primary">Buy Now</a>
+                            <button type="submit" form="buy-now-form" class="btn btn-outline-primary mt-auto" id="buy-now-btn">Buy Now</button>
                         </div>
+                    </form>
+                    
+                    <form method="post" action="{% url 'marketplace:buy_now' %}" id="buy-now-form" style="display:none;">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                        <input type="hidden" name="quantity" value="1">
                     </form>
                 </div>
             </div>

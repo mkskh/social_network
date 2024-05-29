@@ -92,9 +92,9 @@
     </div>
 </section>
 
-{% if category %}
-<div style="margin: 20px; text-align: center;">
-    <a href="{% url 'marketplace:marketplace_page' %}"><button class="btn btn-secondary">Reset</button></a>
+{% if request.GET %}
+<div class="container mt-4 mb-4 text-center">
+    <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-secondary">Reset</a>
 </div>
 {% endif %}
 

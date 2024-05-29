@@ -136,6 +136,30 @@ def cart_add(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('marketplace:marketplace_page')))
     else:
         return redirect('marketplace:marketplace_page')
+    
+
+@login_required
+def buy_now(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+
+        product = get_object_or_404(Product, id=product_id)
+
+        cart = Cart(request)
+        if not cart.has_product(product_id):
+            cart.add(product=product, quantity=quantity)
+            messages.success(request, 'Product added to the cart successfully.')
+        else:
+            messages.info(request, 'Product already in the cart.')
+
+        return redirect('marketplace:cart_summary')
+    else:
+        return redirect('marketplace:marketplace_page')
+    
+
+
+
 
 
 @login_required
@@ -171,6 +195,34 @@ def payment_view(request):
         return redirect('marketplace:success_page')
 
     return render(request, 'marketplace/payment.html')
+
+
+@login_required
+def shipping_form_view(request):
+    if request.method == 'POST':
+        form = ShippingForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            
+            customer, created = Customer.objects.get_or_create(
+                email=user.email,
+                defaults={
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'phone': '',
+                    'password': user.password,
+                }
+            )
+            
+            shipping_address = form.save(commit=False)
+            shipping_address.user = user
+            shipping_address.save()
+
+            
+            return render(request, 'marketplace/payment.html', {'shipping_info': shipping_address})
+    else:
+        form = ShippingForm()
+    return render(request, 'marketplace/shipping_form.html', {'form': form})
 
 
 @login_required
