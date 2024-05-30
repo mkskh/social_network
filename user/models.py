@@ -34,13 +34,19 @@ class UserProfile(models.Model):
             return None
     
     def capitalized_gender(self):
-        return (self.gender).capitalize()
+        if self.gender:
+            return (self.gender).capitalize()
+        else:
+            return None
     
     def dob_another_format(self):
-        input_date_string = str(self.date_of_birth)
-        parsed_date = datetime.strptime(input_date_string, "%Y-%m-%d")
-        formatted_date = parsed_date.strftime("%d %B %Y")
-        return (formatted_date)
+        if self.date_of_birth:
+            input_date_string = str(self.date_of_birth)
+            parsed_date = datetime.strptime(input_date_string, "%Y-%m-%d")
+            formatted_date = parsed_date.strftime("%d %B %Y")
+            return (formatted_date)
+        else:
+            return None
     
     def count_subscribers(self):
         return self.subscribers.count()
