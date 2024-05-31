@@ -233,7 +233,6 @@ def buy_now(request):
 
         product = get_object_or_404(Product, id=product_id)
 
-        # Store product price and other details in the session, convert price to string
         request.session['buy_now_product'] = {
             'product_id': product.id,
             'quantity': quantity,
@@ -252,37 +251,6 @@ def buy_now(request):
     else:
         return redirect('marketplace:marketplace_page')
 
-
-# @login_required
-# def buy_now(request):
-#     if request.method == 'POST':
-#         product_id = request.POST.get('product_id')
-#         quantity = int(request.POST.get('quantity', 1))
-
-#         product = get_object_or_404(Product, id=product_id)
-
-#         # Store product price and other details in the session, convert price to string
-#         request.session['buy_now_product'] = {
-#             'product_id': product.id,
-#             'quantity': quantity,
-#             'price': str(product.sale_price if product.is_sale else product.price),
-#         }
-
-#         cart = Cart(request)
-#         if cart.has_product(product_id):
-#             messages.info(request, 'Product already in the cart.')
-#         else:
-#             cart.add(product=product, quantity=quantity)
-#             messages.success(request, 'Product added to the cart successfully.')
-
-        
-#         if len(cart) > 0:
-#             print(cart)
-#             return redirect('marketplace:cart_summary')
-#         else:
-#             return redirect('marketplace:bn_shipping_form_view')
-#     else:
-#         return redirect('marketplace:marketplace_page')
 
 
     
