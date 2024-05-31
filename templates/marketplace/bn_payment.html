@@ -26,16 +26,14 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    
-                        <p><strong>Full Name:</strong> {{ request.POST.shipping_full_name }}</p>
-                        <p><strong>Email Address:</strong> {{ request.POST.shipping_email }}</p>
-                        <p><strong>Address 1:</strong> {{ request.POST.shipping_address1 }}</p>
-                        <p><strong>Address 2:</strong> {{ request.POST.shipping_address2 }}</p>
-                        <p><strong>City:</strong> {{ request.POST.shipping_city }}</p>
-                        <p><strong>State:</strong> {{ request.POST.shipping_state }}</p>
-                        <p><strong>Zipcode:</strong> {{ request.POST.shipping_zipcode }}</p>
-                        <p><strong>Country:</strong> {{ request.POST.shipping_country }}</p>
-                    
+                    <p><strong>Full Name:</strong> {{ request.POST.shipping_full_name }}</p>
+                    <p><strong>Email Address:</strong> {{ request.POST.shipping_email }}</p>
+                    <p><strong>Address 1:</strong> {{ request.POST.shipping_address1 }}</p>
+                    <p><strong>Address 2:</strong> {{ request.POST.shipping_address2 }}</p>
+                    <p><strong>City:</strong> {{ request.POST.shipping_city }}</p>
+                    <p><strong>State:</strong> {{ request.POST.shipping_state }}</p>
+                    <p><strong>Zipcode:</strong> {{ request.POST.shipping_zipcode }}</p>
+                    <p><strong>Country:</strong> {{ request.POST.shipping_country }}</p>
                 </div>
             </div>
         </div>
@@ -49,7 +47,7 @@
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Payment Details</h3>
                     <!-- Display total price -->
-                    <p>Total Price: €<span id="total-cart-price">0.00</span></p>
+                    <p>Total Price: €<span id="total-cart-price">{{ total_price }}</span></p>
                     <form method="POST" action="{% url 'marketplace:success_page' %}">
                         {% csrf_token %}
                         <div class="form-group">
@@ -63,24 +61,18 @@
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="cvv">CVV</label>
-                                <input type="text" id="cvv" name="cvv" class="form-control" placeholder="CVV" required
-                                    oninput="validateCVV(this)">
-                                <small id="cvvHelp" class="form-text text-muted">Please enter a 3-digit CVV
-                                    number.</small>
+                                <input type="text" id="cvv" name="cvv" class="form-control" placeholder="CVV" required oninput="validateCVV(this)">
+                                <small id="cvvHelp" class="form-text text-muted">Please enter a 3-digit CVV number.</small>
                             </div>
                         </div>
-                        <div class="mt-4">
+                        <div class="text-center mt-4">
                             <button type="submit" class="btn btn-secondary">Make Payment</button>
                         </div>
                         <div class="text-center mt-3">
-                            <img src="{% static 'logos/visa-logo4.png' %}" alt="Visa"
-                                style="height: 40px; margin: 10px 10px 0 0;">
-                            <img src="{% static 'logos/Mastercard.png' %}" alt="MasterCard"
-                                style="height: 40px; margin: 10px 10px 0 0;">
-                            <img src="{% static 'logos/American-Express.png' %}" alt="American Express"
-                                style="height: 40px; margin: 10px 10px 0 0;">
-                            <img src="{% static 'logos/Paypal_logo.png' %}" alt="PayPal"
-                                style="height: 40px; margin: 10px 10px 0 0;">
+                            <img src="{% static 'logos/visa-logo4.png' %}" alt="Visa" style="height: 40px; margin: 10px 10px 0 0;">
+                            <img src="{% static 'logos/Mastercard.png' %}" alt="MasterCard" style="height: 40px; margin: 10px 10px 0 0;">
+                            <img src="{% static 'logos/American-Express.png' %}" alt="American Express" style="height: 40px; margin: 10px 10px 0 0;">
+                            <img src="{% static 'logos/Paypal_logo.png' %}" alt="PayPal" style="height: 40px; margin: 10px 10px 0 0;">
                         </div>
                     </form>
                 </div>
@@ -90,7 +82,7 @@
 </div>
 
 <script>
-    function formatCardNumber(input) {
+function formatCardNumber(input) {
         
         let value = input.value.replace(/\D/g, '');
         if (value.length > 16) {
@@ -100,17 +92,13 @@
         input.value = formattedValue;
     }
 
-    function validateCVV(input) {
-        input.value = input.value.replace(/\D/g, '');
-        if (input.value.length > 3) {
-            input.value = input.value.slice(0, 3);
-        }
+function validateCVV(input) {
+    input.value = input.value.replace(/\D/g, '');
+    if (input.value.length > 3) {
+        input.value = input.value.slice(0, 3);
     }
-
-    const totalCartPrice = localStorage.getItem('totalCartPrice');
-    if (totalCartPrice) {
-        document.getElementById('total-cart-price').textContent = totalCartPrice;
-    }
+}
 </script>
+
 
 {% endblock %}
