@@ -44,7 +44,7 @@ For example if we want to find people from Berlin except real users we will see 
   
 ![news_feed](./media/for_readme/news_feed.png)   
   
-#### Like button and comments (demo version)
+#### Like button and comments
   
 ![post](./media/for_readme/post.png)   
   
