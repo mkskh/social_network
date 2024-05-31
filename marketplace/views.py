@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm, ShippingForm
+from .forms import ProductForm, ShippingForm, bn_ShippingForm
 from .cart import Cart
 from decimal import Decimal, InvalidOperation
 
@@ -136,24 +136,24 @@ def cart_add(request):
         return redirect('marketplace:marketplace_page')
     
     
-@login_required
-def buy_now(request):
-    if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        quantity = int(request.POST.get('quantity', 1))
+# @login_required
+# def buy_now(request):
+#     if request.method == 'POST':
+#         product_id = request.POST.get('product_id')
+#         quantity = int(request.POST.get('quantity', 1))
 
-        product = get_object_or_404(Product, id=product_id)
+#         product = get_object_or_404(Product, id=product_id)
 
-        cart = Cart(request)
-        if not cart.has_product(product_id):
-            cart.add(product=product, quantity=quantity)
-            messages.success(request, 'Product added to the cart successfully.')
-        else:
-            messages.info(request, 'Product already in the cart.')
+#         cart = Cart(request)
+#         if not cart.has_product(product_id):
+#             cart.add(product=product, quantity=quantity)
+#             messages.success(request, 'Product added to the cart successfully.')
+#         else:
+#             messages.info(request, 'Product already in the cart.')
 
-        return redirect('marketplace:cart_summary')
-    else:
-        return redirect('marketplace:marketplace_page')
+#         return redirect('marketplace:cart_summary')
+#     else:
+#         return redirect('marketplace:marketplace_page')
 
 
     
@@ -224,8 +224,175 @@ def shipping_form_view(request):
         form = ShippingForm()
     return render(request, 'marketplace/shipping_form.html', {'form': form})
 
-@login_required
 
+@login_required
+def buy_now(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        quantity = int(request.POST.get('quantity', 1))
+
+        product = get_object_or_404(Product, id=product_id)
+
+        # Store product price and other details in the session, convert price to string
+        request.session['buy_now_product'] = {
+            'product_id': product.id,
+            'quantity': quantity,
+            'price': str(product.sale_price if product.is_sale else product.price),
+        }
+
+        cart = Cart(request)
+        if not cart.has_product(product_id):
+            # cart.add(product=product, quantity=quantity)
+            messages.success(request, 'Product added to the cart successfully.')
+            return redirect('marketplace:bn_shipping_form_view')
+        else:
+            messages.info(request, 'Product already in the cart.')
+
+            return redirect('marketplace:cart_summary')
+    else:
+        return redirect('marketplace:marketplace_page')
+
+
+# @login_required
+# def buy_now(request):
+#     if request.method == 'POST':
+#         product_id = request.POST.get('product_id')
+#         quantity = int(request.POST.get('quantity', 1))
+
+#         product = get_object_or_404(Product, id=product_id)
+
+#         # Store product price and other details in the session, convert price to string
+#         request.session['buy_now_product'] = {
+#             'product_id': product.id,
+#             'quantity': quantity,
+#             'price': str(product.sale_price if product.is_sale else product.price),
+#         }
+
+#         cart = Cart(request)
+#         if cart.has_product(product_id):
+#             messages.info(request, 'Product already in the cart.')
+#         else:
+#             cart.add(product=product, quantity=quantity)
+#             messages.success(request, 'Product added to the cart successfully.')
+
+        
+#         if len(cart) > 0:
+#             print(cart)
+#             return redirect('marketplace:cart_summary')
+#         else:
+#             return redirect('marketplace:bn_shipping_form_view')
+#     else:
+#         return redirect('marketplace:marketplace_page')
+
+
+    
+    
+@login_required
+def bn_shipping_form_view(request):
+    if request.method == 'POST':
+        form = bn_ShippingForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            
+            customer, created = Customer.objects.get_or_create(
+                email=user.email,
+                defaults={
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'phone': '',
+                    'password': user.password,
+                }
+            )
+            
+            shipping_address = form.save(commit=False)
+            shipping_address.user = user
+            shipping_address.save()
+
+            # Retrieve product details from the session
+            buy_now_product = request.session.get('buy_now_product', None)
+            if buy_now_product:
+                price = buy_now_product['price']
+                quantity = buy_now_product['quantity']
+                total_price = price * quantity
+            else:
+                total_price = 0
+
+            return render(request, 'marketplace/bn_payment.html', {
+                'shipping_info': shipping_address,
+                'total_price': total_price,
+            })
+    else:
+        form = bn_ShippingForm()
+    return render(request, 'marketplace/shipping_form.html', {'form': form})
+
+
+# @login_required
+# def bn_shipping_form_view(request):
+#     if request.method == 'POST':
+#         form = bn_ShippingForm(request.POST)
+#         if form.is_valid():
+#             user = request.user
+            
+#             customer, created = Customer.objects.get_or_create(
+#                 email=user.email,
+#                 defaults={
+#                     'first_name': user.first_name,
+#                     'last_name': user.last_name,
+#                     'phone': '',
+#                     'password': user.password,
+#                 }
+#             )
+            
+#             shipping_address = form.save(commit=False)
+#             shipping_address.user = user
+#             shipping_address.save()
+
+#             card_number = request.POST.get('card_number')
+#             if not card_number or len(card_number.replace(' ', '')) != 16:
+#                 messages.error(request, 'Please enter a valid 16-digit card number.')
+#                 return render(request, 'marketplace/bn_payment.html', {
+#                     'shipping_info': shipping_address,
+#                     'total_price': request.session.get('total_price', 0),
+#                 })
+
+#             # Here you would handle the payment processing logic
+
+#             return redirect('marketplace:success_page')
+#     else:
+#         form = bn_ShippingForm()
+#     return render(request, 'marketplace/shipping_form.html', {'form': form})
+
+
+
+
+
+@login_required
+def bn_payment_view(request):
+    buy_now_product = request.session.get('buy_now_product')
+    shipping_info = request.session.get('shipping_info')
+
+    if not buy_now_product or not shipping_info:
+        return redirect('marketplace:marketplace_page')
+
+    context = {
+        'product_id': buy_now_product['product_id'],
+        'quantity': buy_now_product['quantity'],
+        'price': buy_now_product['price'],
+        'shipping_info': shipping_info,
+    }
+
+    if request.method == 'POST':
+        # Handle payment processing here
+        messages.success(request, 'Payment successful.')
+        return redirect('marketplace:order_confirmation')
+
+    return render(request, 'marketplace/bn_payment.html', context)
+
+
+
+
+
+@login_required
 def success_page(request):
     
     cart = Cart(request)
