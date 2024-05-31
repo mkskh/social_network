@@ -2,13 +2,14 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="alert alert-success" role="alert">
-        <h1>Payment Successful!</h1>
-        <p>Your order has been placed successfully.</p>
+    <div class="alert alert-success text-center" role="alert">
+        <h1 class="display-4">Payment Successful!</h1>
+        <p class="lead">Your order has been placed successfully.</p>
+        <hr class="my-4">
+        <p>Thank you for shopping with us. We hope to see you again soon!</p>
     </div>
-    <div class="d-flex justify-content-center gap-2" role="group">
-        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-secondary" style="text-align: center;">Go to Home</a>
+    <div class="d-flex justify-content-center">
+        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-secondary btn-lg" style="text-align: center;">Go to Home</a>
     </div>
-    
 </div>
 {% endblock %}
