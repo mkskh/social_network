@@ -21,24 +21,25 @@
     {% if cart_products %}
         {% for item in cart_products %}
             <br>
-            <div class="card mb-3">
+            <div class="card mb-3" style="padding: 30px;">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img src="{{ item.product.image.url }}" class="img-fluid rounded-start" alt="{{ item.product.name }}">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <center>
-                                <h5 class="card-title">{{ item.product.name }}</h5>
+                            
+                                <h4 class="card-title" style="text-align: center;">{{ item.product.name }}</h4>
+                                <br>
                                 <p class="card-text">{{ item.product.description }}</p>
+                            <center>
                                 {% if item.product.is_sale %}
                                     <span class="text-muted"><strike>€{{ item.product.price }}</strike></span>
                                     <span class="text-danger ms-2">€{{ item.product.sale_price }}</span>
                                     <span class="badge bg-danger text-white ms-2">Sale</span>
                                 {% else %}
-                                    €{{ item.product.price }}
                                     <br>
-                                    <p class="product-id" id="product-id">ID : {{ item.product.id }}</p>
+                                    <strong>Product price:</strong> €{{ item.product.price }}
                                 {% endif %}
                                 <br><br>
                                 <div class="row justify-content-center">
