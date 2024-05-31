@@ -1,15 +1,22 @@
-# social_network
-
-## Group project  
+# In touch: social network
   
-**Team members:**  Maksym Kharchenko, Rituparna Dobey, Jonathan Lemarie, Jaime Olivos  
+### What is "In touch":  
   
-**Project name:** “In touch”  
+![what_is](media/for_readme/what_is.png)
   
-**Description:** Social network with marketplace function. Here people can share their thoughts and life events. 
-Also, each user can create an advertisement for the sale (or give away for free) some of their things that they no longer need.  
+### What were implemented:  
+  
+![implemented](media/for_readme/implemented.png)
+  
+### OUR TEAM:  
+  
+![team](media/for_readme/team.png)
+  
   
 ### Features and Updates:  
+- Finished design of the whole website
+- Finished Marketplace
+- Implemented Albums
 - Implemented search system for "dummy users" from API.  
 For example if we want to find people from Berlin except real users we will see dummy users also (if api is working)
 - Implemented API into the program code. When we go to the "Search" page, we have 78 dummy users now
@@ -31,7 +38,9 @@ For example if we want to find people from Berlin except real users we will see 
 - Implemented Like button
 - Implemented Comments for every post
   
-### How it looks like (first steps):  
+## How it looks like:  
+  
+### News feed:
   
 ![news_feed](./media/for_readme/news_feed.png)   
   
