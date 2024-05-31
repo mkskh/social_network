@@ -31,10 +31,12 @@
                     <div class="col mb-5">
                         <div class="card h-100 shadow-sm">
                             <!-- Product image-->
+                            <a href="{% if user.is_authenticated %}{% url 'marketplace:product' product.pk %}{% else %}{% url 'user:login' %}?next={% url 'marketplace:product' product.pk %}{% endif %}"></a>
                             <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <!-- Product name-->
+                                <a href="{% if user.is_authenticated %}{% url 'marketplace:product' product.pk %}{% else %}{% url 'user:login' %}?next={% url 'marketplace:product' product.pk %}{% endif %}" class="text-decoration-none text-dark"></a>
                                 <h5 class="card-title fw-bolder">{{ product.name }}</h5>
                                 <!-- Product price-->
                                 <p class="card-text">
@@ -61,4 +63,9 @@
             </div>
         </div>
     </section>
+    {% if request.GET.product_name or request.GET.price_min or request.GET.price_max or request.resolver_match.url_name == 'category' %}
+    <div class="container mt-4 mb-4 text-center">
+        <a href="{% url 'marketplace:marketplace_page' %}" class="btn btn-secondary">Reset</a>
+    </div>
+    {% endif %}
 {% endblock %}
