@@ -50,11 +50,11 @@ For example if we want to find people from Berlin except real users we will see 
   
 ### "Search people" page:  
   
-![Search people](./media/for_readme/search_people.png)   
+![Search people](./media/for_readme/search_system.png)   
   
 ### How search system works:
   
-![search system](./media/for_readme/search_system.png) 
+![search system](./media/for_readme/search_people.png) 
   
 ### User profile page:
   
