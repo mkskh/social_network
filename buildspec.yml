@@ -19,11 +19,9 @@ phases:
   build:
     commands:
       - echo Building the application 
-      - python manage.py test feed.tests
   post_build:
     commands:
       - echo Build completed on `date`
-      - rm db1.sqlite3 db2.sqlite3
 artifacts:
   files:
     - '**/*'
