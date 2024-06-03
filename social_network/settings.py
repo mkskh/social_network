@@ -146,9 +146,7 @@ USE_TZ = True
 AWS_ACCESS_KEY_ID = os.getenv('AWS_ACC_KEY_ID'),
 AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SEC_ACC_KEY'),
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STOR_BUCKET_NAME'),
-AWS_DEFAULT_ACL = 'public-read'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 
 # s3 static settings
 AWS_LOCATION = 'static'
@@ -162,5 +160,5 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/'
+MEDIA_ROOT = '/home/ubuntu/media'
+MEDIA_ROOT = '/home/ubuntu/media/'
