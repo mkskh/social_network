@@ -143,9 +143,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 # aws settings
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACC_KEY_ID'),
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SEC_ACC_KEY'),
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STOR_BUCKET_NAME'),
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACC_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SEC_ACC_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STOR_BUCKET_NAME')
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
 # s3 static settings
