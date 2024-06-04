@@ -42,6 +42,8 @@ For example if we want to find people from Berlin except real users we will see 
   
 ## How it looks like:  
   
+![overview](./media/for_readme/overview.gif)   
+  
 ### News feed:
   
 ![news_feed](./media/for_readme/news_feed.png)   
