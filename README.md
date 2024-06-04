@@ -2,7 +2,7 @@
   
 ### What is "In touch":  
   
-![what_is](media/for_readme/overview.png)
+![what_is](media/for_readme/what_is.png)
   
 ### What were implemented:  
   
