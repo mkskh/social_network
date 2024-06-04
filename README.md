@@ -41,6 +41,8 @@ For example if we want to find people from Berlin except real users we will see 
 - Implemented Comments for every post
   
 ## How it looks like:  
+
+### General overview:  
   
 ![overview](./media/for_readme/overview.gif)   
   
