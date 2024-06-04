@@ -100,7 +100,7 @@ DATABASES = {
         'NAME': 'api_user_social_network',                      
         'USER': 'api_user_sn_admin',
         'PASSWORD': 'testapi1234',
-        'HOST': 'localhost',
+        'HOST': os.getenv('DB_HOST'),
         'PORT': 5432,
     }
 }

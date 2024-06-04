@@ -14,6 +14,8 @@
   
   
 ### Features and Updates:  
+- Implemented CI/CD using aws CodePipeline
+- Deployed on aws using ec2, rds and s3
 - Finished design of the whole website
 - Finished Marketplace
 - Implemented Albums

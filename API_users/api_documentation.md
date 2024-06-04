@@ -28,9 +28,13 @@
 Make sure the database has been created  
   
 
-### Load the data (in the data_backup/ folder): 
+### backup: 
   
-- python manage.py loaddata db_backup.json
+- cd social_network/API_users
+- sudo su postgres
+- psql -U api_user_sn_admin -d api_user_social_network
+- \i backup
+- check tables: \dt public.*
   
 For using the API in social network project use - python manage.py runserver 9000 
   
