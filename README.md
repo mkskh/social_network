@@ -42,7 +42,7 @@ For example if we want to find people from Berlin except real users we will see 
   
 ## How it looks like:  
 
-### General overview:  
+### General overview(wait a little while the GIF file loads):  
   
 ![overview](./media/for_readme/overview.gif)   
   
